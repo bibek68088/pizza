@@ -68,27 +68,101 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['lookup_order'])) {
     <title>Track Order - Crust Pizza</title>
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Notification styles from index.php */
+        .cart-notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+            z-index: 9999;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .cart-notification.error {
+            background: linear-gradient(135deg, #dc3545, #e74c3c);
+            box-shadow: 0 8px 25px rgba(220, 53, 69, 0.4);
+        }
+
+        .cart-notification.warning {
+            background: linear-gradient(135deg, #ffc107, #f39c12);
+            box-shadow: 0 8px 25px rgba(255, 193, 7, 0.4);
+        }
+
+        .cart-notification.info {
+            background: linear-gradient(135deg, #17a2b8, #3498db);
+            box-shadow: 0 8px 25px rgba(23, 162, 184, 0.4);
+        }
+
+        .cart-notification.slide-out {
+            animation: slideOut 0.3s ease-in;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <!-- Header -->
+    <!-- Navigation from index.php -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-brand">
                 <i class="fas fa-pizza-slice"></i>
                 <p><a href="index.php" style="text-decoration: none; color: inherit;">Crust Pizza</a></p>
             </div>
-            <div class="nav-menu">
+            <button class="nav-toggle" onclick="toggleNavMenu()" aria-label="Toggle Navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="nav-menu" id="navMenu">
                 <a href="index.php" class="nav-link">Home</a>
                 <a href="menu.php" class="nav-link">Menu</a>
                 <a href="build-pizza.php" class="nav-link">Build Your Pizza</a>
                 <a href="track-order.php" class="nav-link active">Track Order</a>
-                <?php if (isLoggedIn()): ?>
-                    <a href="profile.php" class="nav-link">Profile</a>
-                    <a href="logout.php" class="nav-link">Logout</a>
-                <?php else: ?>
-                    <a href="login.php" class="nav-link">Login</a>
-                <?php endif; ?>
+                <div class="dropdown">
+                    <button class="dropdown-toggle" onclick="toggleDropdown()" aria-label="User Menu" aria-expanded="false" title="User Menu">
+                        <span class="user-icon"><i class="fas fa-user"></i></span>
+                        <span class="dropdown-arrow"></span>
+                    </button>
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <?php if (isLoggedIn()): ?>
+                            <a class="dropdown-item" href="profile.php">Profile</a>
+                            <a class="dropdown-item" href="logout.php">Logout</a>
+                        <?php else: ?>
+                            <a class="dropdown-item" href="login.php">Login</a>
+                            <a class="dropdown-item" href="register.php">Sign Up</a>
+                        <?php endif; ?>
+                    </div>
+                </div>
                 <a href="cart.php" class="nav-link cart-link">
                     <i class="fas fa-shopping-cart"></i>
                     <span class="cart-count" id="cartCount">0</span>
@@ -97,14 +171,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['lookup_order'])) {
         </div>
     </nav>
 
-    <main style="margin-top: 70px;">
-        <div class="container" style="padding: 2rem 20px;">
-            <div class="page-header" style="text-align: center; margin-bottom: 2rem;">
-                <h2><i class="fas fa-search"></i> Track Your Order</h2>
+    <main style="margin-top: 70px; padding: 40px 20px;">
+        <div class="container">
+            <div class="page-header">
+                <h1><i class="fas fa-search"></i> Track Your Order</h1>
                 <p>Enter your order details to track your pizza</p>
             </div>
 
-            <!-- Flash Messages -->
             <?php displayFlashMessages(); ?>
 
             <?php if ($error): ?>
@@ -113,11 +186,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['lookup_order'])) {
 
             <?php if (!$order_details): ?>
                 <!-- Order Lookup Form -->
-                <div class="card" style="max-width: 500px; margin: 2rem auto; background: white; border-radius: 10px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); overflow: hidden;">
-                    <div class="card-header" style="background: #f8f9fa; padding: 1rem; border-bottom: 1px solid #ddd;">
+                <div class="card" style="max-width: 500px; margin: 2rem auto;">
+                    <div class="card-header">
                         <h3 style="margin: 0;">Find Your Order</h3>
                     </div>
-                    <div class="card-body" style="padding: 1.5rem;">
+                    <div class="card-body">
                         <form method="POST">
                             <div class="form-group">
                                 <label for="lookup_order_id">Order ID</label>
@@ -138,11 +211,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['lookup_order'])) {
 
                 <?php if (isLoggedIn()): ?>
                     <!-- Recent Orders for Logged-in Users -->
-                    <div class="card" style="margin-top: 2rem; background: white; border-radius: 10px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); overflow: hidden;">
-                        <div class="card-header" style="background: #f8f9fa; padding: 1rem; border-bottom: 1px solid #ddd;">
+                    <div class="card" style="margin-top: 2rem;">
+                        <div class="card-header">
                             <h3 style="margin: 0;">Your Recent Orders</h3>
                         </div>
-                        <div class="card-body" style="padding: 1.5rem;">
+                        <div class="card-body">
                             <?php
                             $user_orders = $order->getOrdersByUserId($_SESSION['user_id']);
                             if (empty($user_orders)):
@@ -159,7 +232,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['lookup_order'])) {
                                                 </p>
                                             </div>
                                             <div style="text-align: right;">
-                                                <div class="status-badge status-<?php echo $user_order['status']; ?>">
+                                                <div class="badge badge-<?php echo $user_order['status'] === 'completed' ? 'success' : 'primary'; ?>">
                                                     <?php echo ucfirst(str_replace('_', ' ', $user_order['status'])); ?>
                                                 </div>
                                                 <div style="font-weight: 600; margin-top: 0.25rem;">
@@ -179,19 +252,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['lookup_order'])) {
 
             <?php else: ?>
                 <!-- Order Details -->
-                <div class="order-tracking-layout">
+                <div style="display: grid; grid-template-columns: 1fr 350px; gap: 2rem; margin-top: 2rem;">
                     <!-- Order Status and Timeline -->
-                    <div class="order-main">
+                    <div>
                         <!-- Order Status -->
-                        <div class="card mb-4">
-                            <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                        <div class="card" style="margin-bottom: 2rem;">
+                            <div class="card-header">
                                 <h3 style="margin: 0;">Order #<?php echo $order_details['order_id']; ?></h3>
-                                <div class="status-badge status-<?php echo $order_details['status']; ?>">
+                                <div class="badge badge-<?php echo $order_details['status'] === 'completed' ? 'success' : 'primary'; ?>">
                                     <?php echo ucfirst(str_replace('_', ' ', $order_details['status'])); ?>
                                 </div>
                             </div>
                             <div class="card-body">
-                                <div class="order-info-grid">
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
                                     <div>
                                         <h4>Order Type</h4>
                                         <p><i class="fas fa-<?php echo $order_details['order_type'] === 'delivery' ? 'truck' : 'store'; ?>"></i>
@@ -215,7 +288,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['lookup_order'])) {
                         </div>
 
                         <!-- Order Timeline -->
-                        <div class="card mb-4">
+                        <div class="card" style="margin-bottom: 2rem;">
                             <div class="card-header">
                                 <h3 style="margin: 0;">Order Progress</h3>
                             </div>
@@ -259,7 +332,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['lookup_order'])) {
                                                 <h4 style="margin: 0; color: <?php echo $is_completed ? '#333' : '#999'; ?>;">
                                                     <?php echo $info['label']; ?>
                                                     <?php if ($is_current): ?>
-                                                        <span class="status-badge" style="margin-left: 0.5rem; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; background: #ff6b35; color: white;">Current</span>
+                                                        <span class="badge badge-primary" style="margin-left: 0.5rem;">Current</span>
                                                     <?php endif; ?>
                                                 </h4>
                                                 <?php if ($is_completed): ?>
@@ -306,9 +379,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['lookup_order'])) {
                     </div>
 
                     <!-- Order Summary Sidebar -->
-                    <div class="order-sidebar">
+                    <div>
                         <!-- Customer Details -->
-                        <div class="card mb-4">
+                        <div class="card" style="margin-bottom: 2rem;">
                             <div class="card-header">
                                 <h3 style="margin: 0;">Customer Details</h3>
                             </div>
@@ -330,7 +403,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['lookup_order'])) {
                         </div>
 
                         <!-- Order Total -->
-                        <div class="card mb-4">
+                        <div class="card">
                             <div class="card-header">
                                 <h3 style="margin: 0;">Order Total</h3>
                             </div>
@@ -358,7 +431,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['lookup_order'])) {
                         </div>
 
                         <!-- Store Information -->
-                        <div class="card">
+                        <div class="card" style="margin-top: 2rem;">
                             <div class="card-header">
                                 <h3 style="margin: 0;">Store Information</h3>
                             </div>
@@ -374,87 +447,126 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['lookup_order'])) {
         </div>
     </main>
 
-    <!-- Footer -->
+    <!-- Footer from index.php -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
                     <h3>Crust Pizza</h3>
-                    <p>Delivering gourmet pizza experiences since 2024</p>
+                    <p>Australia's favorite gourmet pizza destination since 2001. From our family to yours, we're committed to delivering exceptional taste and quality in every bite.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
                 </div>
+
                 <div class="footer-section">
                     <h4>Quick Links</h4>
                     <ul>
-                        <li><a href="menu.php">Menu</a></li>
-                        <li><a href="build-pizza.php">Build Your Pizza</a></li>
-                        <li><a href="track-order.php">Track Order</a></li>
-                        <li><a href="contact.php">Contact Us</a></li>
+                        <li><a href="menu.php"><i class="fas fa-pizza-slice"></i> Our Menu</a></li>
+                        <li><a href="build-pizza.php"><i class="fas fa-tools"></i> Build Your Pizza</a></li>
+                        <li><a href="track-order.php"><i class="fas fa-truck"></i> Track Your Order</a></li>
+                        <li><a href="locations.php"><i class="fas fa-map-marker-alt"></i> Find a Store</a></li>
                     </ul>
                 </div>
+
+                <div class="footer-section">
+                    <h4>Customer Care</h4>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-phone"></i> Contact Us</a></li>
+                        <li><a href="#"><i class="fas fa-question-circle"></i> FAQ</a></li>
+                        <li><a href="#"><i class="fas fa-comment"></i> Feedback</a></li>
+                        <li><a href="#"><i class="fas fa-file-contract"></i> Terms & Conditions</a></li>
+                        <li><a href="#"><i class="fas fa-shield-alt"></i> Privacy Policy</a></li>
+                    </ul>
+                </div>
+
                 <div class="footer-section">
                     <h4>Contact Info</h4>
-                    <p><i class="fas fa-phone"></i> 1300 CRUST (1300 278 787)</p>
-                    <p><i class="fas fa-envelope"></i> info@crustpizza.com.au</p>
+                    <ul>
+                        <li><i class="fas fa-phone"></i> <strong>1300 278 787</strong></li>
+                        <li><i class="fas fa-envelope"></i> info@crustpizza.com.au</li>
+                        <li><i class="fas fa-clock"></i> Mon-Sun: 11AM - 11PM</li>
+                        <li><i class="fas fa-map-marker-alt"></i> 130+ locations across Australia</li>
+                    </ul>
                 </div>
             </div>
+
             <div class="footer-bottom">
-                <p>&copy; 2024 Crust Pizza. All rights reserved.</p>
+                <p>© <span id="currentYear"></span> Crust Pizza. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
     <script src="assets/js/main.js"></script>
     <script>
+        // Set the current year in the copyright notice
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCartCount();
+
+            // Add scroll effect to navbar
+            window.addEventListener('scroll', function() {
+                const navbar = document.querySelector('.navbar');
+                if (window.scrollY > 50) {
+                    navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+                    navbar.style.boxShadow = '0 4px 25px rgba(0, 0, 0, 0.15)';
+                } else {
+                    navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+                    navbar.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.1)';
+                }
+            });
+        });
+
         // Auto-refresh order status every 30 seconds if order is active
         <?php if ($order_details && !in_array($order_details['status'], ['completed', 'cancelled'])): ?>
             setInterval(function() {
                 location.reload();
             }, 30000);
         <?php endif; ?>
-    </script>
 
-    <style>
-        /* Track Order Page Specific Styles */
-        .card {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('crustPizzaCart')) || [];
+            const cartCount = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+            document.getElementById('cartCount').textContent = cartCount;
         }
 
-        .card-header {
-            background: #f8f9fa;
-            padding: 1rem;
-            border-bottom: 1px solid #ddd;
+        function toggleDropdown() {
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            const isOpen = dropdownMenu.classList.toggle('show');
+            document.querySelector('.dropdown-toggle').setAttribute('aria-expanded', isOpen);
         }
 
-        .card-body {
-            padding: 1.5rem;
+        function toggleNavMenu() {
+            const navMenu = document.getElementById('navMenu');
+            navMenu.classList.toggle('active');
         }
 
-        .order-tracking-layout {
-            display: grid;
-            grid-template-columns: 1fr 350px;
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .order-info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-        }
-
-        .order-item:last-child {
-            border-bottom: none !important;
-        }
-
-        @media (max-width: 768px) {
-            .order-tracking-layout {
-                grid-template-columns: 1fr;
+        // Close dropdown and nav menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.querySelector('.dropdown');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            const navMenu = document.getElementById('navMenu');
+            const navToggle = document.querySelector('.nav-toggle');
+            if (!dropdown.contains(event.target) && !navToggle.contains(event.target)) {
+                dropdownMenu.classList.remove('show');
+                navMenu.classList.remove('active');
+                document.querySelector('.dropdown-toggle').setAttribute('aria-expanded', 'false');
             }
-        }
-    </style>
+        });
+
+        // Close dropdown and nav menu on Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                document.getElementById('dropdownMenu').classList.remove('show');
+                document.getElementById('navMenu').classList.remove('active');
+                document.querySelector('.dropdown-toggle').setAttribute('aria-expanded', 'false');
+            }
+        });
+    </script>
 </body>
 
 </html>

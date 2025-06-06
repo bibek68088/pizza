@@ -14,61 +14,20 @@ $pizza = new Pizza($db);
 $search = isset($_GET['search']) ? sanitizeInput($_GET['search']) : '';
 $category = isset($_GET['category']) ? (int)$_GET['category'] : '';
 
-// Debug: Add error checking and logging
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
-// Get pizzas based on search/filter with error handling
-try {
-    if (!empty($search)) {
-        $pizzas = $pizza->searchPizzas($search);
-    } elseif (!empty($category)) {
-        $pizzas = $pizza->getPizzasByCategory($category);
-    } else {
-        $pizzas = $pizza->getAllPizzas();
-    }
-
-    // Debug: Check what we actually got
-    if (isset($_GET['debug'])) {
-        echo "<pre>Debug - Pizzas data:\n";
-        var_dump($pizzas);
-        echo "</pre>";
-        exit;
-    }
-
-    // Ensure $pizzas is an array
-    if (!is_array($pizzas)) {
-        $pizzas = [];
-    }
-
-    // Check if we have valid pizza data
-    if (!empty($pizzas)) {
-        $first_pizza = reset($pizzas);
-        if (!is_array($first_pizza) || !isset($first_pizza['pizza_id'])) {
-            // Something is wrong with the data structure
-            error_log("Invalid pizza data structure: " . print_r($pizzas, true));
-            $pizzas = [];
-        }
-    }
-} catch (Exception $e) {
-    error_log("Error fetching pizzas: " . $e->getMessage());
-    $pizzas = [];
+// Get pizzas based on search/filter
+if (!empty($search)) {
+    $pizzas = $pizza->searchPizzas($search);
+} elseif (!empty($category)) {
+    $pizzas = $pizza->getPizzasByCategory($category);
+} else {
+    $pizzas = $pizza->getAllPizzas();
 }
 
-// Get categories for filter with error handling
-try {
-    $categories_query = "SELECT * FROM categories WHERE is_active = 1 ORDER BY name";
-    $categories_stmt = $db->prepare($categories_query);
-    $categories_stmt->execute();
-    $categories = $categories_stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    if (!is_array($categories)) {
-        $categories = [];
-    }
-} catch (Exception $e) {
-    error_log("Error fetching categories: " . $e->getMessage());
-    $categories = [];
-}
+// Get categories for filter
+$categories_query = "SELECT * FROM categories WHERE is_active = 1 ORDER BY name";
+$categories_stmt = $db->prepare($categories_query);
+$categories_stmt->execute();
+$categories = $categories_stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -80,27 +39,101 @@ try {
     <title>Menu - Crust Pizza</title>
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Notification styles from index.php */
+        .cart-notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+            z-index: 9999;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .cart-notification.error {
+            background: linear-gradient(135deg, #dc3545, #e74c3c);
+            box-shadow: 0 8px 25px rgba(220, 53, 69, 0.4);
+        }
+
+        .cart-notification.warning {
+            background: linear-gradient(135deg, #ffc107, #f39c12);
+            box-shadow: 0 8px 25px rgba(255, 193, 7, 0.4);
+        }
+
+        .cart-notification.info {
+            background: linear-gradient(135deg, #17a2b8, #3498db);
+            box-shadow: 0 8px 25px rgba(23, 162, 184, 0.4);
+        }
+
+        .cart-notification.slide-out {
+            animation: slideOut 0.3s ease-in;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <!-- Navigation -->
+    <!-- Navigation from index.php -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-brand">
                 <i class="fas fa-pizza-slice"></i>
                 <p><a href="index.php" style="text-decoration: none; color: inherit;">Crust Pizza</a></p>
             </div>
-            <div class="nav-menu">
+            <button class="nav-toggle" onclick="toggleNavMenu()" aria-label="Toggle Navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="nav-menu" id="navMenu">
                 <a href="index.php" class="nav-link">Home</a>
                 <a href="menu.php" class="nav-link active">Menu</a>
                 <a href="build-pizza.php" class="nav-link">Build Your Pizza</a>
                 <a href="track-order.php" class="nav-link">Track Order</a>
-                <?php if (isLoggedIn()): ?>
-                    <a href="profile.php" class="nav-link">Profile</a>
-                    <a href="logout.php" class="nav-link">Logout</a>
-                <?php else: ?>
-                    <a href="login.php" class="nav-link">Login</a>
-                <?php endif; ?>
+                <div class="dropdown">
+                    <button class="dropdown-toggle" onclick="toggleDropdown()" aria-label="User Menu" aria-expanded="false" title="User Menu">
+                        <span class="user-icon"><i class="fas fa-user"></i></span>
+                        <span class="dropdown-arrow"></span>
+                    </button>
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <?php if (isLoggedIn()): ?>
+                            <a class="dropdown-item" href="profile.php">Profile</a>
+                            <a class="dropdown-item" href="logout.php">Logout</a>
+                        <?php else: ?>
+                            <a class="dropdown-item" href="login.php">Login</a>
+                            <a class="dropdown-item" href="register.php">Sign Up</a>
+                        <?php endif; ?>
+                    </div>
+                </div>
                 <a href="cart.php" class="nav-link cart-link">
                     <i class="fas fa-shopping-cart"></i>
                     <span class="cart-count" id="cartCount">0</span>
@@ -113,32 +146,21 @@ try {
         <div class="container">
             <h1>Our Menu</h1>
 
-            <!-- Debug link (remove in production) -->
-            <?php if (isset($_GET['show_debug'])): ?>
-                <p><a href="menu.php?debug=1" style="color: red;">Debug: View Raw Data</a></p>
-            <?php endif; ?>
-
             <!-- Search and Filter -->
             <div class="menu-filters" style="margin-bottom: 30px;">
                 <form method="GET" class="filter-form" style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
                     <div class="search-box">
-                        <input type="text" name="search" placeholder="Search pizzas..."
-                            value="<?php echo htmlspecialchars($search); ?>" class="form-control" style="width: 300px;">
+                        <input type="text" name="search" placeholder="Search pizzas..." value="<?php echo htmlspecialchars($search); ?>" class="form-control" style="width: 300px;">
                     </div>
 
                     <div class="category-filter">
                         <select name="category" class="form-control" style="width: 200px;">
                             <option value="">All Categories</option>
-                            <?php if (!empty($categories)): ?>
-                                <?php foreach ($categories as $cat): ?>
-                                    <?php if (is_array($cat) && isset($cat['category_id'], $cat['name'])): ?>
-                                        <option value="<?php echo $cat['category_id']; ?>"
-                                            <?php echo $category == $cat['category_id'] ? 'selected' : ''; ?>>
-                                            <?php echo htmlspecialchars($cat['name']); ?>
-                                        </option>
-                                    <?php endif; ?>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
+                            <?php foreach ($categories as $cat): ?>
+                                <option value="<?php echo $cat['category_id']; ?>" <?php echo $category == $cat['category_id'] ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($cat['name']); ?>
+                                </option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
 
@@ -161,51 +183,43 @@ try {
                 <div class="pizza-grid">
                     <?php foreach ($pizzas as $pizza_item): ?>
                         <?php
-                        if (!is_array($pizza_item) || !isset($pizza_item['pizza_id'])) {
-                            continue;
-                        }
+                        // Ensure we have all required fields with default values if missing
+                        $pizza_id = isset($pizza_item['pizza_id']) ? $pizza_item['pizza_id'] : 0;
+                        $name = isset($pizza_item['name']) ? htmlspecialchars($pizza_item['name']) : 'Pizza';
+                        $description = isset($pizza_item['description']) ? htmlspecialchars($pizza_item['description']) : 'Delicious pizza with our signature sauce and cheese.';
+                        $image_url = isset($pizza_item['image_url']) && !empty($pizza_item['image_url']) ? $pizza_item['image_url'] : '/placeholder.svg?height=250&width=300';
 
-                        $pizza_data = array_merge([
-                            'pizza_id' => 0,
-                            'name' => 'Unknown Pizza',
-                            'description' => 'No description available',
-                            'image_url' => '',
-                            'base_price_small' => 0.00,
-                            'base_price_medium' => 0.00,
-                            'base_price_large' => 0.00
-                        ], $pizza_item);
+                        // Set default prices if not available
+                        $price_small = isset($pizza_item['base_price_small']) ? (float)$pizza_item['base_price_small'] : 15.90;
+                        $price_medium = isset($pizza_item['base_price_medium']) ? (float)$pizza_item['base_price_medium'] : 21.90;
+                        $price_large = isset($pizza_item['base_price_large']) ? (float)$pizza_item['base_price_large'] : 27.90;
                         ?>
-                        <div class="pizza-card"
-                            data-price-small="<?php echo number_format($pizza_data['base_price_small'], 2); ?>"
-                            data-price-medium="<?php echo number_format($pizza_data['base_price_medium'], 2); ?>"
-                            data-price-large="<?php echo number_format($pizza_data['base_price_large'], 2); ?>">
+                        <div class="pizza-card" data-price-small="<?php echo $price_small; ?>" data-price-medium="<?php echo $price_medium; ?>" data-price-large="<?php echo $price_large; ?>">
                             <div class="pizza-image">
-                                <img src="<?php echo !empty($pizza_data['image_url']) ? htmlspecialchars($pizza_data['image_url']) : '/placeholder.svg?height=250&width=300'; ?>"
-                                    alt="<?php echo htmlspecialchars($pizza_data['name']); ?>">
+                                <img src="<?php echo $image_url; ?>" alt="<?php echo $name; ?>">
                             </div>
                             <div class="pizza-info">
-                                <h3><?php echo htmlspecialchars($pizza_data['name']); ?></h3>
-                                <p><?php echo htmlspecialchars($pizza_data['description']); ?></p>
+                                <h3><?php echo $name; ?></h3>
+                                <p><?php echo $description; ?></p>
 
                                 <div class="pizza-options" style="margin-bottom: 15px;">
-                                    <label for="size-<?php echo $pizza_data['pizza_id']; ?>">Size:</label>
-                                    <select id="size-<?php echo $pizza_data['pizza_id']; ?>" class="size-selector form-control" style="width: 100%;">
-                                        <option value="small">Small - <?php echo formatCurrency($pizza_data['base_price_small']); ?></option>
-                                        <option value="medium" selected>Medium - <?php echo formatCurrency($pizza_data['base_price_medium']); ?></option>
-                                        <option value="large">Large - <?php echo formatCurrency($pizza_data['base_price_large']); ?></option>
+                                    <label for="size-<?php echo $pizza_id; ?>">Size:</label>
+                                    <select id="size-<?php echo $pizza_id; ?>" class="size-selector form-control" style="width: 100%;">
+                                        <option value="small">Small - <?php echo formatCurrency($price_small); ?></option>
+                                        <option value="medium" selected>Medium - <?php echo formatCurrency($price_medium); ?></option>
+                                        <option value="large">Large - <?php echo formatCurrency($price_large); ?></option>
                                     </select>
                                 </div>
 
                                 <div class="current-price" style="font-size: 1.2rem; font-weight: bold; color: #ff6b35; margin-bottom: 15px;">
-                                    <?php echo formatCurrency($pizza_data['base_price_medium']); ?>
+                                    <?php echo formatCurrency($price_medium); ?>
                                 </div>
 
                                 <div class="pizza-actions">
-                                    <a href="pizza-details.php?id=<?php echo $pizza_data['pizza_id']; ?>" class="btn btn-outline">
+                                    <a href="pizza-details.php?id=<?php echo $pizza_id; ?>" class="btn btn-outline">
                                         View Details
                                     </a>
-                                    <button class="btn btn-primary"
-                                        onclick="addToCartFromMenu(<?php echo $pizza_data['pizza_id']; ?>)">
+                                    <button class="btn btn-primary" onclick="addToCartFromMenu(<?php echo $pizza_id; ?>)">
                                         Add to Cart
                                     </button>
                                 </div>
@@ -217,43 +231,160 @@ try {
         </div>
     </main>
 
-    <!-- Footer -->
+    <!-- Footer from index.php -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
                     <h3>Crust Pizza</h3>
-                    <p>Delivering gourmet pizza experiences since 2024</p>
+                    <p>Australia's favorite gourmet pizza destination since 2001. From our family to yours, we're committed to delivering exceptional taste and quality in every bite.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
                 </div>
+
                 <div class="footer-section">
                     <h4>Quick Links</h4>
                     <ul>
-                        <li><a href="menu.php">Menu</a></li>
-                        <li><a href="build-pizza.php">Build Your Pizza</a></li>
-                        <li><a href="track-order.php">Track Order</a></li>
-                        <li><a href="contact.php">Contact Us</a></li>
+                        <li><a href="menu.php"><i class="fas fa-pizza-slice"></i> Our Menu</a></li>
+                        <li><a href="build-pizza.php"><i class="fas fa-tools"></i> Build Your Pizza</a></li>
+                        <li><a href="track-order.php"><i class="fas fa-truck"></i> Track Your Order</a></li>
+                        <li><a href="locations.php"><i class="fas fa-map-marker-alt"></i> Find a Store</a></li>
                     </ul>
                 </div>
+
+                <div class="footer-section">
+                    <h4>Customer Care</h4>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-phone"></i> Contact Us</a></li>
+                        <li><a href="#"><i class="fas fa-question-circle"></i> FAQ</a></li>
+                        <li><a href="#"><i class="fas fa-comment"></i> Feedback</a></li>
+                        <li><a href="#"><i class="fas fa-file-contract"></i> Terms & Conditions</a></li>
+                        <li><a href="#"><i class="fas fa-shield-alt"></i> Privacy Policy</a></li>
+                    </ul>
+                </div>
+
                 <div class="footer-section">
                     <h4>Contact Info</h4>
-                    <p><i class="fas fa-phone"></i> 1300 CRUST (1300 278 787)</p>
-                    <p><i class="fas fa-envelope"></i> info@crustpizza.com.au</p>
+                    <ul>
+                    <li><i class="fas fa-phone"></i> <strong>1300 278 787</strong></li>
+                    <li><i class="fas fa-envelope"></i> info@crustpizza.com.au</li>
+                    <li><i class="fas fa-clock"></i> Mon-Sun: 11AM - 11PM</li>
+                    <li><i class="fas fa-map-marker-alt"></i> 130+ locations across Australia</li>
+                    </ul>
                 </div>
             </div>
+
             <div class="footer-bottom">
-                <p>&copy; <span id="copyright-year"></span> Crust Pizza. All rights reserved.</p>
+                <p>© <span id="currentYear"></span> Crust Pizza. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
     <script src="assets/js/main.js"></script>
     <script>
-        document.getElementById('copyright-year').textContent = new Date().getFullYear();
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCartCount();
+            // Add scroll effect to navbar
+            window.addEventListener('scroll', function() {
+                const navbar = document.querySelector('.navbar');
+                if (window.scrollY > 50) {
+                    navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+                    navbar.style.boxShadow = '0 4px 25px rgba(0, 0, 0, 0.15)';
+                } else {
+                    navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+                    navbar.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.1)';
+                }
+            });
+        });
 
         function addToCartFromMenu(pizzaId) {
+            if (!isUserLoggedIn()) {
+                showNotification("Please log in to add items to your cart", "warning");
+                setTimeout(() => {
+                    window.location.href = 'login.php?redirect=menu.php';
+                }, 1500);
+                return;
+            }
+
             const sizeSelector = document.getElementById(`size-${pizzaId}`);
             const size = sizeSelector.value;
             addToCart(pizzaId, size, 1);
+        }
+
+        function toggleDropdown() {
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            const isOpen = dropdownMenu.classList.toggle('show');
+            document.querySelector('.dropdown-toggle').setAttribute('aria-expanded', isOpen);
+        }
+
+        function toggleNavMenu() {
+            const navMenu = document.getElementById('navMenu');
+            navMenu.classList.toggle('active');
+        }
+
+        document.addEventListener('click', function(event) {
+            const dropdown = document.querySelector('.dropdown');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            const navMenu = document.getElementById('navMenu');
+            const navToggle = document.querySelector('.nav-toggle');
+            if (!dropdown.contains(event.target) && !navToggle.contains(event.target)) {
+                dropdownMenu.classList.remove('show');
+                navMenu.classList.remove('active');
+                document.querySelector('.dropdown-toggle').setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                document.getElementById('dropdownMenu').classList.remove('show');
+                document.getElementById('navMenu').classList.remove('active');
+                document.querySelector('.dropdown-toggle').setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('crustPizzaCart')) || [];
+            const cartCount = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+            document.getElementById('cartCount').textContent = cartCount;
+        }
+
+        function isUserLoggedIn() {
+            const logoutLink = document.querySelector('a[href="logout.php"]');
+            const loginLink = document.querySelector('a.dropdown-item[href="login.php"]');
+            return logoutLink !== null && loginLink === null;
+        }
+
+        function showNotification(message, type = "info") {
+            const existingNotifications = document.querySelectorAll(".cart-notification");
+            existingNotifications.forEach((notification) => notification.remove());
+            const notification = document.createElement("div");
+            notification.className = `cart-notification ${type}`;
+
+            // Set icon based on notification type
+            let icon = 'info-circle';
+            if (type === 'success') icon = 'check-circle';
+            if (type === 'error') icon = 'exclamation-circle';
+            if (type === 'warning') icon = 'exclamation-triangle';
+
+            notification.innerHTML = `
+                <i class="fas fa-${icon}"></i> 
+                ${message}
+            `;
+
+            document.body.appendChild(notification);
+            setTimeout(() => {
+                    notification.classList.add("slide-out");
+                    setTimeout(() => {
+                        if (notification.parentElement) {
+                            notification.remove();
+                        }
+                    }, 300);
+            }, 3000);
         }
     </script>
 </body>

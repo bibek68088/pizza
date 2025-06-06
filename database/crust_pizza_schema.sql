@@ -1,12 +1,13 @@
--- Complete Crust Pizza Database Schema
--- All deliverables implementation
+-- Drop existing database if it exists
 DROP DATABASE IF EXISTS crust_pizza;
 
+-- Create new database
 CREATE DATABASE crust_pizza;
 
+-- Use the created database
 USE crust_pizza;
 
--- Users table for customer accounts
+-- Combined Users table for customers and staff
 CREATE TABLE
     users (
         user_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -14,28 +15,21 @@ CREATE TABLE
         email VARCHAR(100) UNIQUE NOT NULL,
         password_hash VARCHAR(255) NOT NULL,
         full_name VARCHAR(100) NOT NULL,
-        phone VARCHAR(20) NOT NULL,
-        address TEXT NOT NULL,
+        phone VARCHAR(20),
+        address TEXT,
         date_of_birth DATE,
-        is_active BOOLEAN DEFAULT TRUE,
-        email_verified BOOLEAN DEFAULT FALSE,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-    );
-
--- Staff table for employees
-CREATE TABLE
-    staff (
-        staff_id INT AUTO_INCREMENT PRIMARY KEY,
-        username VARCHAR(50) UNIQUE NOT NULL,
-        email VARCHAR(100) UNIQUE NOT NULL,
-        password_hash VARCHAR(255) NOT NULL,
-        full_name VARCHAR(100) NOT NULL,
-        role ENUM ('kitchen', 'delivery', 'counter', 'admin') NOT NULL,
+        role ENUM (
+            'customer',
+            'kitchen',
+            'delivery',
+            'counter',
+            'admin'
+        ) NOT NULL DEFAULT 'customer',
         store_id INT,
-        is_active BOOLEAN DEFAULT TRUE,
         hire_date DATE,
         salary DECIMAL(10, 2),
+        is_active BOOLEAN DEFAULT TRUE,
+        email_verified BOOLEAN DEFAULT FALSE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     );
@@ -51,7 +45,8 @@ CREATE TABLE
         opening_hours JSON,
         is_active BOOLEAN DEFAULT TRUE,
         manager_id INT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (manager_id) REFERENCES users (user_id)
     );
 
 -- Categories for menu items
@@ -210,7 +205,7 @@ CREATE TABLE
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users (user_id),
         FOREIGN KEY (store_id) REFERENCES stores (store_id),
-        FOREIGN KEY (assigned_staff_id) REFERENCES staff (staff_id)
+        FOREIGN KEY (assigned_staff_id) REFERENCES users (user_id)
     );
 
 -- Order items
@@ -263,7 +258,7 @@ CREATE TABLE
         notes TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (order_id) REFERENCES orders (order_id) ON DELETE CASCADE,
-        FOREIGN KEY (changed_by) REFERENCES staff (staff_id)
+        FOREIGN KEY (changed_by) REFERENCES users (user_id)
     );
 
 -- Shopping cart
@@ -375,7 +370,7 @@ CREATE TABLE
         action_url VARCHAR(255),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE,
-        FOREIGN KEY (staff_id) REFERENCES staff (staff_id) ON DELETE CASCADE
+        FOREIGN KEY (staff_id) REFERENCES users (user_id) ON DELETE CASCADE
     );
 
 -- System settings
@@ -389,13 +384,8 @@ CREATE TABLE
         is_public BOOLEAN DEFAULT FALSE,
         updated_by INT,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        FOREIGN KEY (updated_by) REFERENCES staff (staff_id)
+        FOREIGN KEY (updated_by) REFERENCES users (user_id)
     );
-
--- Add foreign key constraints
-ALTER TABLE staff ADD FOREIGN KEY (store_id) REFERENCES stores (store_id);
-
-ALTER TABLE stores ADD FOREIGN KEY (manager_id) REFERENCES staff (staff_id);
 
 -- Create indexes for performance
 CREATE INDEX idx_orders_user_id ON orders (user_id);
@@ -414,9 +404,9 @@ CREATE INDEX idx_cart_items_user_id ON cart_items (user_id);
 
 CREATE INDEX idx_cart_items_session_id ON cart_items (session_id);
 
-CREATE INDEX idx_staff_role ON staff (role);
+CREATE INDEX idx_users_role ON users (role);
 
-CREATE INDEX idx_staff_store_id ON staff (store_id);
+CREATE INDEX idx_users_store_id ON users (store_id);
 
 CREATE INDEX idx_pizzas_category_id ON pizzas (category_id);
 
@@ -433,6 +423,7 @@ CREATE INDEX idx_notifications_user_id ON notifications (user_id);
 CREATE INDEX idx_loyalty_points_user_id ON loyalty_points (user_id);
 
 -- Insert comprehensive sample data
+-- Insert comprehensive sample data for categories
 INSERT INTO
     categories (name, description, sort_order)
 VALUES
@@ -747,181 +738,6 @@ VALUES
         ''
     );
 
--- Sample pizzas with comprehensive data
-INSERT INTO
-    pizzas (
-        name,
-        description,
-        category_id,
-        base_price_small,
-        base_price_medium,
-        base_price_large,
-        cost_small,
-        cost_medium,
-        cost_large,
-        prep_time_minutes,
-        calories_small,
-        calories_medium,
-        calories_large,
-        is_featured,
-        is_gluten_free_available,
-        allergens,
-        popularity_score
-    )
-VALUES
-    (
-        'Peri Peri Chicken',
-        'Award-winning pizza with peri peri chicken, capsicum, red onion, and mozzarella',
-        1,
-        18.90,
-        24.90,
-        29.90,
-        8.50,
-        11.20,
-        14.50,
-        18,
-        580,
-        780,
-        980,
-        1,
-        1,
-        'Gluten, Dairy',
-        95
-    ),
-    (
-        'Margherita',
-        'Classic pizza with fresh basil, mozzarella, and tomato sauce',
-        2,
-        15.90,
-        21.90,
-        26.90,
-        6.50,
-        8.90,
-        11.20,
-        15,
-        520,
-        720,
-        920,
-        1,
-        1,
-        'Gluten, Dairy',
-        88
-    ),
-    (
-        'Vegan Supreme',
-        'Plant-based pepperoni, mushrooms, capsicum, olives, and vegan cheese',
-        3,
-        19.90,
-        25.90,
-        30.90,
-        9.20,
-        12.50,
-        15.80,
-        20,
-        480,
-        680,
-        880,
-        1,
-        1,
-        'Gluten',
-        75
-    ),
-    (
-        'Meat Lovers',
-        'Pepperoni, ham, bacon, Italian sausage, and mozzarella',
-        4,
-        21.90,
-        27.90,
-        32.90,
-        10.50,
-        14.20,
-        18.50,
-        22,
-        680,
-        920,
-        1180,
-        1,
-        1,
-        'Gluten, Dairy',
-        92
-    ),
-    (
-        'Hawaiian',
-        'Ham, pineapple, and mozzarella on tomato base',
-        2,
-        17.90,
-        23.90,
-        28.90,
-        7.80,
-        10.50,
-        13.20,
-        16,
-        550,
-        750,
-        950,
-        0,
-        1,
-        'Gluten, Dairy',
-        70
-    ),
-    (
-        'Supreme',
-        'Pepperoni, mushrooms, capsicum, olives, and mozzarella',
-        2,
-        19.90,
-        25.90,
-        30.90,
-        9.20,
-        12.50,
-        15.80,
-        20,
-        600,
-        800,
-        1000,
-        1,
-        1,
-        'Gluten, Dairy',
-        85
-    ),
-    (
-        'BBQ Chicken',
-        'BBQ sauce, chicken, red onion, capsicum, and mozzarella',
-        2,
-        18.90,
-        24.90,
-        29.90,
-        8.50,
-        11.20,
-        14.50,
-        18,
-        590,
-        790,
-        990,
-        0,
-        1,
-        'Gluten, Dairy',
-        80
-    ),
-    (
-        'Prosciutto & Rocket',
-        'Prosciutto, rocket, cherry tomatoes, parmesan, and mozzarella',
-        5,
-        22.90,
-        28.90,
-        33.90,
-        11.50,
-        15.20,
-        19.50,
-        20,
-        620,
-        820,
-        1020,
-        1,
-        1,
-        'Gluten, Dairy',
-        78
-    );
-
 -- Menu items with comprehensive data
 INSERT INTO
     menu_items (
@@ -1184,61 +1000,7 @@ VALUES
         75
     );
 
--- Sample staff members
-INSERT INTO
-    staff (
-        username,
-        email,
-        password_hash,
-        full_name,
-        role,
-        store_id,
-        hire_date,
-        salary
-    )
-VALUES
-    (
-        'admin',
-        'admin@crustpizza.com.au',
-        '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
-        'System Administrator',
-        'admin',
-        1,
-        '2023-01-01',
-        75000.00
-    ),
-    (
-        'kitchen1',
-        'kitchen1@crustpizza.com.au',
-        '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
-        'Mario Rossi',
-        'kitchen',
-        1,
-        '2023-02-15',
-        55000.00
-    ),
-    (
-        'delivery1',
-        'delivery1@crustpizza.com.au',
-        '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
-        'James Wilson',
-        'delivery',
-        1,
-        '2023-03-01',
-        45000.00
-    ),
-    (
-        'counter1',
-        'counter1@crustpizza.com.au',
-        '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
-        'Sarah Johnson',
-        'counter',
-        1,
-        '2023-02-20',
-        48000.00
-    );
-
--- Sample customer
+-- Sample users (combined customers and staff)
 INSERT INTO
     users (
         username,
@@ -1248,6 +1010,10 @@ INSERT INTO
         phone,
         address,
         date_of_birth,
+        role,
+        store_id,
+        hire_date,
+        salary,
         email_verified
     )
 VALUES
@@ -1259,6 +1025,66 @@ VALUES
         '0412345678',
         '123 Test Street, Sydney NSW 2000',
         '1990-05-15',
+        'customer',
+        NULL,
+        NULL,
+        NULL,
+        1
+    ),
+    (
+        'admin',
+        'admin@crustpizza.com.au',
+        '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+        'System Administrator',
+        '0412345679',
+        '456 Admin Rd, Sydney NSW 2000',
+        NULL,
+        'admin',
+        1,
+        '2023-01-01',
+        75000.00,
+        1
+    ),
+    (
+        'kitchen1',
+        'kitchen1@crustpizza.com.au',
+        '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+        'Mario Rossi',
+        '0412345680',
+        '789 Kitchen St, Sydney NSW 2000',
+        NULL,
+        'kitchen',
+        1,
+        '2023-02-15',
+        55000.00,
+        1
+    ),
+    (
+        'delivery1',
+        'delivery1@crustpizza.com.au',
+        '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+        'James Wilson',
+        '0412345681',
+        '101 Delivery Ave, Sydney NSW 2000',
+        NULL,
+        'delivery',
+        1,
+        '2023-03-01',
+        45000.00,
+        1
+    ),
+    (
+        'counter1',
+        'counter1@crustpizza.com.au',
+        '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+        'Sarah Johnson',
+        '0412345682',
+        '202 Counter Rd, Sydney NSW 2000',
+        NULL,
+        'counter',
+        1,
+        '2023-02-20',
+        48000.00,
         1
     );
 
@@ -1365,4 +1191,628 @@ VALUES
         'number',
         'Dollar value per loyalty point',
         1
+    );
+
+INSERT INTO
+    pizzas (
+        name,
+        description,
+        category_id,
+        base_price_small,
+        base_price_medium,
+        base_price_large,
+        cost_small,
+        cost_medium,
+        cost_large,
+        prep_time_minutes,
+        calories_small,
+        calories_medium,
+        calories_large,
+        is_featured,
+        is_gluten_free_available,
+        allergens,
+        popularity_score
+    )
+VALUES
+    (
+        'Peri Peri Chicken',
+        'Award-winning pizza with peri peri chicken, capsicum, red onion, and mozzarella',
+        1,
+        18.90,
+        24.90,
+        29.90,
+        8.50,
+        11.20,
+        14.50,
+        18,
+        580,
+        780,
+        980,
+        1,
+        1,
+        'Gluten, Dairy',
+        95
+    ),
+    (
+        'Margherita',
+        'Classic pizza with fresh basil, mozzarella, and tomato sauce',
+        2,
+        15.90,
+        21.90,
+        26.90,
+        6.50,
+        8.90,
+        11.20,
+        15,
+        520,
+        720,
+        920,
+        1,
+        1,
+        'Gluten, Dairy',
+        88
+    ),
+    (
+        'Vegan Supreme',
+        'Plant-based pepperoni, mushrooms, capsicum, olives, and vegan cheese',
+        3,
+        19.90,
+        25.90,
+        30.90,
+        9.20,
+        12.50,
+        15.80,
+        20,
+        480,
+        680,
+        880,
+        1,
+        1,
+        'Gluten',
+        75
+    ),
+    (
+        'Meat Lovers',
+        'Pepperoni, ham, bacon, Italian sausage, and mozzarella',
+        4,
+        21.90,
+        27.90,
+        32.90,
+        10.50,
+        14.20,
+        18.50,
+        22,
+        680,
+        920,
+        1180,
+        1,
+        1,
+        'Gluten, Dairy',
+        92
+    ),
+    (
+        'Hawaiian',
+        'Ham, pineapple, and mozzarella on tomato base',
+        2,
+        17.90,
+        23.90,
+        28.90,
+        7.80,
+        10.50,
+        13.20,
+        16,
+        550,
+        750,
+        950,
+        0,
+        1,
+        'Gluten, Dairy',
+        70
+    ),
+    (
+        'Supreme',
+        'Pepperoni, mushrooms, capsicum, olives, and mozzarella',
+        2,
+        19.90,
+        25.90,
+        30.90,
+        9.20,
+        12.50,
+        15.80,
+        20,
+        600,
+        800,
+        1000,
+        1,
+        1,
+        'Gluten, Dairy',
+        85
+    ),
+    (
+        'BBQ Chicken',
+        'BBQ sauce, chicken, red onion, capsicum, and mozzarella',
+        2,
+        18.90,
+        24.90,
+        29.90,
+        8.50,
+        11.20,
+        14.50,
+        18,
+        590,
+        790,
+        990,
+        0,
+        1,
+        'Gluten, Dairy',
+        80
+    ),
+    (
+        'Prosciutto & Rocket',
+        'Prosciutto, rocket, cherry tomatoes, parmesan, and mozzarella',
+        5,
+        22.90,
+        28.90,
+        33.90,
+        11.50,
+        15.20,
+        19.50,
+        20,
+        620,
+        820,
+        1020,
+        1,
+        1,
+        'Gluten, Dairy',
+        78
+    );
+
+-- Sample pizza_ingredients (defining default ingredients for pizzas)
+INSERT INTO
+    pizza_ingredients (pizza_id, ingredient_id, is_default, quantity)
+VALUES
+    -- Peri Peri Chicken (Pizza ID 1)
+    (1, 1, 1, 1.00), -- Thin Crust
+    (1, 6, 1, 1.00), -- Tomato Base
+    (1, 12, 1, 1.00), -- Mozzarella
+    (1, 19, 1, 1.50), -- Chicken
+    (1, 27, 1, 1.00), -- Capsicum
+    (1, 28, 1, 1.00), -- Red Onion
+    -- Margherita (Pizza ID 2)
+    (2, 1, 1, 1.00), -- Thin Crust
+    (2, 6, 1, 1.00), -- Tomato Base
+    (2, 12, 1, 1.00), -- Mozzarella
+    -- Vegan Supreme (Pizza ID 3)
+    (3, 4, 1, 1.00), -- Gluten Free Crust
+    (3, 6, 1, 1.00), -- Tomato Base
+    (3, 14, 1, 1.00), -- Vegan Cheese
+    (3, 26, 1, 1.00), -- Mushrooms
+    (3, 27, 1, 1.00), -- Capsicum
+    (3, 29, 1, 1.00), -- Olives
+    -- Meat Lovers (Pizza ID 4)
+    (4, 1, 1, 1.00), -- Thin Crust
+    (4, 6, 1, 1.00), -- Tomato Base
+    (4, 12, 1, 1.00), -- Mozzarella
+    (4, 18, 1, 1.00), -- Pepperoni
+    (4, 20, 1, 1.00), -- Ham
+    (4, 21, 1, 1.00), -- Bacon
+    (4, 22, 1, 1.00), -- Italian Sausage
+    -- Hawaiian (Pizza ID 5)
+    (5, 1, 1, 1.00), -- Thin Crust
+    (5, 6, 1, 1.00), -- Tomato Base
+    (5, 12, 1, 1.00), -- Mozzarella
+    (5, 20, 1, 1.00), -- Ham
+    (5, 31, 1, 1.00), -- Pineapple
+    -- Supreme (Pizza ID 6)
+    (6, 1, 1, 1.00), -- Thin Crust
+    (6, 6, 1, 1.00), -- Tomato Base
+    (6, 12, 1, 1.00), -- Mozzarella
+    (6, 18, 1, 1.00), -- Pepperoni
+    (6, 26, 1, 1.00), -- Mushrooms
+    (6, 27, 1, 1.00), -- Capsicum
+    (6, 29, 1, 1.00), -- Olives
+    -- BBQ Chicken (Pizza ID 7)
+    (7, 1, 1, 1.00), -- Thin Crust
+    (7, 7, 1, 1.00), -- BBQ Sauce
+    (7, 12, 1, 1.00), -- Mozzarella
+    (7, 19, 1, 1.50), -- Chicken
+    (7, 27, 1, 1.00), -- Capsicum
+    (7, 28, 1, 1.00), -- Red Onion
+    -- Prosciutto & Rocket (Pizza ID 8)
+    (8, 1, 1, 1.00), -- Thin Crust
+    (8, 6, 1, 1.00), -- Tomato Base
+    (8, 12, 1, 1.00), -- Mozzarella
+    (8, 15, 1, 0.50), -- Parmesan
+    (8, 23, 1, 1.00), -- Prosciutto
+    (8, 30, 1, 1.00), -- Cherry Tomatoes
+    (8, 32, 1, 1.00);
+
+-- Baby Spinach
+-- Sample orders
+INSERT INTO
+    orders (
+        order_number,
+        user_id,
+        store_id,
+        order_type,
+        status,
+        priority,
+        subtotal,
+        tax,
+        delivery_fee,
+        discount_amount,
+        total,
+        payment_method,
+        payment_status,
+        customer_name,
+        customer_phone,
+        customer_email,
+        delivery_address,
+        delivery_instructions,
+        estimated_prep_time,
+        estimated_delivery_time,
+        assigned_staff_id,
+        special_requests,
+        rating,
+        review,
+        created_at
+    )
+VALUES
+    (
+        'ORD001',
+        1,
+        1,
+        'delivery',
+        'completed',
+        'normal',
+        38.80,
+        3.88,
+        5.50,
+        3.88,
+        44.30,
+        'card',
+        'paid',
+        'John Customer',
+        '0412345678',
+        'customer@example.com',
+        '123 Test Street, Sydney NSW 2000',
+        'Leave at front door',
+        20,
+        '2025-06-06 14:00:00',
+        4,
+        'No onions please',
+        5,
+        'Great service!',
+        '2025-06-06 12:00:00'
+    ),
+    (
+        'ORD002',
+        1,
+        1,
+        'pickup',
+        'completed',
+        'normal',
+        24.90,
+        2.49,
+        0.00,
+        0.00,
+        27.39,
+        'cash',
+        'paid',
+        'John Customer',
+        '0412345678',
+        'customer@example.com',
+        NULL,
+        NULL,
+        15,
+        NULL,
+        NULL,
+        NULL,
+        4,
+        'Pizza was delicious',
+        '2025-06-05 18:00:00'
+    );
+
+-- Sample order_items
+INSERT INTO
+    order_items (
+        order_id,
+        item_type,
+        pizza_id,
+        menu_item_id,
+        size,
+        quantity,
+        unit_price,
+        total_price,
+        special_instructions
+    )
+VALUES
+    -- Order 1: Peri Peri Chicken (medium) + Garlic Bread
+    (
+        1,
+        'pizza',
+        1,
+        NULL,
+        'medium',
+        1,
+        24.90,
+        24.90,
+        'Extra spicy'
+    ),
+    (
+        1,
+        'menu_item',
+        NULL,
+        1,
+        NULL,
+        1,
+        8.90,
+        8.90,
+        NULL
+    ),
+    -- Order 2: Margherita (medium)
+    (
+        2,
+        'pizza',
+        2,
+        NULL,
+        'medium',
+        1,
+        21.90,
+        21.90,
+        'Extra basil'
+    );
+
+-- Sample order_item_ingredients (custom ingredients for order items)
+INSERT INTO
+    order_item_ingredients (order_item_id, ingredient_id, quantity, price)
+VALUES
+    -- Order item 1 (Peri Peri Chicken): Extra Mozzarella
+    (1, 13, 1.00, 2.50),
+    -- Order item 2 (Garlic Bread): No custom ingredients
+    -- Order item 3 (Margherita): Extra Mozzarella
+    (2, 13, 1.00, 2.50);
+
+-- Sample order_status_history
+INSERT INTO
+    order_status_history (order_id, status, changed_by, notes, created_at)
+VALUES
+    -- Order 1 history
+    (
+        1,
+        'pending',
+        NULL,
+        'Order received',
+        '2025-06-06 12:00:00'
+    ),
+    (
+        1,
+        'confirmed',
+        2,
+        'Order confirmed by kitchen',
+        '2025-06-06 12:05:00'
+    ),
+    (
+        1,
+        'preparing',
+        2,
+        'Pizza in preparation',
+        '2025-06-06 12:10:00'
+    ),
+    (
+        1,
+        'out_for_delivery',
+        4,
+        'Assigned to delivery',
+        '2025-06-06 12:30:00'
+    ),
+    (
+        1,
+        'delivered',
+        4,
+        'Delivered to customer',
+        '2025-06-06 13:00:00'
+    ),
+    (
+        1,
+        'completed',
+        NULL,
+        'Customer confirmed receipt',
+        '2025-06-06 13:05:00'
+    ),
+    -- Order 2 history
+    (
+        2,
+        'pending',
+        NULL,
+        'Order received',
+        '2025-06-05 18:00:00'
+    ),
+    (
+        2,
+        'confirmed',
+        2,
+        'Order confirmed by kitchen',
+        '2025-06-05 18:05:00'
+    ),
+    (
+        2,
+        'preparing',
+        2,
+        'Pizza in preparation',
+        '2025-06-05 18:10:00'
+    ),
+    (
+        2,
+        'ready_for_pickup',
+        5,
+        'Ready for customer pickup',
+        '2025-06-05 18:25:00'
+    ),
+    (
+        2,
+        'completed',
+        NULL,
+        'Customer picked up',
+        '2025-06-05 18:40:00'
+    );
+
+-- Sample cart_items
+INSERT INTO
+    cart_items (
+        user_id,
+        session_id,
+        item_type,
+        pizza_id,
+        menu_item_id,
+        size,
+        quantity
+    )
+VALUES
+    (1, 'session123', 'pizza', 1, NULL, 'large', 1),
+    (1, 'session123', 'menu_item', NULL, 3, NULL, 2);
+
+-- Sample cart_item_ingredients
+INSERT INTO
+    cart_item_ingredients (cart_item_id, ingredient_id, quantity)
+VALUES
+    (1, 13, 1.00), -- Extra Mozzarella for Peri Peri Chicken in cart
+    (1, 35, 1.00);
+
+-- Jalapeños for Peri Peri Chicken in cart
+-- Sample user_addresses
+INSERT INTO
+    user_addresses (
+        user_id,
+        address_type,
+        address_line_1,
+        address_line_2,
+        suburb,
+        state,
+        postcode,
+        country,
+        is_default,
+        delivery_instructions
+    )
+VALUES
+    (
+        1,
+        'home',
+        '123 Test Street',
+        'Apartment 4B',
+        'Sydney',
+        'NSW',
+        '2000',
+        'Australia',
+        1,
+        'Leave at front door'
+    ),
+    (
+        1,
+        'work',
+        '456 Business Rd',
+        'Suite 101',
+        'Sydney',
+        'NSW',
+        '2000',
+        'Australia',
+        0,
+        'Deliver to reception'
+    );
+
+-- Sample user_favorites
+INSERT INTO
+    user_favorites (
+        user_id,
+        item_type,
+        pizza_id,
+        menu_item_id,
+        size,
+        custom_ingredients
+    )
+VALUES
+    (
+        1,
+        'pizza',
+        1,
+        NULL,
+        'medium',
+        '{"ingredients": [{"id": 13, "quantity": 1.00}]}'
+    ),
+    (1, 'menu_item', NULL, 1, NULL, NULL);
+
+-- Sample loyalty_points
+INSERT INTO
+    loyalty_points (
+        user_id,
+        order_id,
+        points_earned,
+        points_redeemed,
+        transaction_type,
+        description
+    )
+VALUES
+    (
+        1,
+        1,
+        44,
+        0,
+        'earned',
+        'Points earned from order ORD001'
+    ),
+    (
+        1,
+        2,
+        27,
+        0,
+        'earned',
+        'Points earned from order ORD002'
+    ),
+    (
+        1,
+        NULL,
+        0,
+        20,
+        'redeemed',
+        'Redeemed for discount on next order'
+    );
+
+-- Sample notifications
+INSERT INTO
+    notifications (
+        user_id,
+        staff_id,
+        type,
+        title,
+        message,
+        is_read,
+        action_url
+    )
+VALUES
+    (
+        1,
+        NULL,
+        'order_update',
+        'Order Confirmation',
+        'Your order ORD001 has been confirmed!',
+        1,
+        '/orders/1'
+    ),
+    (
+        1,
+        NULL,
+        'promotion',
+        'Special Offer',
+        'Get 10% off your next order with code WELCOME10',
+        0,
+        '/promotions'
+    ),
+    (
+        NULL,
+        2,
+        'system',
+        'Inventory Alert',
+        'Low stock on Gluten Free Crust',
+        0,
+        '/inventory'
     );
