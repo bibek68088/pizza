@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Login Page
- * Handles user authentication
- * Crust Pizza Online Ordering System
- */
-
 require_once 'config/database.php';
 require_once 'classes/User.php';
 require_once 'includes/functions.php';
@@ -55,7 +49,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         .login-container {
-            min-height: calc(100vh - 140px); /* Account for header and footer */
+            min-height: calc(100vh - 140px);
+            /* Account for header and footer */
             background: white;
             display: flex;
             align-items: center;
@@ -214,7 +209,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
             </form>
 
             <div class="auth-links">
-                <p>Don't have an account? <a href="register.php">Sign up here</a></p>
+                <p>Don't have an account? <a href="register.php">Register</a></p>
             </div>
         </div>
     </div>
