@@ -832,3 +832,38 @@
 
 2025-06-08 13:24:30 - Redirecting for role: customer
 2025-06-08 13:24:30 - Redirecting to: index.php
+2025-06-08 14:40:23 - --- New request to login.php ---
+2025-06-08 14:40:23 - Session ID: 9f5551roj1smj4h2t6gkg53g7t
+2025-06-08 14:40:23 - Session data before processing: Array
+(
+    [csrf_token] => f78ca848283a4902e4a874985ba2f58c89da77b86ae0f0fc9ec09f6deb0728af
+)
+
+2025-06-08 14:40:29 - --- New request to login.php ---
+2025-06-08 14:40:29 - Session ID: 9f5551roj1smj4h2t6gkg53g7t
+2025-06-08 14:40:29 - Session data before processing: Array
+(
+    [csrf_token] => f78ca848283a4902e4a874985ba2f58c89da77b86ae0f0fc9ec09f6deb0728af
+)
+
+2025-06-08 14:40:29 - POST request received: Array
+(
+    [csrf_token] => f78ca848283a4902e4a874985ba2f58c89da77b86ae0f0fc9ec09f6deb0728af
+    [username] => bibeks337@gmail.com
+    [password] => password123
+    [login] => 1
+)
+
+2025-06-08 14:40:29 - Username: bibeks337@gmail.com
+2025-06-08 14:40:29 - Login successful for user ID: 6
+2025-06-08 14:40:29 - Session data set: Array
+(
+    [csrf_token] => f78ca848283a4902e4a874985ba2f58c89da77b86ae0f0fc9ec09f6deb0728af
+    [user_id] => 6
+    [username] => bibek
+    [full_name] => Bibek Tamang
+    [role] => customer
+)
+
+2025-06-08 14:40:29 - Redirecting for role: customer
+2025-06-08 14:40:29 - Redirecting to: index.php

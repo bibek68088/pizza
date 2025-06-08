@@ -108,22 +108,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['lookup_order'])) {
                         <?php else: ?>
                             <div class="orders-list">
                                 <?php foreach (array_slice($user_orders, 0, 5) as $user_order): ?>
-                                    <div class="order-item" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-bottom: 1px solid #eee;">
-                                        <div>
-                                            <h4 style="margin: 0;">Order #<?php echo $user_order['order_id']; ?></h4>
-                                            <p style="margin: 0; color: #666; font-size: 0.9rem;">
-                                                <?php echo date('M j, Y g:i A', strtotime($user_order['created_at'])); ?>
-                                            </p>
-                                        </div>
-                                        <div style="text-align: right;">
-                                            <div class="badge badge-<?php echo $user_order['status'] === 'completed' ? 'success' : 'primary'; ?>">
-                                                <?php echo ucfirst(str_replace('_', ' ', $user_order['status'])); ?>
+                                    <div class="order-item fade-in-up">
+                                        <div class="order-info">
+                                            <div class="order-details">
+                                                <h4>Order #<?php echo htmlspecialchars($user_order['order_id']); ?></h4>
+                                                <p><?php echo date('M j, Y g:i A', strtotime($user_order['created_at'])); ?></p>
                                             </div>
-                                            <div style="font-weight: 600; margin-top: 0.25rem;">
-                                                <?php echo formatCurrency($user_order['total']); ?>
+
+                                            <div class="order-status">
+                                                <div class="badge badge-<?php echo $user_order['status'] === 'completed' ? 'success' : 'primary'; ?>">
+                                                    <?php echo ucfirst(str_replace('_', ' ', htmlspecialchars($user_order['status']))); ?>
+                                                </div>
+                                                <div class="order-total">
+                                                    <?php echo formatCurrency($user_order['total']); ?>
+                                                </div>
                                             </div>
                                         </div>
-                                        <a href="track-order.php?order_id=<?php echo $user_order['order_id']; ?>" class="btn btn-outline">
+
+                                        <a href="track-order.php?order_id=<?php echo htmlspecialchars($user_order['order_id']); ?>"
+                                            class="btn-track">
+                                            <i class="fas fa-search"></i>
                                             Track
                                         </a>
                                     </div>
@@ -402,52 +406,345 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['lookup_order'])) {
     });
 </script>
 <style>
-    /* Notification styles from index.php */
-    .cart-notification {
-        position: fixed;
-        top: 100px;
-        right: 20px;
-        background: linear-gradient(135deg, #28a745, #20c997);
-        color: white;
-        padding: 15px 25px;
-        border-radius: 10px;
-        box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
-        z-index: 9999;
-        font-weight: 600;
+    /* General Reset */
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Container */
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 15px;
+    }
+
+    /* Section Header */
+    .section-header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+    }
+
+    .section-header h2 {
+        font-size: 2.25rem;
+        font-weight: 700;
+        color: #2d2d2d;
+        letter-spacing: -0.5px;
         display: flex;
         align-items: center;
-        gap: 10px;
-        animation: slideIn 0.3s ease-out;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .section-header h2 i {
+        color: #ff6b35;
+    }
+
+    .section-subtitle {
+        font-size: 1rem;
+        color: #555;
+        font-weight: 400;
+        max-width: 500px;
+        margin: 0.5rem auto 0;
+        line-height: 1.5;
+    }
+
+    /* Cards */
+    .card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    .card-header {
+        background: linear-gradient(135deg, #ff6b35, #f7931e);
+        color: white;
+        padding: 1rem 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .card-header h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    /* Fade-in Animation */
+    .fade-in-up {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+    /* Primary Buttons */
+    .btn-primary {
+        background: linear-gradient(135deg, #ff6b35, #f7931e);
+        color: #fff;
+        padding: 0.75rem 1.5rem;
+        border-radius: 10px;
+        font-weight: 500;
+        text-align: center;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        border: none;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(255, 107, 53, 0.3);
+    }
+
+    /* General Outline Button (for other parts of the site) */
+    .btn-outline {
+        background: transparent;
+        border: 2px solid #ff6b35;
+        color: #ff6b35;
+        padding: 0.5rem 1rem;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-align: center;
+        text-decoration: none;
+        transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn-outline:hover {
+        background: #ff6b35;
+        color: #fff;
+        transform: translateY(-2px);
+    }
+
+    /* Recent Orders List Styling */
+    .orders-list {
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .order-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        border-bottom: 1px solid #eee;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+    }
+
+    .order-item:hover {
+        background: linear-gradient(135deg, #f8f9fa, #ffffff);
+        transform: translateX(5px);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .order-item:last-child {
+        border-bottom: none;
+    }
+
+    /* Order Item Content Layout */
+    .order-info {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .order-details {
+        flex: 1;
+    }
+
+    .order-details h4 {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #2d2d2d;
+    }
+
+    .order-details p {
+        margin: 0.25rem 0 0 0;
+        color: #666;
+        font-size: 0.85rem;
+    }
+
+    .order-status {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0.5rem;
+        margin-right: 1rem;
+    }
+
+    .order-total {
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: #ff6b35;
+    }
+
+    /* Improved Track Button - Small and Stylish */
+    .btn-track {
+        background: linear-gradient(135deg, #ff6b35, #f7931e);
+        color: #fff;
+        border: none;
+        padding: 0.4rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.3rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        min-width: 70px;
+        box-shadow: 0 2px 8px rgba(255, 107, 53, 0.2);
+        cursor: pointer;
+    }
+
+    .btn-track:hover {
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 4px 15px rgba(255, 107, 53, 0.35);
+        background: linear-gradient(135deg, #f7931e, #ff6b35);
+        color: #fff;
+    }
+
+    .btn-track:active {
+        transform: translateY(0) scale(0.98);
+        transition: transform 0.1s ease;
+    }
+
+    .btn-track i {
+        font-size: 0.7rem;
+    }
+
+    /* Alternative Track Button Style (Outline) */
+    .btn-track-outline {
+        background: transparent;
+        color: #ff6b35;
+        border: 1.5px solid #ff6b35;
+        padding: 0.35rem 0.75rem;
+        border-radius: 18px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.3rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        min-width: 70px;
+        cursor: pointer;
+    }
+
+    .btn-track-outline:hover {
+        background: #ff6b35;
+        color: #fff;
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+    }
+
+    .btn-track-outline:active {
+        transform: translateY(0) scale(0.98);
+        transition: transform 0.1s ease;
+    }
+
+    .btn-track-outline i {
+        font-size: 0.7rem;
+    }
+
+    /* Badges */
+    .badge {
+        padding: 0.3rem 0.6rem;
+        border-radius: 15px;
+        font-size: 0.7rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .badge-primary {
+        background: linear-gradient(135deg, #007bff, #0056b3);
+        color: #fff;
+        box-shadow: 0 2px 6px rgba(0, 123, 255, 0.2);
+    }
+
+    .badge-success {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: #fff;
+        box-shadow: 0 2px 6px rgba(40, 167, 69, 0.2);
+    }
+
+    .badge-warning {
+        background: linear-gradient(135deg, #ffc107, #f39c12);
+        color: #fff;
+        box-shadow: 0 2px 6px rgba(255, 193, 7, 0.2);
+    }
+
+    /* Notifications */
+    .cart-notification {
+        position: fixed;
+        top: 90px;
+        right: 20px;
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: #fff;
+        padding: 0.75rem 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
+        z-index: 1000;
+        font-size: 0.9rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        animation: slideIn 0.4s ease-out;
     }
 
     .cart-notification.error {
         background: linear-gradient(135deg, #dc3545, #e74c3c);
-        box-shadow: 0 8px 25px rgba(220, 53, 69, 0.4);
-    }
-
-    .cart-link {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
+        box-shadow: 0 6px 20px rgba(220, 53, 69, 0.3);
     }
 
     .cart-notification.warning {
         background: linear-gradient(135deg, #ffc107, #f39c12);
-        box-shadow: 0 8px 25px rgba(255, 193, 7, 0.4);
+        box-shadow: 0 6px 20px rgba(255, 193, 7, 0.3);
     }
 
     .cart-notification.info {
         background: linear-gradient(135deg, #17a2b8, #3498db);
-        box-shadow: 0 8px 25px rgba(23, 162, 184, 0.4);
+        box-shadow: 0 6px 20px rgba(23, 162, 184, 0.3);
     }
 
     .cart-notification.slide-out {
-        animation: slideOut 0.3s ease-in;
+        animation: slideOut 0.4s ease-in;
     }
 
     @keyframes slideIn {
         from {
-            transform: translateX(100%);
+            transform: translateX(120%);
             opacity: 0;
         }
 
@@ -464,8 +761,152 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['lookup_order'])) {
         }
 
         to {
-            transform: translateX(100%);
+            transform: translateX(120%);
             opacity: 0;
+        }
+    }
+
+    /* Form Controls */
+    .form-group {
+        margin-bottom: 1.2rem;
+    }
+
+    .form-group label {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: #2d2d2d;
+        margin-bottom: 0.4rem;
+        display: block;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 0.95rem;
+        color: #333;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #ff6b35;
+        box-shadow: 0 0 8px rgba(255, 107, 53, 0.2);
+    }
+
+    /* Alerts */
+    .alert-error {
+        background: linear-gradient(135deg, #dc3545, #e74c3c);
+        color: #fff;
+        padding: 1rem 1.5rem;
+        border-radius: 10px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 4px 15px rgba(220, 53, 69, 0.2);
+    }
+
+    /* Timeline */
+    .timeline-item {
+        transition: opacity 0.3s ease;
+    }
+
+    .timeline-icon {
+        flex-shrink: 0;
+        transition: background 0.3s ease;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .section-header h2 {
+            font-size: 1.75rem;
+        }
+
+        .section-subtitle {
+            font-size: 0.9rem;
+        }
+
+        .card {
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header h3 {
+            font-size: 1.1rem;
+        }
+
+        .btn-primary {
+            padding: 0.6rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            font-size: 0.9rem;
+            padding: 0.6rem;
+        }
+
+        .grid {
+            grid-template-columns: 1fr !important;
+        }
+
+        /* Mobile layout for order items */
+        .order-item {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 1rem;
+            padding: 1rem 0.75rem;
+        }
+
+        .order-info {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0.75rem;
+        }
+
+        .order-status {
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            margin-right: 0;
+        }
+
+        .btn-track,
+        .btn-track-outline {
+            align-self: flex-end;
+            min-width: 80px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .cart-notification {
+            top: 80px;
+            right: 10px;
+            left: 10px;
+            font-size: 0.85rem;
+            padding: 0.6rem 1rem;
+        }
+
+        .card-body {
+            padding: 1rem;
+        }
+
+        .order-item {
+            padding: 0.75rem 0.5rem;
+        }
+
+        .order-details h4 {
+            font-size: 0.95rem;
+        }
+
+        .order-details p {
+            font-size: 0.8rem;
+        }
+
+        .btn-track,
+        .btn-track-outline {
+            font-size: 0.7rem;
+            padding: 0.35rem 0.7rem;
+            min-width: 65px;
         }
     }
 </style>
