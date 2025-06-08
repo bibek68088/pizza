@@ -1,7 +1,24 @@
 <?php
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 // Include the header
 require_once 'header.php';
 ?>
+
+<?php
+// Ensure $featured_pizzas is defined
+$featured_pizzas = isset($featured_pizzas) && is_array($featured_pizzas) ? $featured_pizzas : [];
+// Check if generate_csrf_token exists and session is started
+if (function_exists('generate_csrf_token')) {
+    $csrf_token = generate_csrf_token();
+} else {
+    $csrf_token = '';
+    error_log('generate_csrf_token function not found in index.php');
+}
+?>
+<input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
 
 <!-- Hero Section -->
 <section class="hero">
@@ -34,7 +51,12 @@ require_once 'header.php';
                     $index = (int)$index;
 
                     // Ensure we have all required fields with default values if missing
-                    $pizza_id = isset($pizza_item['pizza_id']) ? $pizza_item['pizza_id'] : 0;
+                    $pizza_id = isset($pizza_item['pizza_id']) && $pizza_item['pizza_id'] > 0 ? (int)$pizza_item['pizza_id'] : 0;
+                    // Skip invalid pizza IDs
+                    if ($pizza_id <= 0) {
+                        error_log('Skipping invalid pizza_id: ' . $pizza_id);
+                        continue;
+                    }
                     $name = isset($pizza_item['name']) ? htmlspecialchars($pizza_item['name']) : 'Pizza';
                     $description = isset($pizza_item['description']) ? htmlspecialchars($pizza_item['description']) : 'Delicious pizza with our signature sauce and cheese.';
                     $image_url = isset($pizza_item['image_url']) && !empty($pizza_item['image_url']) ? $pizza_item['image_url'] : '/placeholder.svg?height=280&width=400';
@@ -49,7 +71,7 @@ require_once 'header.php';
                     $badge_index = $index % count($badges);
                     $badge = $badges[$badge_index];
                     ?>
-                    <div class="pizza-card fade-in-up" style="animation-delay: <?php echo $index * 0.2; ?>s;" data-price-small="<?php echo $price_small; ?>" data-price-medium="<?php echo $price_medium; ?>" data-price-large="<?php echo $price_large; ?>">
+                    <div class="pizza-card fade-in-up" style="animation-delay: <?php echo $index * 0.2; ?>s;" data-pizza-id="<?php echo $pizza_id; ?>" data-price-small="<?php echo $price_small; ?>" data-price-medium="<?php echo $price_medium; ?>" data-price-large="<?php echo $price_large; ?>">
                         <div class="pizza-image">
                             <img src="<?php echo $image_url; ?>" alt="<?php echo $name; ?>">
                             <div class="pizza-badge"><?php echo $badge; ?></div>
@@ -73,7 +95,7 @@ require_once 'header.php';
                             </div>
                             <div class="pizza-actions">
                                 <a href="pizza-details.php?id=<?php echo $pizza_id; ?>" class="btn btn-outline">View Details</a>
-                                <button class="btn btn-add-cart" onclick="addToCart(<?php echo $pizza_id; ?>, 'medium')">
+                                <button class="btn btn-add-cart" onclick="addToCart(<?php echo $pizza_id; ?>, 'medium', event)">
                                     <i class="fas fa-cart-plus"></i> Add to Cart
                                 </button>
                             </div>
@@ -286,20 +308,6 @@ require_once 'header.php';
             }
         });
 
-        // Add loading animation to Add to Cart buttons
-        document.querySelectorAll('.btn-add-cart').forEach(button => {
-            button.addEventListener('click', function() {
-                const originalText = this.innerHTML;
-                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
-                this.disabled = true;
-
-                setTimeout(() => {
-                    this.innerHTML = originalText;
-                    this.disabled = false;
-                }, 1000);
-            });
-        });
-
         // Intersection Observer for fade-in animations
         if ('IntersectionObserver' in window) {
             const observerOptions = {
@@ -356,77 +364,165 @@ require_once 'header.php';
     });
 
     function updateCartCount() {
-        const cart = JSON.parse(localStorage.getItem('crustPizzaCart')) || [];
-        const cartCount = cart.reduce((total, item) => total + (item.quantity || 1), 0);
-        document.getElementById('cartCount').textContent = cartCount;
+        try {
+            const cart = JSON.parse(localStorage.getItem('crustPizzaCart')) || [];
+            if (!Array.isArray(cart)) {
+                console.error('Invalid cart data:', cart);
+                localStorage.setItem('crustPizzaCart', JSON.stringify([]));
+                document.getElementById('cartCount').textContent = '0';
+                return;
+            }
+            const cartCount = cart.reduce((total, item) => {
+                const qty = Number(item.quantity) || 1;
+                return total + qty;
+            }, 0);
+            const cartCountElement = document.getElementById('cartCount');
+            if (cartCountElement) {
+                cartCountElement.textContent = cartCount.toString();
+            }
+        } catch (error) {
+            console.error('Error updating cart count:', error);
+            localStorage.setItem('crustPizzaCart', JSON.stringify([]));
+            document.getElementById('cartCount').textContent = '0';
+        }
     }
 
-    function addToCart(pizzaId, size = "medium", quantity = 1) {
-        // Check if user is logged in first
-        if (!isUserLoggedIn()) {
-            showNotification("Please log in to add items to your cart", "warning");
-            return false;
-        }
+    function addToCart(pizzaId, size = "medium", quantity = 1, event) {
+        try {
+            // Validate pizzaId
+            if (!pizzaId || pizzaId <= 0) {
+                console.error('Invalid pizzaId:', pizzaId);
+                showNotification('Invalid pizza selection. Please try again.', 'error');
+                return false;
+            }
 
-        // Get pizza details from the card
-        const pizzaCard = document.querySelector(`[data-price-small][data-price-medium][data-price-large]`);
-        if (!pizzaCard) {
-            showNotification('Pizza details not found', 'error');
-            return false;
-        }
+            // Check if user is logged in
+            if (!isUserLoggedIn()) {
+                showNotification("Please log in to add items to your cart", 'warning');
+                return false;
+            }
 
-        const pizzaName = pizzaCard.querySelector('h3').textContent;
-        const priceData = {
-            small: parseFloat(pizzaCard.dataset.priceSmall),
-            medium: parseFloat(pizzaCard.dataset.priceMedium),
-            large: parseFloat(pizzaCard.dataset.priceLarge)
-        };
+            // Get pizza details from the card
+            let pizzaCard, button;
+            if (event) {
+                button = event.currentTarget || (event.target && event.target.closest('button'));
+                if (button) {
+                    pizzaCard = button.closest('.pizza-card');
+                }
+            }
 
-        const cartItem = {
-            pizza_id: pizzaId,
-            name: pizzaName,
-            size: size,
-            price: priceData[size],
-            quantity: quantity,
-            item_type: 'pizza',
-            custom_ingredients: null,
-            special_instructions: null
-        };
+            // Fallback: Find pizza card by pizzaId if event-based selection fails
+            if (!pizzaCard) {
+                pizzaCard = document.querySelector(`.pizza-card[data-pizza-id="${pizzaId}"]`);
+                button = pizzaCard?.querySelector('.btn-add-cart');
+            }
 
-        const userId = getUserId();
-        if (!userId) {
-            showNotification('User session not found. Please log in again.', 'error');
-            return false;
-        }
+            if (!pizzaCard) {
+                console.error('Pizza card not found for pizzaId:', pizzaId, 'event:', event);
+                showNotification('Pizza details not found', 'error');
+                return false;
+            }
 
-        const data = {
-            ...cartItem,
-            user_id: userId,
-            csrf_token: getCSRFToken()
-        };
+            const pizzaName = pizzaCard.querySelector('h3')?.textContent?.trim() || 'Unknown Pizza';
+            const priceData = {
+                small: parseFloat(pizzaCard.dataset.priceSmall) || 15.90,
+                medium: parseFloat(pizzaCard.dataset.priceMedium) || 21.90,
+                large: parseFloat(pizzaCard.dataset.priceLarge) || 27.90
+            };
 
-        fetch('api/cart_api.php?action=add', {
+            if (!priceData[size]) {
+                console.error('Invalid size or price for pizzaId:', pizzaId, 'size:', size);
+                showNotification('Invalid pizza size or price', 'error');
+                return false;
+            }
+
+            const cartItem = {
+                pizza_id: pizzaId,
+                name: pizzaName,
+                size: size,
+                price: priceData[size],
+                quantity: Number(quantity) || 1,
+                item_type: 'pizza',
+                custom_ingredients: null,
+                special_instructions: null
+            };
+
+            const userId = getUserId();
+            if (!userId) {
+                console.error('User ID not found');
+                showNotification('User session not found. Please log in again.', 'error');
+                return false;
+            }
+
+            const csrfToken = getCSRFToken();
+            if (!csrfToken) {
+                console.error('CSRF token not found');
+                showNotification('Security token missing. Please refresh the page.', 'error');
+                return false;
+            }
+
+            const data = {
+                ...cartItem,
+                user_id: userId,
+                csrf_token: csrfToken
+            };
+
+            // Apply loading animation if button exists
+            let originalText;
+            if (button) {
+                originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+                button.disabled = true;
+            }
+
+            return fetch('api/cart_api.php?action=add', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(data)
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(result => {
+                if (button) {
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                }
                 if (result.success) {
+                    let cart = JSON.parse(localStorage.getItem('crustPizzaCart')) || [];
+                    if (!Array.isArray(cart)) {
+                        cart = [];
+                    }
+                    cart.push({ ...cartItem, cart_id: result.cart_id || Date.now() });
+                    localStorage.setItem('crustPizzaCart', JSON.stringify(cart));
                     updateCartCount();
                     showNotification(`${pizzaName} (${size}) added to cart!`, 'success');
+                    return true;
                 } else {
+                    console.error('API Error:', result.message || 'Unknown error');
                     showNotification(result.message || 'Failed to add item to cart', 'error');
+                    return false;
                 }
             })
             .catch(error => {
+                if (button) {
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                }
+                console.error('Error adding to cart:', error.message);
                 showNotification('An error occurred while adding to cart', 'error');
-                console.error('Error adding to cart:', error);
+                return false;
             });
-
-        return true;
+        } catch (error) {
+            console.error('Unexpected error in addToCart:', error);
+            showNotification('Unexpected error occurred', 'error');
+            return false;
+        }
     }
 
     function isUserLoggedIn() {

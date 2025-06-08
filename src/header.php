@@ -9,8 +9,8 @@ $database = new Database();
 $db = $database->getConnection();
 $pizza = new Pizza($db);
 
-// Get featured pizzas (first 6 pizzas for homepage)
-$featured_pizzas = array_slice($pizza->getAllPizzas(), 0, 6);
+// Get featured pizzas for homepage
+$featured_pizzas = $pizza->getFeaturedPizzas(6);
 
 // Helper function to get dashboard URL based on user role
 function getDashboardUrl($role)
