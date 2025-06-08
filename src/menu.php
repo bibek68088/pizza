@@ -49,9 +49,7 @@ $categories = $categories_stmt->fetchAll(PDO::FETCH_ASSOC);
         <!-- Search and Filter -->
         <div class="menu-filters" style="margin-bottom: 30px;">
             <form method="GET" class="filter-form" style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
-                <div class="search-box">
-                    <input type="text" name="search" placeholder="Search pizzas..." value="<?php echo htmlspecialchars($search); ?>" class="form-control" style="width: 300px;">
-                </div>
+                
 
                 <div class="category-filter">
                     <select name="category" class="form-control" style="width: 200px;" onchange="this.form.submit()">
@@ -661,4 +659,4 @@ $categories = $categories_stmt->fetchAll(PDO::FETCH_ASSOC);
 
 </body>
 
-</html>
+</html> 
