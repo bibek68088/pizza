@@ -166,8 +166,9 @@ class Order
     }
 
     // Get orders by status with filtering
-    public function getOrdersByStatus($status, $store_id = null, $limit = 50)
-    {
+    public function getOrdersByStatus($status, $store_id = null, $conditions = [], $limit = 50)
+{
+    try {
         $whereConditions = ['o.status = :status'];
         $params = [':status' => $status];
 
@@ -176,10 +177,18 @@ class Order
             $params[':store_id'] = $store_id;
         }
 
+        // Add additional conditions
+        if (!empty($conditions)) {
+            foreach ($conditions as $key => $value) {
+                $whereConditions[] = "o.$key = :$key";
+                $params[":$key"] = $value;
+            }
+        }
+
         $whereClause = 'WHERE ' . implode(' AND ', $whereConditions);
 
         $query = "SELECT o.*, s.name as store_name, u.full_name as assigned_staff_name
-                  FROM " . $this->table_name . " o
+                  FROM orders o
                   LEFT JOIN stores s ON o.store_id = s.store_id
                   LEFT JOIN users u ON o.assigned_staff_id = u.user_id
                   $whereClause
@@ -188,13 +197,25 @@ class Order
 
         $stmt = $this->conn->prepare($query);
         foreach ($params as $key => $value) {
-            $stmt->bindValue($key, $value);
+            $stmt->bindValue($key, $value, is_int($value) ? PDO::PARAM_INT : PDO::PARAM_STR);
         }
         $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
         $stmt->execute();
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Debug: Log query and results
+        error_log("Query: $query");
+        error_log("Params: " . print_r($params, true));
+        error_log("Results: " . print_r($results, true));
+
+        return $results;
+    } catch (PDOException $e) {
+        error_log("Database Error in getOrdersByStatus: " . $e->getMessage());
+        return [];
     }
+}
+
 
     // Get all orders with advanced filtering
     public function getAllOrders($page = 1, $perPage = 20)
