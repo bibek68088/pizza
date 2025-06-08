@@ -1,0 +1,1589 @@
+[08-Jun-2025 06:31:35 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 06:31:35 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 2
+    [name] => Mediterranean Delight
+    [size] => medium
+    [price] => 23.9
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => b435c3902e3d571a749e37a37bc61454b58e06ac874c97469ea52f8f5d250ca6
+)
+
+[08-Jun-2025 06:31:35 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 06:31:35 Europe/Berlin] Added new item: cart_id=2, user_id=6, item_name=Mediterranean Delight
+[08-Jun-2025 06:31:35 Europe/Berlin] Fetched 1 cart items for user_id=6
+[08-Jun-2025 06:31:35 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 06:31:35 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 3
+                    [name] => Plant-Based Supreme
+                    [size] => medium
+                    [price] => 25.9
+                    [quantity] => 1
+                    [added_at] => 2025-06-06T16:50:37.121Z
+                    [item_type] => pizza
+                )
+
+            [1] => Array
+                (
+                    [id] => custom_1749259058823
+                    [name] => Custom Medium Pizza
+                    [price] => 16.9
+                    [size] => medium
+                    [item_type] => pizza
+                    [quantity] => 1
+                    [customIngredients] => Array
+                        (
+                            [0] => Classic Crust
+                            [1] => Tomato Base
+                            [2] => Mozzarella
+                        )
+
+                    [specialInstructions] => 
+                    [added_at] => 2025-06-07T01:17:38.823Z
+                )
+
+            [2] => Array
+                (
+                    [id] => 0
+                    [name] => Pizza
+                    [size] => medium
+                    [price] => 21.9
+                    [quantity] => 4
+                    [added_at] => 2025-06-07T01:17:47.050Z
+                    [item_type] => pizza
+                )
+
+            [3] => Array
+                (
+                    [id] => 2
+                    [name] => Mediterranean Delight
+                    [size] => medium
+                    [price] => 23.9
+                    [quantity] => 4
+                    [added_at] => 2025-06-07T01:35:57.241Z
+                    [item_type] => pizza
+                )
+
+        )
+
+    [csrf_token] => b435c3902e3d571a749e37a37bc61454b58e06ac874c97469ea52f8f5d250ca6
+)
+
+[08-Jun-2025 06:31:35 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 06:31:35 Europe/Berlin] Added new item: cart_id=3, user_id=6, item_name=Plant-Based Supreme
+[08-Jun-2025 06:31:35 Europe/Berlin] Added new item: cart_id=4, user_id=6, item_name=Custom Medium Pizza
+[08-Jun-2025 06:31:35 Europe/Berlin] Added new item: cart_id=5, user_id=6, item_name=Pizza
+[08-Jun-2025 06:31:35 Europe/Berlin] Updating existing item: cart_id=2, new_quantity=5
+[08-Jun-2025 06:31:35 Europe/Berlin] Error updating quantity: SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 06:31:35 Europe/Berlin] Failed to sync item for user_id=6: Array
+(
+    [id] => 2
+    [name] => Mediterranean Delight
+    [size] => medium
+    [price] => 23.9
+    [quantity] => 4
+    [added_at] => 2025-06-07T01:35:57.241Z
+    [item_type] => pizza
+)
+
+[08-Jun-2025 06:31:35 Europe/Berlin] Cart sync completed for user_id=6, success=false
+[08-Jun-2025 06:31:58 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 06:31:58 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 06:31:58 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 06:31:58 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 06:31:58 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 06:31:58 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 06:32:04 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 06:32:04 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 3
+    [name] => Plant-Based Supreme
+    [size] => medium
+    [price] => 25.9
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => b435c3902e3d571a749e37a37bc61454b58e06ac874c97469ea52f8f5d250ca6
+)
+
+[08-Jun-2025 06:32:04 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 06:32:04 Europe/Berlin] Updating existing item: cart_id=3, new_quantity=2
+[08-Jun-2025 06:32:04 Europe/Berlin] Error updating quantity: SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 06:32:18 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 06:32:18 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 1
+    [name] => Peri Peri Chicken
+    [size] => medium
+    [price] => 24.9
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => b435c3902e3d571a749e37a37bc61454b58e06ac874c97469ea52f8f5d250ca6
+)
+
+[08-Jun-2025 06:32:18 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 06:32:18 Europe/Berlin] Added new item: cart_id=6, user_id=6, item_name=Peri Peri Chicken
+[08-Jun-2025 06:32:18 Europe/Berlin] Fetched 5 cart items for user_id=6
+[08-Jun-2025 06:32:18 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 06:32:18 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 3
+                    [name] => Plant-Based Supreme
+                    [size] => medium
+                    [price] => 25.9
+                    [quantity] => 1
+                    [added_at] => 2025-06-06T16:50:37.121Z
+                    [item_type] => pizza
+                )
+
+            [1] => Array
+                (
+                    [id] => custom_1749259058823
+                    [name] => Custom Medium Pizza
+                    [price] => 16.9
+                    [size] => medium
+                    [item_type] => pizza
+                    [quantity] => 1
+                    [customIngredients] => Array
+                        (
+                            [0] => Classic Crust
+                            [1] => Tomato Base
+                            [2] => Mozzarella
+                        )
+
+                    [specialInstructions] => 
+                    [added_at] => 2025-06-07T01:17:38.823Z
+                )
+
+            [2] => Array
+                (
+                    [id] => 0
+                    [name] => Pizza
+                    [size] => medium
+                    [price] => 21.9
+                    [quantity] => 4
+                    [added_at] => 2025-06-07T01:17:47.050Z
+                    [item_type] => pizza
+                )
+
+            [3] => Array
+                (
+                    [id] => 2
+                    [name] => Mediterranean Delight
+                    [size] => medium
+                    [price] => 23.9
+                    [quantity] => 4
+                    [added_at] => 2025-06-07T01:35:57.241Z
+                    [item_type] => pizza
+                )
+
+        )
+
+    [csrf_token] => b435c3902e3d571a749e37a37bc61454b58e06ac874c97469ea52f8f5d250ca6
+)
+
+[08-Jun-2025 06:32:18 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 06:32:18 Europe/Berlin] Updating existing item: cart_id=3, new_quantity=2
+[08-Jun-2025 06:32:18 Europe/Berlin] Error updating quantity: SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 06:32:18 Europe/Berlin] Failed to sync item for user_id=6: Array
+(
+    [id] => 3
+    [name] => Plant-Based Supreme
+    [size] => medium
+    [price] => 25.9
+    [quantity] => 1
+    [added_at] => 2025-06-06T16:50:37.121Z
+    [item_type] => pizza
+)
+
+[08-Jun-2025 06:32:18 Europe/Berlin] Updating existing item: cart_id=4, new_quantity=2
+[08-Jun-2025 06:32:18 Europe/Berlin] Error updating quantity: SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 06:32:18 Europe/Berlin] Failed to sync item for user_id=6: Array
+(
+    [id] => custom_1749259058823
+    [name] => Custom Medium Pizza
+    [price] => 16.9
+    [size] => medium
+    [item_type] => pizza
+    [quantity] => 1
+    [customIngredients] => Array
+        (
+            [0] => Classic Crust
+            [1] => Tomato Base
+            [2] => Mozzarella
+        )
+
+    [specialInstructions] => 
+    [added_at] => 2025-06-07T01:17:38.823Z
+)
+
+[08-Jun-2025 06:32:18 Europe/Berlin] Updating existing item: cart_id=5, new_quantity=8
+[08-Jun-2025 06:32:18 Europe/Berlin] Error updating quantity: SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 06:32:18 Europe/Berlin] Failed to sync item for user_id=6: Array
+(
+    [id] => 0
+    [name] => Pizza
+    [size] => medium
+    [price] => 21.9
+    [quantity] => 4
+    [added_at] => 2025-06-07T01:17:47.050Z
+    [item_type] => pizza
+)
+
+[08-Jun-2025 06:32:18 Europe/Berlin] Updating existing item: cart_id=2, new_quantity=5
+[08-Jun-2025 06:32:18 Europe/Berlin] Error updating quantity: SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 06:32:18 Europe/Berlin] Failed to sync item for user_id=6: Array
+(
+    [id] => 2
+    [name] => Mediterranean Delight
+    [size] => medium
+    [price] => 23.9
+    [quantity] => 4
+    [added_at] => 2025-06-07T01:35:57.241Z
+    [item_type] => pizza
+)
+
+[08-Jun-2025 06:32:18 Europe/Berlin] Cart sync completed for user_id=6, success=false
+[08-Jun-2025 06:32:34 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 06:32:34 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 3
+    [name] => Plant-Based Supreme
+    [size] => medium
+    [price] => 25.9
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => b435c3902e3d571a749e37a37bc61454b58e06ac874c97469ea52f8f5d250ca6
+)
+
+[08-Jun-2025 06:32:34 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 06:32:34 Europe/Berlin] Updating existing item: cart_id=3, new_quantity=2
+[08-Jun-2025 06:32:34 Europe/Berlin] Error updating quantity: SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 06:32:39 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 06:32:39 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 1
+    [name] => Peri Peri Chicken
+    [size] => medium
+    [price] => 24.9
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => b435c3902e3d571a749e37a37bc61454b58e06ac874c97469ea52f8f5d250ca6
+)
+
+[08-Jun-2025 06:32:39 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 06:32:39 Europe/Berlin] Updating existing item: cart_id=6, new_quantity=2
+[08-Jun-2025 06:32:39 Europe/Berlin] Error updating quantity: SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 06:32:42 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 06:32:42 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 2
+    [name] => Mediterranean Delight
+    [size] => medium
+    [price] => 23.9
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => b435c3902e3d571a749e37a37bc61454b58e06ac874c97469ea52f8f5d250ca6
+)
+
+[08-Jun-2025 06:32:42 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 06:32:42 Europe/Berlin] Updating existing item: cart_id=2, new_quantity=2
+[08-Jun-2025 06:32:42 Europe/Berlin] Error updating quantity: SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 06:32:50 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 06:32:50 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 06:33:03 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 06:33:03 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 06:33:03 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 06:33:03 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 06:33:03 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 06:33:03 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 06:33:06 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 06:33:06 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 1
+    [name] => Peri Peri Chicken
+    [size] => medium
+    [price] => 24.9
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => b435c3902e3d571a749e37a37bc61454b58e06ac874c97469ea52f8f5d250ca6
+)
+
+[08-Jun-2025 06:33:06 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 06:33:06 Europe/Berlin] Updating existing item: cart_id=6, new_quantity=2
+[08-Jun-2025 06:33:06 Europe/Berlin] Error updating quantity: SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 06:39:05 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 06:39:05 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 06:39:05 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 2
+    [name] => Mediterranean Delight
+    [size] => medium
+    [price] => 23.9
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => f3777503f408a6d1050e216dbe1c7b4076cd9429737126fa007f0e6f9913f21c
+)
+
+[08-Jun-2025 06:39:05 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 06:39:05 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 06:39:05 Europe/Berlin] Added new item: cart_id=1, user_id=6, item_name=Mediterranean Delight
+[08-Jun-2025 06:39:05 Europe/Berlin] Fetched 1 cart items for user_id=6
+[08-Jun-2025 06:39:05 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 06:39:05 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 06:39:05 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 3
+                    [name] => Plant-Based Supreme
+                    [size] => medium
+                    [price] => 25.9
+                    [quantity] => 1
+                    [added_at] => 2025-06-06T16:50:37.121Z
+                    [item_type] => pizza
+                )
+
+            [1] => Array
+                (
+                    [id] => custom_1749259058823
+                    [name] => Custom Medium Pizza
+                    [price] => 16.9
+                    [size] => medium
+                    [item_type] => pizza
+                    [quantity] => 1
+                    [customIngredients] => Array
+                        (
+                            [0] => Classic Crust
+                            [1] => Tomato Base
+                            [2] => Mozzarella
+                        )
+
+                    [specialInstructions] => 
+                    [added_at] => 2025-06-07T01:17:38.823Z
+                )
+
+            [2] => Array
+                (
+                    [id] => 0
+                    [name] => Pizza
+                    [size] => medium
+                    [price] => 21.9
+                    [quantity] => 5
+                    [added_at] => 2025-06-07T01:17:47.050Z
+                    [item_type] => pizza
+                )
+
+            [3] => Array
+                (
+                    [id] => 2
+                    [name] => Mediterranean Delight
+                    [size] => medium
+                    [price] => 23.9
+                    [quantity] => 4
+                    [added_at] => 2025-06-07T01:35:57.241Z
+                    [item_type] => pizza
+                )
+
+        )
+
+    [csrf_token] => f3777503f408a6d1050e216dbe1c7b4076cd9429737126fa007f0e6f9913f21c
+)
+
+[08-Jun-2025 06:39:05 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 06:39:05 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 06:39:05 Europe/Berlin] Added new item: cart_id=2, user_id=6, item_name=Plant-Based Supreme
+[08-Jun-2025 06:39:05 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 06:39:05 Europe/Berlin] Added new item: cart_id=3, user_id=6, item_name=Custom Medium Pizza
+[08-Jun-2025 06:39:05 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 06:39:05 Europe/Berlin] Added new item: cart_id=4, user_id=6, item_name=Pizza
+[08-Jun-2025 06:39:05 Europe/Berlin] findSimilarItem result: Array
+(
+    [cart_id] => 1
+    [quantity] => 1
+)
+
+[08-Jun-2025 06:39:05 Europe/Berlin] Updating existing item: cart_id=1, new_quantity=5
+[08-Jun-2025 06:39:05 Europe/Berlin] Error updating quantity: SQLSTATE=HY093, Message=SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 06:39:05 Europe/Berlin] Failed to sync item for user_id=6: Array
+(
+    [id] => 2
+    [name] => Mediterranean Delight
+    [size] => medium
+    [price] => 23.9
+    [quantity] => 4
+    [added_at] => 2025-06-07T01:35:57.241Z
+    [item_type] => pizza
+)
+
+[08-Jun-2025 06:39:05 Europe/Berlin] Cart sync completed for user_id=6, success=false
+[08-Jun-2025 06:39:34 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 06:39:34 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 06:39:34 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 06:39:34 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 06:39:34 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 06:39:34 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 06:39:34 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 06:39:34 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 06:39:34 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 06:39:43 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 06:39:43 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 06:39:43 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 1
+    [name] => Peri Peri Chicken
+    [size] => medium
+    [price] => 24.9
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => f3777503f408a6d1050e216dbe1c7b4076cd9429737126fa007f0e6f9913f21c
+)
+
+[08-Jun-2025 06:39:43 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 06:39:43 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 06:39:43 Europe/Berlin] Added new item: cart_id=5, user_id=6, item_name=Peri Peri Chicken
+[08-Jun-2025 06:39:43 Europe/Berlin] Fetched 5 cart items for user_id=6
+[08-Jun-2025 06:39:43 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 06:39:43 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 06:39:43 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 3
+                    [name] => Plant-Based Supreme
+                    [size] => medium
+                    [price] => 25.9
+                    [quantity] => 1
+                    [added_at] => 2025-06-06T16:50:37.121Z
+                    [item_type] => pizza
+                )
+
+            [1] => Array
+                (
+                    [id] => custom_1749259058823
+                    [name] => Custom Medium Pizza
+                    [price] => 16.9
+                    [size] => medium
+                    [item_type] => pizza
+                    [quantity] => 1
+                    [customIngredients] => Array
+                        (
+                            [0] => Classic Crust
+                            [1] => Tomato Base
+                            [2] => Mozzarella
+                        )
+
+                    [specialInstructions] => 
+                    [added_at] => 2025-06-07T01:17:38.823Z
+                )
+
+            [2] => Array
+                (
+                    [id] => 0
+                    [name] => Pizza
+                    [size] => medium
+                    [price] => 21.9
+                    [quantity] => 6
+                    [added_at] => 2025-06-07T01:17:47.050Z
+                    [item_type] => pizza
+                )
+
+            [3] => Array
+                (
+                    [id] => 2
+                    [name] => Mediterranean Delight
+                    [size] => medium
+                    [price] => 23.9
+                    [quantity] => 4
+                    [added_at] => 2025-06-07T01:35:57.241Z
+                    [item_type] => pizza
+                )
+
+        )
+
+    [csrf_token] => f3777503f408a6d1050e216dbe1c7b4076cd9429737126fa007f0e6f9913f21c
+)
+
+[08-Jun-2025 06:39:43 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 06:39:43 Europe/Berlin] findSimilarItem result: Array
+(
+    [cart_id] => 2
+    [quantity] => 1
+)
+
+[08-Jun-2025 06:39:43 Europe/Berlin] Updating existing item: cart_id=2, new_quantity=2
+[08-Jun-2025 06:39:43 Europe/Berlin] Error updating quantity: SQLSTATE=HY093, Message=SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 06:39:43 Europe/Berlin] Failed to sync item for user_id=6: Array
+(
+    [id] => 3
+    [name] => Plant-Based Supreme
+    [size] => medium
+    [price] => 25.9
+    [quantity] => 1
+    [added_at] => 2025-06-06T16:50:37.121Z
+    [item_type] => pizza
+)
+
+[08-Jun-2025 06:39:43 Europe/Berlin] findSimilarItem result: Array
+(
+    [cart_id] => 3
+    [quantity] => 1
+)
+
+[08-Jun-2025 06:39:43 Europe/Berlin] Updating existing item: cart_id=3, new_quantity=2
+[08-Jun-2025 06:39:43 Europe/Berlin] Error updating quantity: SQLSTATE=HY093, Message=SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 06:39:43 Europe/Berlin] Failed to sync item for user_id=6: Array
+(
+    [id] => custom_1749259058823
+    [name] => Custom Medium Pizza
+    [price] => 16.9
+    [size] => medium
+    [item_type] => pizza
+    [quantity] => 1
+    [customIngredients] => Array
+        (
+            [0] => Classic Crust
+            [1] => Tomato Base
+            [2] => Mozzarella
+        )
+
+    [specialInstructions] => 
+    [added_at] => 2025-06-07T01:17:38.823Z
+)
+
+[08-Jun-2025 06:39:43 Europe/Berlin] findSimilarItem result: Array
+(
+    [cart_id] => 4
+    [quantity] => 5
+)
+
+[08-Jun-2025 06:39:43 Europe/Berlin] Updating existing item: cart_id=4, new_quantity=11
+[08-Jun-2025 06:39:43 Europe/Berlin] Error updating quantity: SQLSTATE=HY093, Message=SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 06:39:43 Europe/Berlin] Failed to sync item for user_id=6: Array
+(
+    [id] => 0
+    [name] => Pizza
+    [size] => medium
+    [price] => 21.9
+    [quantity] => 6
+    [added_at] => 2025-06-07T01:17:47.050Z
+    [item_type] => pizza
+)
+
+[08-Jun-2025 06:39:43 Europe/Berlin] findSimilarItem result: Array
+(
+    [cart_id] => 1
+    [quantity] => 1
+)
+
+[08-Jun-2025 06:39:43 Europe/Berlin] Updating existing item: cart_id=1, new_quantity=5
+[08-Jun-2025 06:39:43 Europe/Berlin] Error updating quantity: SQLSTATE=HY093, Message=SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 06:39:43 Europe/Berlin] Failed to sync item for user_id=6: Array
+(
+    [id] => 2
+    [name] => Mediterranean Delight
+    [size] => medium
+    [price] => 23.9
+    [quantity] => 4
+    [added_at] => 2025-06-07T01:35:57.241Z
+    [item_type] => pizza
+)
+
+[08-Jun-2025 06:39:43 Europe/Berlin] Cart sync completed for user_id=6, success=false
+[08-Jun-2025 06:43:24 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 06:43:24 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 06:43:24 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 2
+    [name] => Mediterranean Delight
+    [size] => medium
+    [price] => 23.9
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => f3777503f408a6d1050e216dbe1c7b4076cd9429737126fa007f0e6f9913f21c
+)
+
+[08-Jun-2025 06:43:24 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 06:43:24 Europe/Berlin] findSimilarItem result: Array
+(
+    [cart_id] => 1
+    [quantity] => 1
+)
+
+[08-Jun-2025 06:43:24 Europe/Berlin] Updating existing item: cart_id=1, new_quantity=2
+[08-Jun-2025 06:43:24 Europe/Berlin] Error updating quantity: SQLSTATE=HY093, Message=SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 06:43:24 Europe/Berlin] addItem failed for user_id=6, pizza_id=2, item_name=Mediterranean Delight
+[08-Jun-2025 06:43:31 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 06:43:31 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 06:43:31 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 1
+    [name] => Peri Peri Chicken
+    [size] => medium
+    [price] => 24.9
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => f3777503f408a6d1050e216dbe1c7b4076cd9429737126fa007f0e6f9913f21c
+)
+
+[08-Jun-2025 06:43:31 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 06:43:31 Europe/Berlin] findSimilarItem result: Array
+(
+    [cart_id] => 5
+    [quantity] => 1
+)
+
+[08-Jun-2025 06:43:31 Europe/Berlin] Updating existing item: cart_id=5, new_quantity=2
+[08-Jun-2025 06:43:31 Europe/Berlin] Error updating quantity: SQLSTATE=HY093, Message=SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 06:43:31 Europe/Berlin] addItem failed for user_id=6, pizza_id=1, item_name=Peri Peri Chicken
+[08-Jun-2025 06:43:58 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 06:43:58 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 06:43:58 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 2
+    [name] => Mediterranean Delight
+    [size] => medium
+    [price] => 23.9
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 1
+    [csrf_token] => 488dd1bcef207a18e7e48eef56577169d35c7807ca546c6815ee8f5b6db11e89
+)
+
+[08-Jun-2025 06:43:58 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 06:43:58 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 06:43:58 Europe/Berlin] Added new item: cart_id=6, user_id=1, item_name=Mediterranean Delight
+[08-Jun-2025 06:43:58 Europe/Berlin] Fetched 1 cart items for user_id=1
+[08-Jun-2025 06:43:58 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 06:43:58 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 06:43:58 Europe/Berlin] Received input: Array
+(
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 3
+                    [name] => Plant-Based Supreme
+                    [size] => medium
+                    [price] => 25.9
+                    [quantity] => 1
+                    [added_at] => 2025-06-06T16:50:37.121Z
+                    [item_type] => pizza
+                )
+
+            [1] => Array
+                (
+                    [id] => custom_1749259058823
+                    [name] => Custom Medium Pizza
+                    [price] => 16.9
+                    [size] => medium
+                    [item_type] => pizza
+                    [quantity] => 1
+                    [customIngredients] => Array
+                        (
+                            [0] => Classic Crust
+                            [1] => Tomato Base
+                            [2] => Mozzarella
+                        )
+
+                    [specialInstructions] => 
+                    [added_at] => 2025-06-07T01:17:38.823Z
+                )
+
+            [2] => Array
+                (
+                    [id] => 0
+                    [name] => Pizza
+                    [size] => medium
+                    [price] => 21.9
+                    [quantity] => 6
+                    [added_at] => 2025-06-07T01:17:47.050Z
+                    [item_type] => pizza
+                )
+
+            [3] => Array
+                (
+                    [id] => 2
+                    [name] => Mediterranean Delight
+                    [size] => medium
+                    [price] => 23.9
+                    [quantity] => 4
+                    [added_at] => 2025-06-07T01:35:57.241Z
+                    [item_type] => pizza
+                )
+
+        )
+
+    [user_id] => 1
+    [csrf_token] => 488dd1bcef207a18e7e48eef56577169d35c7807ca546c6815ee8f5b6db11e89
+)
+
+[08-Jun-2025 06:43:58 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 06:43:58 Europe/Berlin] Syncing item for user_id=1: Array
+(
+    [conn] => PDO Object
+        (
+        )
+
+    [table_name] => cart
+    [cart_id] => 
+    [user_id] => 1
+    [item_type] => pizza
+    [pizza_id] => 
+    [menu_item_id] => 
+    [item_name] => Plant-Based Supreme
+    [size] => medium
+    [quantity] => 1
+    [unit_price] => 25.9
+    [total_price] => 
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [created_at] => 
+    [updated_at] => 
+)
+
+[08-Jun-2025 06:43:58 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 06:43:58 Europe/Berlin] Added new item: cart_id=7, user_id=1, item_name=Plant-Based Supreme
+[08-Jun-2025 06:43:58 Europe/Berlin] Syncing item for user_id=1: Array
+(
+    [conn] => PDO Object
+        (
+        )
+
+    [table_name] => cart
+    [cart_id] => 7
+    [user_id] => 1
+    [item_type] => pizza
+    [pizza_id] => 
+    [menu_item_id] => 
+    [item_name] => Custom Medium Pizza
+    [size] => medium
+    [quantity] => 1
+    [unit_price] => 16.9
+    [total_price] => 25.9
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [created_at] => 
+    [updated_at] => 
+)
+
+[08-Jun-2025 06:43:58 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 06:43:58 Europe/Berlin] Added new item: cart_id=8, user_id=1, item_name=Custom Medium Pizza
+[08-Jun-2025 06:43:58 Europe/Berlin] Syncing item for user_id=1: Array
+(
+    [conn] => PDO Object
+        (
+        )
+
+    [table_name] => cart
+    [cart_id] => 8
+    [user_id] => 1
+    [item_type] => pizza
+    [pizza_id] => 
+    [menu_item_id] => 
+    [item_name] => Pizza
+    [size] => medium
+    [quantity] => 6
+    [unit_price] => 21.9
+    [total_price] => 16.9
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [created_at] => 
+    [updated_at] => 
+)
+
+[08-Jun-2025 06:43:58 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 06:43:58 Europe/Berlin] Added new item: cart_id=9, user_id=1, item_name=Pizza
+[08-Jun-2025 06:43:58 Europe/Berlin] Syncing item for user_id=1: Array
+(
+    [conn] => PDO Object
+        (
+        )
+
+    [table_name] => cart
+    [cart_id] => 9
+    [user_id] => 1
+    [item_type] => pizza
+    [pizza_id] => 
+    [menu_item_id] => 
+    [item_name] => Mediterranean Delight
+    [size] => medium
+    [quantity] => 4
+    [unit_price] => 23.9
+    [total_price] => 131.4
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [created_at] => 
+    [updated_at] => 
+)
+
+[08-Jun-2025 06:43:58 Europe/Berlin] findSimilarItem result: Array
+(
+    [cart_id] => 6
+    [quantity] => 1
+)
+
+[08-Jun-2025 06:43:58 Europe/Berlin] Updating existing item: cart_id=6, new_quantity=5
+[08-Jun-2025 06:43:58 Europe/Berlin] Error updating quantity: SQLSTATE=HY093, Message=SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 06:43:58 Europe/Berlin] Failed to sync item at index 3 for user_id=1: Array
+(
+    [id] => 2
+    [name] => Mediterranean Delight
+    [size] => medium
+    [price] => 23.9
+    [quantity] => 4
+    [added_at] => 2025-06-07T01:35:57.241Z
+    [item_type] => pizza
+)
+
+[08-Jun-2025 06:43:58 Europe/Berlin] Cart sync completed for user_id=1, success=false
+[08-Jun-2025 06:44:16 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 06:44:16 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 06:44:16 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 1
+    [name] => Peri Peri Chicken
+    [size] => medium
+    [price] => 24.9
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 1
+    [csrf_token] => 488dd1bcef207a18e7e48eef56577169d35c7807ca546c6815ee8f5b6db11e89
+)
+
+[08-Jun-2025 06:44:16 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 06:44:16 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 06:44:16 Europe/Berlin] Added new item: cart_id=10, user_id=1, item_name=Peri Peri Chicken
+[08-Jun-2025 06:44:16 Europe/Berlin] Fetched 5 cart items for user_id=1
+[08-Jun-2025 06:44:16 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 06:44:16 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 06:44:16 Europe/Berlin] Received input: Array
+(
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 3
+                    [name] => Plant-Based Supreme
+                    [size] => medium
+                    [price] => 25.9
+                    [quantity] => 1
+                    [added_at] => 2025-06-06T16:50:37.121Z
+                    [item_type] => pizza
+                )
+
+            [1] => Array
+                (
+                    [id] => custom_1749259058823
+                    [name] => Custom Medium Pizza
+                    [price] => 16.9
+                    [size] => medium
+                    [item_type] => pizza
+                    [quantity] => 1
+                    [customIngredients] => Array
+                        (
+                            [0] => Classic Crust
+                            [1] => Tomato Base
+                            [2] => Mozzarella
+                        )
+
+                    [specialInstructions] => 
+                    [added_at] => 2025-06-07T01:17:38.823Z
+                )
+
+            [2] => Array
+                (
+                    [id] => 0
+                    [name] => Pizza
+                    [size] => medium
+                    [price] => 21.9
+                    [quantity] => 6
+                    [added_at] => 2025-06-07T01:17:47.050Z
+                    [item_type] => pizza
+                )
+
+            [3] => Array
+                (
+                    [id] => 2
+                    [name] => Mediterranean Delight
+                    [size] => medium
+                    [price] => 23.9
+                    [quantity] => 4
+                    [added_at] => 2025-06-07T01:35:57.241Z
+                    [item_type] => pizza
+                )
+
+        )
+
+    [user_id] => 1
+    [csrf_token] => 488dd1bcef207a18e7e48eef56577169d35c7807ca546c6815ee8f5b6db11e89
+)
+
+[08-Jun-2025 06:44:16 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 06:44:16 Europe/Berlin] Syncing item for user_id=1: Array
+(
+    [conn] => PDO Object
+        (
+        )
+
+    [table_name] => cart
+    [cart_id] => 
+    [user_id] => 1
+    [item_type] => pizza
+    [pizza_id] => 
+    [menu_item_id] => 
+    [item_name] => Plant-Based Supreme
+    [size] => medium
+    [quantity] => 1
+    [unit_price] => 25.9
+    [total_price] => 
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [created_at] => 
+    [updated_at] => 
+)
+
+[08-Jun-2025 06:44:16 Europe/Berlin] findSimilarItem result: Array
+(
+    [cart_id] => 7
+    [quantity] => 1
+)
+
+[08-Jun-2025 06:44:16 Europe/Berlin] Updating existing item: cart_id=7, new_quantity=2
+[08-Jun-2025 06:44:16 Europe/Berlin] Error updating quantity: SQLSTATE=HY093, Message=SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 06:44:16 Europe/Berlin] Failed to sync item at index 0 for user_id=1: Array
+(
+    [id] => 3
+    [name] => Plant-Based Supreme
+    [size] => medium
+    [price] => 25.9
+    [quantity] => 1
+    [added_at] => 2025-06-06T16:50:37.121Z
+    [item_type] => pizza
+)
+
+[08-Jun-2025 06:44:16 Europe/Berlin] Syncing item for user_id=1: Array
+(
+    [conn] => PDO Object
+        (
+        )
+
+    [table_name] => cart
+    [cart_id] => 
+    [user_id] => 1
+    [item_type] => pizza
+    [pizza_id] => 
+    [menu_item_id] => 
+    [item_name] => Custom Medium Pizza
+    [size] => medium
+    [quantity] => 1
+    [unit_price] => 16.9
+    [total_price] => 
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [created_at] => 
+    [updated_at] => 
+)
+
+[08-Jun-2025 06:44:16 Europe/Berlin] findSimilarItem result: Array
+(
+    [cart_id] => 8
+    [quantity] => 1
+)
+
+[08-Jun-2025 06:44:16 Europe/Berlin] Updating existing item: cart_id=8, new_quantity=2
+[08-Jun-2025 06:44:16 Europe/Berlin] Error updating quantity: SQLSTATE=HY093, Message=SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 06:44:16 Europe/Berlin] Failed to sync item at index 1 for user_id=1: Array
+(
+    [id] => custom_1749259058823
+    [name] => Custom Medium Pizza
+    [price] => 16.9
+    [size] => medium
+    [item_type] => pizza
+    [quantity] => 1
+    [customIngredients] => Array
+        (
+            [0] => Classic Crust
+            [1] => Tomato Base
+            [2] => Mozzarella
+        )
+
+    [specialInstructions] => 
+    [added_at] => 2025-06-07T01:17:38.823Z
+)
+
+[08-Jun-2025 06:44:16 Europe/Berlin] Syncing item for user_id=1: Array
+(
+    [conn] => PDO Object
+        (
+        )
+
+    [table_name] => cart
+    [cart_id] => 
+    [user_id] => 1
+    [item_type] => pizza
+    [pizza_id] => 
+    [menu_item_id] => 
+    [item_name] => Pizza
+    [size] => medium
+    [quantity] => 6
+    [unit_price] => 21.9
+    [total_price] => 
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [created_at] => 
+    [updated_at] => 
+)
+
+[08-Jun-2025 06:44:16 Europe/Berlin] findSimilarItem result: Array
+(
+    [cart_id] => 9
+    [quantity] => 6
+)
+
+[08-Jun-2025 06:44:16 Europe/Berlin] Updating existing item: cart_id=9, new_quantity=12
+[08-Jun-2025 06:44:16 Europe/Berlin] Error updating quantity: SQLSTATE=HY093, Message=SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 06:44:16 Europe/Berlin] Failed to sync item at index 2 for user_id=1: Array
+(
+    [id] => 0
+    [name] => Pizza
+    [size] => medium
+    [price] => 21.9
+    [quantity] => 6
+    [added_at] => 2025-06-07T01:17:47.050Z
+    [item_type] => pizza
+)
+
+[08-Jun-2025 06:44:16 Europe/Berlin] Syncing item for user_id=1: Array
+(
+    [conn] => PDO Object
+        (
+        )
+
+    [table_name] => cart
+    [cart_id] => 
+    [user_id] => 1
+    [item_type] => pizza
+    [pizza_id] => 
+    [menu_item_id] => 
+    [item_name] => Mediterranean Delight
+    [size] => medium
+    [quantity] => 4
+    [unit_price] => 23.9
+    [total_price] => 
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [created_at] => 
+    [updated_at] => 
+)
+
+[08-Jun-2025 06:44:16 Europe/Berlin] findSimilarItem result: Array
+(
+    [cart_id] => 6
+    [quantity] => 1
+)
+
+[08-Jun-2025 06:44:16 Europe/Berlin] Updating existing item: cart_id=6, new_quantity=5
+[08-Jun-2025 06:44:16 Europe/Berlin] Error updating quantity: SQLSTATE=HY093, Message=SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 06:44:16 Europe/Berlin] Failed to sync item at index 3 for user_id=1: Array
+(
+    [id] => 2
+    [name] => Mediterranean Delight
+    [size] => medium
+    [price] => 23.9
+    [quantity] => 4
+    [added_at] => 2025-06-07T01:35:57.241Z
+    [item_type] => pizza
+)
+
+[08-Jun-2025 06:44:16 Europe/Berlin] Cart sync completed for user_id=1, success=false
+[08-Jun-2025 06:44:19 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 06:44:19 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 06:44:19 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 3
+    [name] => Plant-Based Supreme
+    [size] => medium
+    [price] => 25.9
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 1
+    [csrf_token] => 488dd1bcef207a18e7e48eef56577169d35c7807ca546c6815ee8f5b6db11e89
+)
+
+[08-Jun-2025 06:44:19 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 06:44:19 Europe/Berlin] findSimilarItem result: Array
+(
+    [cart_id] => 7
+    [quantity] => 1
+)
+
+[08-Jun-2025 06:44:19 Europe/Berlin] Updating existing item: cart_id=7, new_quantity=2
+[08-Jun-2025 06:44:19 Europe/Berlin] Error updating quantity: SQLSTATE=HY093, Message=SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 06:44:19 Europe/Berlin] addItem failed for user_id=1, pizza_id=3, item_name=Plant-Based Supreme
+[08-Jun-2025 06:44:23 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 06:44:23 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 06:44:23 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 1
+    [name] => Peri Peri Chicken
+    [size] => medium
+    [price] => 24.9
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 1
+    [csrf_token] => 488dd1bcef207a18e7e48eef56577169d35c7807ca546c6815ee8f5b6db11e89
+)
+
+[08-Jun-2025 06:44:23 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 06:44:23 Europe/Berlin] findSimilarItem result: Array
+(
+    [cart_id] => 10
+    [quantity] => 1
+)
+
+[08-Jun-2025 06:44:23 Europe/Berlin] Updating existing item: cart_id=10, new_quantity=2
+[08-Jun-2025 06:44:23 Europe/Berlin] Error updating quantity: SQLSTATE=HY093, Message=SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 06:44:23 Europe/Berlin] addItem failed for user_id=1, pizza_id=1, item_name=Peri Peri Chicken
+[08-Jun-2025 07:14:02 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 07:14:02 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 07:14:02 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 07:14:03 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 07:14:03 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 07:14:03 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 0
+    [size] => medium
+    [quantity] => 1
+    [item_type] => pizza
+    [name] => Custom Pizza
+    [price] => 10
+    [custom_ingredients] => []
+    [special_instructions] => 
+    [user_id] => 1
+    [csrf_token] => 488dd1bcef207a18e7e48eef56577169d35c7807ca546c6815ee8f5b6db11e89
+)
+
+[08-Jun-2025 07:14:03 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 07:14:03 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 07:14:03 Europe/Berlin] Added new item: cart_id=11, user_id=1, item_name=Custom Pizza
+[08-Jun-2025 07:14:03 Europe/Berlin] Fetched 6 cart items for user_id=1
+[08-Jun-2025 07:14:03 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 07:14:03 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 07:14:03 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 07:14:05 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 07:14:05 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 07:14:05 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 0
+    [size] => medium
+    [quantity] => 1
+    [item_type] => pizza
+    [name] => Custom Pizza
+    [price] => 10
+    [custom_ingredients] => []
+    [special_instructions] => 
+    [user_id] => 1
+    [csrf_token] => 488dd1bcef207a18e7e48eef56577169d35c7807ca546c6815ee8f5b6db11e89
+)
+
+[08-Jun-2025 07:14:05 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 07:14:05 Europe/Berlin] findSimilarItem result: Array
+(
+    [cart_id] => 11
+    [quantity] => 1
+)
+
+[08-Jun-2025 07:14:05 Europe/Berlin] Updating existing item: cart_id=11, new_quantity=2
+[08-Jun-2025 07:14:05 Europe/Berlin] Error updating quantity: SQLSTATE=HY093, Message=SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 07:14:05 Europe/Berlin] addItem failed for user_id=1, pizza_id=0, item_name=Custom Pizza
+[08-Jun-2025 07:14:05 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 07:14:05 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 07:14:05 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 0
+    [size] => medium
+    [quantity] => 1
+    [item_type] => pizza
+    [name] => Custom Pizza
+    [price] => 10
+    [custom_ingredients] => []
+    [special_instructions] => 
+    [user_id] => 1
+    [csrf_token] => 488dd1bcef207a18e7e48eef56577169d35c7807ca546c6815ee8f5b6db11e89
+)
+
+[08-Jun-2025 07:14:05 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 07:14:05 Europe/Berlin] findSimilarItem result: Array
+(
+    [cart_id] => 11
+    [quantity] => 1
+)
+
+[08-Jun-2025 07:14:05 Europe/Berlin] Updating existing item: cart_id=11, new_quantity=2
+[08-Jun-2025 07:14:05 Europe/Berlin] Error updating quantity: SQLSTATE=HY093, Message=SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 07:14:05 Europe/Berlin] addItem failed for user_id=1, pizza_id=0, item_name=Custom Pizza
+[08-Jun-2025 07:14:05 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 07:14:05 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 07:14:05 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 0
+    [size] => medium
+    [quantity] => 1
+    [item_type] => pizza
+    [name] => Custom Pizza
+    [price] => 10
+    [custom_ingredients] => []
+    [special_instructions] => 
+    [user_id] => 1
+    [csrf_token] => 488dd1bcef207a18e7e48eef56577169d35c7807ca546c6815ee8f5b6db11e89
+)
+
+[08-Jun-2025 07:14:05 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 07:14:05 Europe/Berlin] findSimilarItem result: Array
+(
+    [cart_id] => 11
+    [quantity] => 1
+)
+
+[08-Jun-2025 07:14:05 Europe/Berlin] Updating existing item: cart_id=11, new_quantity=2
+[08-Jun-2025 07:14:05 Europe/Berlin] Error updating quantity: SQLSTATE=HY093, Message=SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 07:14:05 Europe/Berlin] addItem failed for user_id=1, pizza_id=0, item_name=Custom Pizza
+[08-Jun-2025 07:14:05 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 07:14:05 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 07:14:05 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 0
+    [size] => medium
+    [quantity] => 1
+    [item_type] => pizza
+    [name] => Custom Pizza
+    [price] => 10
+    [custom_ingredients] => []
+    [special_instructions] => 
+    [user_id] => 1
+    [csrf_token] => 488dd1bcef207a18e7e48eef56577169d35c7807ca546c6815ee8f5b6db11e89
+)
+
+[08-Jun-2025 07:14:05 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 07:14:05 Europe/Berlin] findSimilarItem result: Array
+(
+    [cart_id] => 11
+    [quantity] => 1
+)
+
+[08-Jun-2025 07:14:05 Europe/Berlin] Updating existing item: cart_id=11, new_quantity=2
+[08-Jun-2025 07:14:05 Europe/Berlin] Error updating quantity: SQLSTATE=HY093, Message=SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 07:14:05 Europe/Berlin] addItem failed for user_id=1, pizza_id=0, item_name=Custom Pizza
+[08-Jun-2025 07:14:05 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 07:14:05 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 07:14:05 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 0
+    [size] => medium
+    [quantity] => 1
+    [item_type] => pizza
+    [name] => Custom Pizza
+    [price] => 10
+    [custom_ingredients] => []
+    [special_instructions] => 
+    [user_id] => 1
+    [csrf_token] => 488dd1bcef207a18e7e48eef56577169d35c7807ca546c6815ee8f5b6db11e89
+)
+
+[08-Jun-2025 07:14:05 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 07:14:05 Europe/Berlin] findSimilarItem result: Array
+(
+    [cart_id] => 11
+    [quantity] => 1
+)
+
+[08-Jun-2025 07:14:05 Europe/Berlin] Updating existing item: cart_id=11, new_quantity=2
+[08-Jun-2025 07:14:05 Europe/Berlin] Error updating quantity: SQLSTATE=HY093, Message=SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 07:14:05 Europe/Berlin] addItem failed for user_id=1, pizza_id=0, item_name=Custom Pizza
+[08-Jun-2025 07:14:06 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 07:14:06 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 07:14:06 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 0
+    [size] => medium
+    [quantity] => 1
+    [item_type] => pizza
+    [name] => Custom Pizza
+    [price] => 10
+    [custom_ingredients] => []
+    [special_instructions] => 
+    [user_id] => 1
+    [csrf_token] => 488dd1bcef207a18e7e48eef56577169d35c7807ca546c6815ee8f5b6db11e89
+)
+
+[08-Jun-2025 07:14:06 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 07:14:06 Europe/Berlin] findSimilarItem result: Array
+(
+    [cart_id] => 11
+    [quantity] => 1
+)
+
+[08-Jun-2025 07:14:06 Europe/Berlin] Updating existing item: cart_id=11, new_quantity=2
+[08-Jun-2025 07:14:06 Europe/Berlin] Error updating quantity: SQLSTATE=HY093, Message=SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 07:14:06 Europe/Berlin] addItem failed for user_id=1, pizza_id=0, item_name=Custom Pizza
+[08-Jun-2025 07:14:06 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 07:14:06 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 07:14:06 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 0
+    [size] => medium
+    [quantity] => 1
+    [item_type] => pizza
+    [name] => Custom Pizza
+    [price] => 10
+    [custom_ingredients] => []
+    [special_instructions] => 
+    [user_id] => 1
+    [csrf_token] => 488dd1bcef207a18e7e48eef56577169d35c7807ca546c6815ee8f5b6db11e89
+)
+
+[08-Jun-2025 07:14:06 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 07:14:06 Europe/Berlin] findSimilarItem result: Array
+(
+    [cart_id] => 11
+    [quantity] => 1
+)
+
+[08-Jun-2025 07:14:06 Europe/Berlin] Updating existing item: cart_id=11, new_quantity=2
+[08-Jun-2025 07:14:06 Europe/Berlin] Error updating quantity: SQLSTATE=HY093, Message=SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 07:14:06 Europe/Berlin] addItem failed for user_id=1, pizza_id=0, item_name=Custom Pizza
+[08-Jun-2025 07:14:07 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 07:14:07 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 07:14:07 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 0
+    [size] => medium
+    [quantity] => 1
+    [item_type] => pizza
+    [name] => Custom Pizza
+    [price] => 10
+    [custom_ingredients] => []
+    [special_instructions] => 
+    [user_id] => 1
+    [csrf_token] => 488dd1bcef207a18e7e48eef56577169d35c7807ca546c6815ee8f5b6db11e89
+)
+
+[08-Jun-2025 07:14:07 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 07:14:07 Europe/Berlin] findSimilarItem result: Array
+(
+    [cart_id] => 11
+    [quantity] => 1
+)
+
+[08-Jun-2025 07:14:07 Europe/Berlin] Updating existing item: cart_id=11, new_quantity=2
+[08-Jun-2025 07:14:07 Europe/Berlin] Error updating quantity: SQLSTATE=HY093, Message=SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 07:14:07 Europe/Berlin] addItem failed for user_id=1, pizza_id=0, item_name=Custom Pizza
+[08-Jun-2025 07:14:13 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 07:14:13 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 07:14:13 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 0
+    [size] => medium
+    [quantity] => 1
+    [item_type] => pizza
+    [name] => Custom Pizza
+    [price] => 10
+    [custom_ingredients] => []
+    [special_instructions] => 
+    [user_id] => 1
+    [csrf_token] => 488dd1bcef207a18e7e48eef56577169d35c7807ca546c6815ee8f5b6db11e89
+)
+
+[08-Jun-2025 07:14:13 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 07:14:13 Europe/Berlin] findSimilarItem result: Array
+(
+    [cart_id] => 11
+    [quantity] => 1
+)
+
+[08-Jun-2025 07:14:13 Europe/Berlin] Updating existing item: cart_id=11, new_quantity=2
+[08-Jun-2025 07:14:13 Europe/Berlin] Error updating quantity: SQLSTATE=HY093, Message=SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 07:14:13 Europe/Berlin] addItem failed for user_id=1, pizza_id=0, item_name=Custom Pizza
+[08-Jun-2025 07:27:02 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 07:27:02 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 07:27:02 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 07:27:02 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 07:27:02 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 07:27:02 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 07:27:02 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 07:27:02 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 07:27:02 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 07:27:05 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 07:27:05 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 07:27:05 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 07:27:05 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 07:27:05 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 07:27:05 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 07:27:05 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 07:27:05 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 07:27:05 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 07:27:56 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 07:27:56 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 07:27:56 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 07:40:11 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 07:40:11 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 07:40:11 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 07:40:11 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 07:40:11 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 07:40:11 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 07:40:11 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 07:40:11 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 07:40:11 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 07:40:29 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 07:40:29 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 07:40:29 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 07:40:29 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 07:40:29 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 07:40:29 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 07:40:29 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 07:40:29 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 07:40:29 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 07:43:23 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 07:43:23 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 07:43:23 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 07:43:27 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 07:43:27 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 07:43:27 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 07:44:06 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 07:44:06 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 07:44:06 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 07:45:02 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 07:45:02 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 07:45:02 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 07:45:02 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 07:45:02 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 07:45:02 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 07:45:02 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 07:45:02 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 07:45:02 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 07:47:08 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 07:47:08 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 07:47:08 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 07:49:07 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 07:49:07 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 07:49:07 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 08:02:42 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 08:02:42 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 08:02:42 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 1
+    [name] => Peri Peri Chicken
+    [size] => medium
+    [price] => 24.9
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => 145bd9854ac330ff59a6888b33c47795dbb1bfc58c4ef4c0a902f91afc9356b6
+)
+
+[08-Jun-2025 08:02:42 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 08:02:42 Europe/Berlin] findSimilarItem result: Array
+(
+    [cart_id] => 5
+    [quantity] => 1
+)
+
+[08-Jun-2025 08:02:42 Europe/Berlin] Updating existing item: cart_id=5, new_quantity=2
+[08-Jun-2025 08:02:42 Europe/Berlin] Error updating quantity: SQLSTATE=HY093, Message=SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 08:02:42 Europe/Berlin] addItem failed for user_id=6, pizza_id=1, item_name=Peri Peri Chicken
+[08-Jun-2025 08:02:44 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 08:02:44 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 08:02:44 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 08:02:44 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 08:02:44 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 08:02:44 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 08:02:44 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 08:02:44 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 08:02:44 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 08:19:17 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 08:19:17 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 08:19:17 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 0
+    [name] => Pizza
+    [size] => medium
+    [price] => 21.9
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 1
+    [csrf_token] => your_csrf_token
+)
+
+[08-Jun-2025 08:19:17 Europe/Berlin] CSRF token mismatch. Received: your_csrf_token, Expected: 145bd9854ac330ff59a6888b33c47795dbb1bfc58c4ef4c0a902f91afc9356b6
+[08-Jun-2025 10:23:01 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 10:23:01 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 10:23:01 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 10:23:01 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 10:23:01 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 10:23:01 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 10:23:01 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 10:23:01 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 10:23:01 Europe/Berlin] JSON parse error: Syntax error

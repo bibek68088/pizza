@@ -1,7 +1,7 @@
 <?php
-require_once BASE_PATH . 'config/database.php';
-require_once BASE_PATH . 'src/classes/User.php';
-require_once BASE_PATH . 'src/includes/functions.php';
+require_once '../config/database.php';
+require_once '../classes/User.php';
+require_once '..//includes/functions.php';
 
 startSession();
 

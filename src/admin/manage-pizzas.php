@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['save_pizza'])) {
 
         // Handle image upload
         if (!empty($_FILES['image']['name']) && isValidUpload($_FILES['image'], ['image/jpeg', 'image/png'], 5242880)) {
-            $uploadDir = BASE_PATH . 'assets/images/pizzas/';
+            $uploadDir = BASE_PATH . 'public/';
             $data['image'] = $uploadDir . generateUniqueFilename($_FILES['image']['name']);
             move_uploaded_file($_FILES['image']['tmp_name'], $data['image']);
             $data['image'] = str_replace(BASE_PATH, '/', $data['image']); // Store relative path

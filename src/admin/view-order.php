@@ -48,67 +48,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
+<?php include './admin-header.php'; ?>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Order - Crust Pizza</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .container {
-            max-width: 800px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-
-        .order-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .order-details {
-            margin-bottom: 1.5rem;
-        }
-
-        .item-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .item-list li {
-            margin-bottom: 0.5rem;
-        }
-
-        .btn-primary {
-            background: #ff6b35;
-            color: white;
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-    </style>
-</head>
-
-<body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-brand">
-                <i class="fas fa-pizza-slice"></i>
-                <p><a href="../index.php" style="text-decoration: none; color: inherit;">Crust Pizza</a></p>
-            </div>
-            <div class="nav-menu">
-                <a href="dashboard.php" class="nav-link">Dashboard</a>
-                <a href="../logout.php" class="nav-link">Logout</a>
-            </div>
-        </div>
-    </nav>
-
+<main style="margin-top: 70px; padding: 40px 20px;">
     <div class="container">
         <h1>Order #<?php echo htmlspecialchars($orderDetails['order_number']); ?></h1>
         <?php displayFlashMessages(); ?>
@@ -187,19 +129,75 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
                         <option value="received_by_customer" <?php echo $orderDetails['status'] === 'received_by_customer' ? 'selected' : ''; ?>>Received by Customer</option>
                     </select>
                 </div>
-                <button type="submit" name="update_status" class="btn-primary">Update Status</button>
+                <button type="submit" name="update_status" class="btn btn-primary">Update Status</button>
             </form>
         </div>
     </div>
+</main>
 
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-bottom">
-                <p>© 2024 Crust Pizza. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-</body>
+<?php include './admin-footer.php'; ?>
 
-</html>
-?>
+<style>
+    .container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .order-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .order-details {
+        margin-bottom: 1.5rem;
+    }
+
+    .item-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .item-list li {
+        margin-bottom: 0.5rem;
+    }
+
+    .btn-primary {
+        background: #ff6b35;
+        color: white;
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .btn-primary:hover {
+        background: #e55a2b;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #ff6b35;
+        box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.2);
+    }
+</style>

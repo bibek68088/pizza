@@ -375,12 +375,12 @@ class Pizza
     private function addPizzaIngredients($pizza_id, $ingredient_ids)
     {
         $query = "INSERT INTO pizza_ingredients (pizza_id, ingredient_id, is_default, quantity) 
-                VALUES (:pizza_id, :ingredient_id, 1, 1)";
+              VALUES (:pizza_id, :ingredient_id, 1, 1)";
         $stmt = $this->conn->prepare($query);
 
         foreach ($ingredient_ids as $id) {
-            $stmt->bindValue(':pizza_id', $id, PDO::PARAM_INT);
             $stmt->bindValue(':pizza_id', $pizza_id, PDO::PARAM_INT);
+            $stmt->bindValue(':ingredient_id', $id, PDO::PARAM_INT);
             $stmt->execute();
         }
     }

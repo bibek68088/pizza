@@ -23,9 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['save_ingredient'])) {
     } else {
         $data = [
             'name' => sanitizeInput($_POST['name']),
-            'price' => floatval($_POST['price']),
-            'stock' => intval($_POST['stock']),
-            'unit' => sanitizeInput($_POST['unit'])
+            'price' => floatval($_POST['price'])
         ];
         $ingredient_id = isset($_POST['ingredient_id']) ? (int)$_POST['ingredient_id'] : null;
 
@@ -64,7 +62,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_ingredient'])) 
     redirect('manage-ingredients.php');
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -139,11 +136,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_ingredient'])) 
             </div>
         </div>
     </nav>
-
     <div class="container">
         <h1>Manage Ingredients</h1>
         <?php displayFlashMessages(); ?>
-
         <div class="form-container">
             <h2><?php echo isset($_GET['edit_id']) ? 'Edit Ingredient' : 'Add New Ingredient'; ?></h2>
             <form method="POST">
@@ -161,28 +156,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_ingredient'])) 
                 </div>
                 <div class="form-group">
                     <label for="price">Price</label>
-                    <input type="number" name="price" step="0.01" class="form-control" required value="<?php echo htmlspecialchars($editIngredient['price'] ?? ''); ?>">
-                </div>
-                <div class="form-group">
-                    <label for="stock">Stock</label>
-                    <input type="number" name="stock" class="form-control" required value="<?php echo htmlspecialchars($editIngredient['stock'] ?? ''); ?>">
-                </div>
-                <div class="form-group">
-                    <label for="unit">Unit</label>
-                    <input type="text" name="unit" class="form-control" required value="<?php echo htmlspecialchars($editIngredient['unit'] ?? ''); ?>">
+                    <input type="number" name="price" step救助
+                        step="0.01" class="form-control" required value="<?php echo htmlspecialchars($editIngredient['price'] ?? ''); ?>">
                 </div>
                 <button type="submit" name="save_ingredient" class="btn btn-primary">Save Ingredient</button>
             </form>
         </div>
-
         <h2>Ingredient List</h2>
         <table class="table">
             <thead>
                 <tr>
                     <th>Name</th>
                     <th>Price</th>
-                    <th>Stock</th>
-                    <th>Unit</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -191,8 +176,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_ingredient'])) 
                     <tr>
                         <td><?php echo htmlspecialchars($ing['name']); ?></td>
                         <td><?php echo formatCurrency($ing['price']); ?></td>
-                        <td><?php echo $ing['stock']; ?></td>
-                        <td><?php echo htmlspecialchars($ing['unit']); ?></td>
                         <td>
                             <a href="?edit_id=<?php echo $ing['ingredient_id']; ?>" class="btn btn-primary"><i class="fas fa-edit"></i> Edit</a>
                             <form method="POST" style="display:inline;">
@@ -206,7 +189,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_ingredient'])) 
             </tbody>
         </table>
     </div>
-
     <footer class="footer">
         <div class="container">
             <div class="footer-bottom">
@@ -217,4 +199,3 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_ingredient'])) 
 </body>
 
 </html>
-?>

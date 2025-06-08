@@ -56,39 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile'])) {
 </head>
 
 <body>
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-brand">
-                <i class="fas fa-pizza-slice"></i>
-                <p><a href="../index.php" style="text-decoration: none; color: inherit;">Crust Pizza</a></p>
-            </div>
-            <button class="nav-toggle" onclick="toggleNavMenu()" aria-label="Toggle Navigation">
-                <i class="fas fa-bars"></i>
-            </button>
-            <div class="nav-menu" id="navMenu">
-                <a href="../index.php" class="nav-link">Home</a>
-                <a href="../menu.php" class="nav-link">Menu</a>
-                <a href="../build-pizza.php" class="nav-link">Build Your Pizza</a>
-                <a href="../track-order.php" class="nav-link">Track Order</a>
-                <div class="dropdown">
-                    <button class="dropdown-toggle" onclick="toggleDropdown()" aria-label="User Menu" aria-expanded="false" title="User Menu">
-                        <span class="user-icon"><i class="fas fa-user"></i></span>
-                        <span class="dropdown-arrow"></span>
-                    </button>
-                    <div class="dropdown-menu" id="dropdownMenu">
-                        <a class="dropdown-item" href="edit-profile.php">Profile</a>
-                        <a class="dropdown-item" href="dashboard.php">Dashboard</a>
-                        <a class="dropdown-item" href="../logout.php">Logout</a>
-                    </div>
-                </div>
-                <a href="../cart.php" class="nav-link cart-link">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-count" id="cartCount">0</span>
-                </a>
-            </div>
-        </div>
-    </nav>
+    <?php include './admin-header.php'; ?>
 
     <main>
         <div class="container">
@@ -136,58 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile'])) {
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>Crust Pizza</h3>
-                    <p>Australia's favorite gourmet pizza destination since 2001. From our family to yours, we're committed to delivering exceptional taste and quality in every bite.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-
-                <div class="footer-section">
-                    <h4>Quick Links</h4>
-                    <ul>
-                        <li><a href="../menu.php"><i class="fas fa-pizza-slice"></i> Our Menu</a></li>
-                        <li><a href="../build-pizza.php"><i class="fas fa-tools"></i> Build Your Pizza</a></li>
-                        <li><a href="../track-order.php"><i class="fas fa-truck"></i> Track Your Order</a></li>
-                        <li><a href="../locations.php"><i class="fas fa-map-marker-alt"></i> Find a Store</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-section">
-                    <h4>Customer Care</h4>
-                    <ul>
-                        <li><a href="#"><i class="fas fa-phone"></i> Contact Us</a></li>
-                        <li><a href="#"><i class="fas fa-question-circle"></i> FAQ</a></li>
-                        <li><a href="#"><i class="fas fa-comment"></i> Feedback</a></li>
-                        <li><a href="#"><i class="fas fa-file-contract"></i> Terms & Conditions</a></li>
-                        <li><a href="#"><i class="fas fa-shield-alt"></i> Privacy Policy</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-section">
-                    <h4>Contact Info</h4>
-                    <ul>
-                        <li><i class="fas fa-phone"></i> <strong>1300 278 787</strong></li>
-                        <li><i class="fas fa-envelope"></i> info@crustpizza.com.au</li>
-                        <li><i class="fas fa-clock"></i> Mon-Sun: 11AM - 11PM</li>
-                        <li><i class="fas fa-map-marker-alt"></i> 130+ locations across Australia</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="footer-bottom">
-                <p>© <span id="currentYear"></span> Crust Pizza. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+    <?php include './admin-footer.php'; ?>
 
     <script src="../assets/js/main.js"></script>
     <script>

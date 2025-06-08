@@ -29,7 +29,7 @@ foreach ($all_ingredients as $ingredient) {
 
 ?>
 
-<?php include 'includes/header.php'; ?>
+<?php include 'header.php'; ?>
 
 <main style="margin-top: 70px; padding: 40px 20px;">
     <div class="container">
@@ -250,7 +250,7 @@ foreach ($all_ingredients as $ingredient) {
     </div>
 </main>
 
-<?php include 'includes/footer.php'; ?>
+<?php include 'footer.php'; ?>
 
 <script src="assets/js/main.js"></script>
 <script>

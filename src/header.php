@@ -55,6 +55,16 @@ $current_page = basename($_SERVER['PHP_SELF']);
 <body>
     <!-- Enhanced Navigation -->
     <nav class="navbar">
+        <?php if (isLoggedIn()): ?>
+            <meta name="user-id" content="<?php echo htmlspecialchars($_SESSION['user_id']); ?>">
+        <?php endif; ?>
+        <?php
+        // Generate CSRF token if not already set
+        if (empty($_SESSION['csrf_token'])) {
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+        }
+        ?>
+        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
         <div class="nav-container">
             <div class="nav-brand">
                 <i class="fas fa-pizza-slice"></i>

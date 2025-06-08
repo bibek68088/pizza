@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile'])) {
 </head>
 
 <body>
-    <?php include 'includes/header.php'; ?>
+    <?php include 'header.php'; ?>
 
     <main>
         <div class="container">
@@ -112,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile'])) {
         </div>
     </main>
 
-    <?php include 'includes/footer.php'; ?>
+    <?php include 'footer.php'; ?>
 
     <script src="assets/js/main.js"></script>
     <script>
