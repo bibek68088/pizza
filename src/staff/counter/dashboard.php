@@ -127,10 +127,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
             gap: 0.5rem;
             font-size: 1.5rem;
             font-weight: bold;
+            color: #ff6b35;
         }
 
         .nav-brand a {
-            color: #333;
+            color: #ff6b35;
             text-decoration: none;
         }
 
