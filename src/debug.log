@@ -832,3 +832,108 @@
 
 2025-06-08 13:24:30 - Redirecting for role: customer
 2025-06-08 13:24:30 - Redirecting to: index.php
+2025-06-08 14:40:23 - --- New request to login.php ---
+2025-06-08 14:40:23 - Session ID: 9f5551roj1smj4h2t6gkg53g7t
+2025-06-08 14:40:23 - Session data before processing: Array
+(
+    [csrf_token] => f78ca848283a4902e4a874985ba2f58c89da77b86ae0f0fc9ec09f6deb0728af
+)
+
+2025-06-08 14:40:29 - --- New request to login.php ---
+2025-06-08 14:40:29 - Session ID: 9f5551roj1smj4h2t6gkg53g7t
+2025-06-08 14:40:29 - Session data before processing: Array
+(
+    [csrf_token] => f78ca848283a4902e4a874985ba2f58c89da77b86ae0f0fc9ec09f6deb0728af
+)
+
+2025-06-08 14:40:29 - POST request received: Array
+(
+    [csrf_token] => f78ca848283a4902e4a874985ba2f58c89da77b86ae0f0fc9ec09f6deb0728af
+    [username] => bibeks337@gmail.com
+    [password] => password123
+    [login] => 1
+)
+
+2025-06-08 14:40:29 - Username: bibeks337@gmail.com
+2025-06-08 14:40:29 - Login successful for user ID: 6
+2025-06-08 14:40:29 - Session data set: Array
+(
+    [csrf_token] => f78ca848283a4902e4a874985ba2f58c89da77b86ae0f0fc9ec09f6deb0728af
+    [user_id] => 6
+    [username] => bibek
+    [full_name] => Bibek Tamang
+    [role] => customer
+)
+
+2025-06-08 14:40:29 - Redirecting for role: customer
+2025-06-08 14:40:29 - Redirecting to: index.php
+2025-06-08 15:13:09 - --- New request to login.php ---
+2025-06-08 15:13:09 - Session ID: 9f5551roj1smj4h2t6gkg53g7t
+2025-06-08 15:13:09 - Session data before processing: Array
+(
+    [csrf_token] => 62ecd20df7a4f51962fa6208fc44f3f43927150ce2198ddc6f620a30619927f1
+)
+
+2025-06-08 15:13:17 - --- New request to login.php ---
+2025-06-08 15:13:17 - Session ID: 9f5551roj1smj4h2t6gkg53g7t
+2025-06-08 15:13:17 - Session data before processing: Array
+(
+    [csrf_token] => 62ecd20df7a4f51962fa6208fc44f3f43927150ce2198ddc6f620a30619927f1
+)
+
+2025-06-08 15:13:17 - POST request received: Array
+(
+    [csrf_token] => 62ecd20df7a4f51962fa6208fc44f3f43927150ce2198ddc6f620a30619927f1
+    [username] => customer@example.com
+    [password] => password123
+    [login] => 1
+)
+
+2025-06-08 15:13:17 - Username: customer@example.com
+2025-06-08 15:13:17 - Login successful for user ID: 1
+2025-06-08 15:13:17 - Session data set: Array
+(
+    [csrf_token] => 62ecd20df7a4f51962fa6208fc44f3f43927150ce2198ddc6f620a30619927f1
+    [user_id] => 1
+    [username] => customer1
+    [full_name] => John Customer
+    [role] => customer
+)
+
+2025-06-08 15:13:17 - Redirecting for role: customer
+2025-06-08 15:13:17 - Redirecting to: index.php
+2025-06-08 15:16:12 - --- New request to login.php ---
+2025-06-08 15:16:12 - Session ID: 9f5551roj1smj4h2t6gkg53g7t
+2025-06-08 15:16:12 - Session data before processing: Array
+(
+    [csrf_token] => 14c7498eafa4ddf946fdb71371fff9615a984a7ec8c77ce868a94c9b8c8f1974
+)
+
+2025-06-08 15:16:18 - --- New request to login.php ---
+2025-06-08 15:16:18 - Session ID: 9f5551roj1smj4h2t6gkg53g7t
+2025-06-08 15:16:18 - Session data before processing: Array
+(
+    [csrf_token] => 14c7498eafa4ddf946fdb71371fff9615a984a7ec8c77ce868a94c9b8c8f1974
+)
+
+2025-06-08 15:16:18 - POST request received: Array
+(
+    [csrf_token] => 14c7498eafa4ddf946fdb71371fff9615a984a7ec8c77ce868a94c9b8c8f1974
+    [username] => admin@crustpizza.com.au
+    [password] => admin123
+    [login] => 1
+)
+
+2025-06-08 15:16:18 - Username: admin@crustpizza.com.au
+2025-06-08 15:16:18 - Login successful for user ID: 2
+2025-06-08 15:16:18 - Session data set: Array
+(
+    [csrf_token] => 14c7498eafa4ddf946fdb71371fff9615a984a7ec8c77ce868a94c9b8c8f1974
+    [user_id] => 2
+    [username] => admin
+    [full_name] => System Administrator
+    [role] => admin
+)
+
+2025-06-08 15:16:18 - Redirecting for role: admin
+2025-06-08 15:16:18 - Redirecting to: admin/dashboard.php

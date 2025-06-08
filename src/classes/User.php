@@ -153,6 +153,7 @@ class User
 
         if ($stmt->rowCount() > 0) {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            // Populate object properties
             $this->user_id = $row['user_id'];
             $this->username = $row['username'];
             $this->email = $row['email'];
@@ -168,9 +169,9 @@ class User
             $this->email_verified = $row['email_verified'];
             $this->created_at = $row['created_at'];
             $this->updated_at = $row['updated_at'];
-            return true;
+            return $row; // Return the user details as an array
         }
-        return false;
+        return []; // Return an empty array if user is not found
     }
 
     public function update()

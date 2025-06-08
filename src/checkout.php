@@ -1,11 +1,4 @@
 <?php
-
-/**
- * Checkout Page
- * Process orders and handle payments
- * Crust Pizza Online Ordering System
- */
-
 require_once 'config/database.php';
 require_once 'classes/Order.php';
 require_once 'classes/User.php';
@@ -16,6 +9,15 @@ startSession();
 
 // Redirect if not logged in
 if (!isLoggedIn()) {
+    setFlashMessage('Your session has expired. Please log in again.', 'warning');
+    header('Location: login.php?redirect=checkout.php');
+    exit();
+}
+
+// Check if user_id is set
+if (!isset($_SESSION['user_id'])) {
+    error_log("Session user_id not set in checkout.php");
+    setFlashMessage('Session error. Please log in again.', 'error');
     header('Location: login.php?redirect=checkout.php');
     exit();
 }
@@ -26,9 +28,45 @@ $order = new Order($db);
 $user = new User($db);
 $cart = new Cart($db);
 
-// Get user details with proper error handling
+// Get user details
 $user_id = $_SESSION['user_id'];
 $user_details = $user->getUserById($user_id);
+
+// Debug user details
+if (empty($user_details)) {
+    error_log("User details not found for user_id: $user_id");
+    $user_details = [
+        'full_name' => '',
+        'email' => $_SESSION['email'] ?? '',
+        'phone' => '',
+        'address_line_1' => '',
+        'suburb' => '',
+        'state' => '',
+        'postcode' => ''
+    ];
+}
+
+// Fetch default address from user_addresses table
+$addresses = $user->getUserAddresses($user_id);
+$default_address = !empty($addresses) ? array_filter($addresses, function ($addr) {
+    return $addr['is_default'];
+}) : [];
+$default_address = !empty($default_address) ? reset($default_address) : [];
+
+// Merge user details with default address
+$user_details = array_merge($user_details, [
+    'address_line_1' => $default_address['address_line_1'] ?? '',
+    'suburb' => $default_address['suburb'] ?? '',
+    'state' => $default_address['state'] ?? '',
+    'postcode' => $default_address['postcode'] ?? ''
+]);
+
+// Check for incomplete profile
+if (empty($user_details['full_name']) || empty($user_details['email'])) {
+    setFlashMessage('Please complete your profile details before checking out.', 'warning');
+    header('Location: profile.php?redirect=checkout.php');
+    exit();
+}
 
 // Get user's cart items
 $cart_items = $cart->getUserCart($user_id);
@@ -41,23 +79,19 @@ if (empty($cart_items)) {
     exit();
 }
 
-// If user details not found, set defaults
-if (!$user_details || !is_array($user_details)) {
-    $user_details = [
-        'first_name' => '',
-        'last_name' => '',
-        'email' => $_SESSION['email'] ?? '',
-        'phone' => '',
-        'address' => '',
-        'suburb' => '',
-        'state' => '',
-        'postcode' => ''
-    ];
-}
-
 // Process order submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
+        // Validate CSRF token
+        if (!validateCSRFToken($_POST['csrf_token'])) {
+            throw new Exception('Invalid CSRF token.');
+        }
+
+        // Validate session
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] !== $user_id) {
+            throw new Exception('Session mismatch. Please log in again.');
+        }
+
         // Get form data
         $order_type = sanitizeInput($_POST['order_type']);
         $payment_method = sanitizeInput($_POST['payment_method']);
@@ -65,13 +99,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $customer_phone = sanitizeInput($_POST['customer_phone']);
         $customer_email = sanitizeInput($_POST['customer_email']);
 
+        // Validate required fields
+        if (empty($customer_name) || empty($customer_phone) || empty($customer_email)) {
+            throw new Exception('Please fill in all required customer details.');
+        }
+
         // Address fields (only for delivery)
         $delivery_address = '';
+        $street = null;
+        $suburb = null;
+        $postcode = null;
+        $state = null;
         if ($order_type === 'delivery') {
             $street = sanitizeInput($_POST['street']);
             $suburb = sanitizeInput($_POST['suburb']);
             $postcode = sanitizeInput($_POST['postcode']);
             $state = sanitizeInput($_POST['state']);
+
+            // Validate address fields
+            if (empty($street) || empty($suburb) || empty($state) || empty($postcode)) {
+                throw new Exception('Please fill in all required delivery address fields.');
+            }
+            if (!preg_match('/^[0-9]{4}$/', $postcode)) {
+                throw new Exception('Invalid postcode format.');
+            }
+
             $delivery_address = "$street, $suburb, $state $postcode";
         }
 
@@ -84,70 +136,115 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $total = $subtotal + $tax + $delivery_fee;
 
         // Create order
-        // Set order properties
         $order->user_id = $user_id;
-        $order->store_id = 1; // Default store ID
+        $order->store_id = 1;
         $order->order_type = $order_type;
         $order->payment_method = $payment_method;
         $order->customer_name = $customer_name;
         $order->customer_phone = $customer_phone;
         $order->customer_email = $customer_email;
         $order->delivery_address = $delivery_address;
+        $order->delivery_instructions = $special_instructions; // Align with Order.php
         $order->special_requests = $special_instructions;
         $order->subtotal = $subtotal;
         $order->tax = $tax;
         $order->delivery_fee = $delivery_fee;
-        $order->discount_amount = 0; // No discount by default
+        $order->discount_amount = 0;
         $order->total = $total;
-        $order->priority = 'normal'; // Default priority
-        $order->estimated_prep_time = 30; // Default 30 minutes
+        $order->priority = 'normal';
+        $order->estimated_prep_time = 30;
 
-        // Create the order
-        if ($order->create()) {
-            $order_id = $order->order_id;
+        if (!$order->create()) {
+            throw new Exception('Failed to create order. Please try again.');
+        }
 
-            if ($order_id) {
-                // Process cart items
-                foreach ($cart_items as $item) {
-                    $pizza_id = null;
-                    $menu_item_id = null;
+        $order_id = $order->order_id;
+        if (!$order_id) {
+            throw new Exception('Order ID not generated.');
+        }
 
-                    // Extract IDs from database format
-                    if (!empty($item['pizza_id'])) {
-                        $pizza_id = $item['pizza_id'];
-                    } elseif (!empty($item['menu_item_id'])) {
-                        $menu_item_id = $item['menu_item_id'];
-                    }
+        // Process cart items
+        foreach ($cart_items as $item) {
+            $pizza_id = !empty($item['pizza_id']) ? $item['pizza_id'] : null;
+            $menu_item_id = !empty($item['menu_item_id']) ? $item['menu_item_id'] : null;
 
-                    $item_data = [
-                        'order_id' => $order_id,
-                        'item_type' => $item['item_type'] ?? 'pizza',
-                        'pizza_id' => $pizza_id,
-                        'menu_item_id' => $menu_item_id,
-                        'size' => $item['size'] ?? null,
-                        'quantity' => $item['quantity'],
-                        'unit_price' => $item['unit_price'],
-                        'total_price' => $item['total_price'],
-                        'special_instructions' => $item['special_instructions'] ?? ''
-                    ];
+            $item_data = [
+                'order_id' => $order_id,
+                'item_type' => $item['item_type'] ?? 'pizza',
+                'pizza_id' => $pizza_id,
+                'menu_item_id' => $menu_item_id,
+                'size' => $item['size'] ?? null,
+                'quantity' => (int)$item['quantity'],
+                'unit_price' => floatval($item['unit_price']),
+                'total_price' => floatval($item['total_price']),
+                'special_instructions' => $item['special_instructions'] ?? ''
+            ];
 
-                    $order->addOrderItem($item_data);
-                }
+            $order_item_id = $order->addOrderItem($item_data);
+            if (!$order_item_id) {
+                error_log("Failed to add order item: {$item['item_name']} for order_id: $order_id");
+                throw new Exception("Failed to add item: {$item['item_name']}");
+            }
+        }
 
-                // Clear user's cart after successful order
-                $cart->clearUserCart($user_id);
+        // Update user profile
+        $current_user = $user->getUserById($user_id);
+        if ($current_user) {
+            $user->user_id = $user_id;
+            $user->full_name = $customer_name;
+            $user->email = $customer_email;
+            $user->phone = $customer_phone;
+            $user->address = $street ?? $current_user['address'] ?? '';
+            $user->date_of_birth = $current_user['date_of_birth'] ?? null;
+            $user->role = $current_user['role'] ?? 'customer';
+            $user->store_id = $current_user['store_id'] ?? null;
+            $user->hire_date = $current_user['hire_date'] ?? null;
+            $user->salary = $current_user['salary'] ?? null;
+            $user->is_active = $current_user['is_active'] ?? 1;
+            $user->email_verified = $current_user['email_verified'] ?? 0;
 
-                // Set success message and redirect
-                setFlashMessage('Order placed successfully! Order ID: #' . $order_id, 'success');
-                header('Location: order-confirmation.php?order_id=' . $order_id);
-                exit();
-            } else {
-                throw new Exception('Failed to create order');
+            if (!$user->update()) {
+                error_log("Failed to update user details for user_id: $user_id");
             }
         } else {
-            throw new Exception('Failed to create order');
+            error_log("Failed to fetch current user details for update, user_id: $user_id");
         }
+
+        // Update or add address if delivery
+        if ($order_type === 'delivery') {
+            $address_data = [
+                'user_id' => $user_id,
+                'address_type' => 'delivery',
+                'address_line_1' => $street,
+                'address_line_2' => '',
+                'suburb' => $suburb,
+                'state' => $state,
+                'postcode' => $postcode,
+                'country' => 'Australia',
+                'is_default' => empty($default_address) ? 1 : 0,
+                'delivery_instructions' => $special_instructions
+            ];
+
+            try {
+                if (!$user->addAddress($address_data)) {
+                    error_log("Failed to save delivery address for user_id: $user_id");
+                }
+            } catch (PDOException $e) {
+                error_log("PDOException in addAddress for user_id: $user_id: " . $e->getMessage());
+            }
+        }
+
+        // Clear user's cart
+        if (!$cart->clearUserCart($user_id)) {
+            error_log("Failed to clear cart for user_id: $user_id");
+        }
+
+        // Set success message and redirect
+        setFlashMessage('Order placed successfully! Order ID: #' . $order_id, 'success');
+        header('Location: order-confirmation.php?order_id=' . $order_id);
+        exit();
     } catch (Exception $e) {
+        error_log("Order processing error for user_id: $user_id: " . $e->getMessage());
         setFlashMessage('Error processing order: ' . $e->getMessage(), 'error');
     }
 }
@@ -155,7 +252,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Helper function to safely get user data
 function getUserData($user_details, $key, $default = '')
 {
-    return isset($user_details[$key]) ? htmlspecialchars($user_details[$key]) : $default;
+    return isset($user_details[$key]) && $user_details[$key] !== null ? htmlspecialchars($user_details[$key]) : $default;
 }
 ?>
 
@@ -169,13 +266,11 @@ function getUserData($user_details, $key, $default = '')
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script>
-        // Set login status for cart.js
         const isLoggedIn = <?php echo isLoggedIn() ? 'true' : 'false'; ?>;
     </script>
 </head>
 
 <body class="<?php echo isLoggedIn() ? 'logged-in' : ''; ?>">
-    <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-brand">
@@ -218,9 +313,8 @@ function getUserData($user_details, $key, $default = '')
             <?php displayFlashMessages(); ?>
 
             <form id="checkoutForm" method="POST" style="display: grid; grid-template-columns: 1fr 400px; gap: 2rem; margin-top: 2rem;">
-                <!-- Order Details -->
+                <input type="hidden" name="csrf_token" value="<?php echo generateCSRFToken(); ?>">
                 <div class="checkout-details">
-                    <!-- Order Type -->
                     <div class="card" style="margin-bottom: 2rem;">
                         <div class="card-header">
                             <h3><i class="fas fa-truck"></i> Order Type</h3>
@@ -243,33 +337,31 @@ function getUserData($user_details, $key, $default = '')
                         </div>
                     </div>
 
-                    <!-- Customer Details -->
                     <div class="card" style="margin-bottom: 2rem;">
                         <div class="card-header">
                             <h3><i class="fas fa-user"></i> Customer Details</h3>
                         </div>
                         <div class="card-body">
+                            <div style="margin-bottom: 1rem;">
+                                <label for="customer_name">Full Name *</label>
+                                <input type="text" id="customer_name" name="customer_name" class="form-control"
+                                    value="<?php echo getUserData($user_details, 'full_name'); ?>" required>
+                            </div>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-                                <div>
-                                    <label for="customer_name">Full Name *</label>
-                                    <input type="text" id="customer_name" name="customer_name" class="form-control"
-                                        value="<?php echo getUserData($user_details, 'first_name') . ' ' . getUserData($user_details, 'last_name'); ?>" required>
-                                </div>
                                 <div>
                                     <label for="customer_phone">Phone Number *</label>
                                     <input type="tel" id="customer_phone" name="customer_phone" class="form-control"
                                         value="<?php echo getUserData($user_details, 'phone'); ?>" required>
                                 </div>
-                            </div>
-                            <div>
-                                <label for="customer_email">Email Address *</label>
-                                <input type="email" id="customer_email" name="customer_email" class="form-control"
-                                    value="<?php echo getUserData($user_details, 'email'); ?>" required>
+                                <div>
+                                    <label for="customer_email">Email Address *</label>
+                                    <input type="email" id="customer_email" name="customer_email" class="form-control"
+                                        value="<?php echo getUserData($user_details, 'email'); ?>" required>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Delivery Address -->
                     <div class="card delivery-section" style="margin-bottom: 2rem;">
                         <div class="card-header">
                             <h3><i class="fas fa-map-marker-alt"></i> Delivery Address</h3>
@@ -278,7 +370,7 @@ function getUserData($user_details, $key, $default = '')
                             <div style="margin-bottom: 1rem;">
                                 <label for="street">Street Address *</label>
                                 <input type="text" id="street" name="street" class="form-control"
-                                    value="<?php echo getUserData($user_details, 'address'); ?>"
+                                    value="<?php echo getUserData($user_details, 'address_line_1'); ?>"
                                     placeholder="123 Main Street" required>
                             </div>
                             <div style="display: grid; grid-template-columns: 1fr 1fr 100px; gap: 1rem;">
@@ -312,7 +404,6 @@ function getUserData($user_details, $key, $default = '')
                         </div>
                     </div>
 
-                    <!-- Payment Method -->
                     <div class="card" style="margin-bottom: 2rem;">
                         <div class="card-header">
                             <h3><i class="fas fa-credit-card"></i> Payment Method</h3>
@@ -335,7 +426,6 @@ function getUserData($user_details, $key, $default = '')
                         </div>
                     </div>
 
-                    <!-- Special Instructions -->
                     <div class="card">
                         <div class="card-header">
                             <h3><i class="fas fa-comment"></i> Special Instructions</h3>
@@ -347,7 +437,6 @@ function getUserData($user_details, $key, $default = '')
                     </div>
                 </div>
 
-                <!-- Order Summary -->
                 <div class="order-summary">
                     <div class="card" style="position: sticky; top: 2rem;">
                         <div class="card-header">
@@ -355,7 +444,6 @@ function getUserData($user_details, $key, $default = '')
                         </div>
                         <div class="card-body">
                             <div id="orderItems" style="margin-bottom: 1.5rem;">
-                                <!-- Order items from database -->
                                 <?php foreach ($cart_items as $item): ?>
                                     <div class="order-item" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid #eee;">
                                         <div style="flex: 1;">
@@ -405,7 +493,6 @@ function getUserData($user_details, $key, $default = '')
                                 </div>
                             </div>
 
-                            <!-- Hidden inputs for form submission -->
                             <input type="hidden" name="subtotal" id="hiddenSubtotal" value="<?php echo $cart_total['subtotal'] ?? 0; ?>">
                             <input type="hidden" name="tax" id="hiddenTax" value="<?php echo ($cart_total['subtotal'] ?? 0) * 0.1; ?>">
                             <input type="hidden" name="delivery_fee" id="hiddenDeliveryFee" value="<?php echo ($cart_total['subtotal'] ?? 0) < 30 ? 5.99 : 0; ?>">
@@ -425,10 +512,16 @@ function getUserData($user_details, $key, $default = '')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             setupFormHandlers();
+            console.log('Customer Name:', document.getElementById('customer_name').value);
+            console.log('Customer Phone:', document.getElementById('customer_phone').value);
+            console.log('Customer Email:', document.getElementById('customer_email').value);
+            console.log('Street:', document.getElementById('street').value);
+            console.log('Suburb:', document.getElementById('suburb').value);
+            console.log('State:', document.getElementById('state').value);
+            console.log('Postcode:', document.getElementById('postcode').value);
         });
 
         function setupFormHandlers() {
-            // Order type change handler
             document.querySelectorAll('input[name="order_type"]').forEach(radio => {
                 radio.addEventListener('change', function() {
                     updateOrderTotals();
@@ -437,18 +530,14 @@ function getUserData($user_details, $key, $default = '')
                 });
             });
 
-            // Payment method change handler
             document.querySelectorAll('input[name="payment_method"]').forEach(radio => {
                 radio.addEventListener('change', updateOptionCardStyles);
             });
 
-            // Initial setup
             toggleDeliverySection();
             updateOptionCardStyles();
 
-            // Form submission
             document.getElementById('checkoutForm').addEventListener('submit', function(e) {
-                // Show loading state
                 const submitBtn = this.querySelector('button[type="submit"]');
                 submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
                 submitBtn.disabled = true;
@@ -466,7 +555,6 @@ function getUserData($user_details, $key, $default = '')
             document.getElementById('summaryTotal').textContent = formatCurrency(total);
             document.getElementById('hiddenDeliveryFee').value = deliveryFee.toFixed(2);
 
-            // Show/hide delivery fee line
             const deliveryFeeLine = document.querySelector('.delivery-fee-line');
             const deliveryNote = document.querySelector('.delivery-note');
             if (orderType === 'pickup') {
@@ -493,7 +581,6 @@ function getUserData($user_details, $key, $default = '')
         }
 
         function updateOptionCardStyles() {
-            // Update order type cards
             document.querySelectorAll('input[name="order_type"]').forEach(radio => {
                 const card = radio.closest('.option-card');
                 if (radio.checked) {
@@ -509,7 +596,6 @@ function getUserData($user_details, $key, $default = '')
                 }
             });
 
-            // Update payment method cards
             document.querySelectorAll('input[name="payment_method"]').forEach(radio => {
                 const card = radio.closest('.option-card');
                 if (radio.checked) {
@@ -544,7 +630,6 @@ function getUserData($user_details, $key, $default = '')
             navMenu.classList.toggle('active');
         }
 
-        // Close dropdown and nav menu when clicking outside
         document.addEventListener('click', function(event) {
             const dropdown = document.querySelector('.dropdown');
             const dropdownMenu = document.getElementById('dropdownMenu');
@@ -557,7 +642,6 @@ function getUserData($user_details, $key, $default = '')
             }
         });
 
-        // Close dropdown and nav menu on Escape key
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape') {
                 document.getElementById('dropdownMenu').classList.remove('show');
