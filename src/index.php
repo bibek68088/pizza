@@ -12,7 +12,7 @@ require_once 'header.php';
 $featured_pizzas = isset($featured_pizzas) && is_array($featured_pizzas) ? $featured_pizzas : [];
 // Check if generate_csrf_token exists and session is started
 if (function_exists('generate_csrf_token')) {
-    $csrf_token = generate_csrf_token();
+    $csrf_token = generateCSRFToken();
 } else {
     $csrf_token = '';
     error_log('generate_csrf_token function not found in index.php');
@@ -476,48 +476,51 @@ if (function_exists('generate_csrf_token')) {
             }
 
             return fetch('api/cart_api.php?action=add', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(result => {
-                if (button) {
-                    button.innerHTML = originalText;
-                    button.disabled = false;
-                }
-                if (result.success) {
-                    let cart = JSON.parse(localStorage.getItem('crustPizzaCart')) || [];
-                    if (!Array.isArray(cart)) {
-                        cart = [];
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
                     }
-                    cart.push({ ...cartItem, cart_id: result.cart_id || Date.now() });
-                    localStorage.setItem('crustPizzaCart', JSON.stringify(cart));
-                    updateCartCount();
-                    showNotification(`${pizzaName} (${size}) added to cart!`, 'success');
-                    return true;
-                } else {
-                    console.error('API Error:', result.message || 'Unknown error');
-                    showNotification(result.message || 'Failed to add item to cart', 'error');
+                    return response.json();
+                })
+                .then(result => {
+                    if (button) {
+                        button.innerHTML = originalText;
+                        button.disabled = false;
+                    }
+                    if (result.success) {
+                        let cart = JSON.parse(localStorage.getItem('crustPizzaCart')) || [];
+                        if (!Array.isArray(cart)) {
+                            cart = [];
+                        }
+                        cart.push({
+                            ...cartItem,
+                            cart_id: result.cart_id || Date.now()
+                        });
+                        localStorage.setItem('crustPizzaCart', JSON.stringify(cart));
+                        updateCartCount();
+                        showNotification(`${pizzaName} (${size}) added to cart!`, 'success');
+                        return true;
+                    } else {
+                        console.error('API Error:', result.message || 'Unknown error');
+                        showNotification(result.message || 'Failed to add item to cart', 'error');
+                        return false;
+                    }
+                })
+                .catch(error => {
+                    if (button) {
+                        button.innerHTML = originalText;
+                        button.disabled = false;
+                    }
+                    console.error('Error adding to cart:', error.message);
+                    showNotification('An error occurred while adding to cart', 'error');
                     return false;
-                }
-            })
-            .catch(error => {
-                if (button) {
-                    button.innerHTML = originalText;
-                    button.disabled = false;
-                }
-                console.error('Error adding to cart:', error.message);
-                showNotification('An error occurred while adding to cart', 'error');
-                return false;
-            });
+                });
         } catch (error) {
             console.error('Unexpected error in addToCart:', error);
             showNotification('Unexpected error occurred', 'error');
