@@ -1137,3 +1137,38 @@
 
 2025-06-08 15:33:31 - Redirecting for role: counter
 2025-06-08 15:33:31 - Redirecting to: staff/counter/dashboard.php
+2025-06-08 15:41:17 - --- New request to login.php ---
+2025-06-08 15:41:17 - Session ID: an22jockhmoiior9if2eblck6g
+2025-06-08 15:41:17 - Session data before processing: Array
+(
+    [csrf_token] => b71932377ce5525ab3905b2e6fd6a8c9ed167b02858641303e51c3b29e9a7895
+)
+
+2025-06-08 15:41:21 - --- New request to login.php ---
+2025-06-08 15:41:21 - Session ID: an22jockhmoiior9if2eblck6g
+2025-06-08 15:41:21 - Session data before processing: Array
+(
+    [csrf_token] => b71932377ce5525ab3905b2e6fd6a8c9ed167b02858641303e51c3b29e9a7895
+)
+
+2025-06-08 15:41:21 - POST request received: Array
+(
+    [csrf_token] => b71932377ce5525ab3905b2e6fd6a8c9ed167b02858641303e51c3b29e9a7895
+    [username] => abhishek.bam10@gmail.com
+    [password] => alahamora
+    [login] => 1
+)
+
+2025-06-08 15:41:21 - Username: abhishek.bam10@gmail.com
+2025-06-08 15:41:21 - Login successful for user ID: 7
+2025-06-08 15:41:21 - Session data set: Array
+(
+    [csrf_token] => b71932377ce5525ab3905b2e6fd6a8c9ed167b02858641303e51c3b29e9a7895
+    [user_id] => 7
+    [username] => Abhi
+    [full_name] => Abhishek Bam
+    [role] => customer
+)
+
+2025-06-08 15:41:21 - Redirecting for role: customer
+2025-06-08 15:41:21 - Redirecting to: index.php
