@@ -669,3 +669,54 @@
 
 2025-06-08 08:19:44 - Redirecting for role: admin
 2025-06-08 08:19:44 - Redirecting to: admin/dashboard.php
+2025-06-08 11:57:40 - --- New request to login.php ---
+2025-06-08 11:57:40 - Session ID: 9f5551roj1smj4h2t6gkg53g7t
+2025-06-08 11:57:40 - Session data before processing: Array
+(
+)
+
+2025-06-08 11:57:44 - --- New request to login.php ---
+2025-06-08 11:57:44 - Session ID: 9f5551roj1smj4h2t6gkg53g7t
+2025-06-08 11:57:44 - Session data before processing: Array
+(
+    [csrf_token] => 6f02eaae802b362476c4dee80badf33dc0cd289a2454210c3f598340f7929af9
+)
+
+2025-06-08 11:57:44 - POST request received: Array
+(
+    [csrf_token] => 6f02eaae802b362476c4dee80badf33dc0cd289a2454210c3f598340f7929af9
+    [username] => bibeks337@gmail.com
+    [password] => Bibek@123
+    [login] => 1
+)
+
+2025-06-08 11:57:44 - Username: bibeks337@gmail.com
+2025-06-08 11:57:45 - Login failed: Invalid credentials
+2025-06-08 11:57:51 - --- New request to login.php ---
+2025-06-08 11:57:51 - Session ID: 9f5551roj1smj4h2t6gkg53g7t
+2025-06-08 11:57:51 - Session data before processing: Array
+(
+    [csrf_token] => 6f02eaae802b362476c4dee80badf33dc0cd289a2454210c3f598340f7929af9
+)
+
+2025-06-08 11:57:51 - POST request received: Array
+(
+    [csrf_token] => 6f02eaae802b362476c4dee80badf33dc0cd289a2454210c3f598340f7929af9
+    [username] => bibeks337@gmail.com
+    [password] => password123
+    [login] => 1
+)
+
+2025-06-08 11:57:51 - Username: bibeks337@gmail.com
+2025-06-08 11:57:51 - Login successful for user ID: 6
+2025-06-08 11:57:51 - Session data set: Array
+(
+    [csrf_token] => 6f02eaae802b362476c4dee80badf33dc0cd289a2454210c3f598340f7929af9
+    [user_id] => 6
+    [username] => bibek
+    [full_name] => Bibek Tamang
+    [role] => customer
+)
+
+2025-06-08 11:57:51 - Redirecting for role: customer
+2025-06-08 11:57:51 - Redirecting to: index.php

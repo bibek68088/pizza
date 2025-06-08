@@ -1587,3 +1587,15 @@
 [08-Jun-2025 10:23:01 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
 [08-Jun-2025 10:23:01 Europe/Berlin] Cart class instantiated
 [08-Jun-2025 10:23:01 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 11:56:35 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 11:56:35 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 11:56:35 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 11:56:35 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 11:56:35 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 11:56:35 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 11:56:35 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 11:56:35 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 11:56:35 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 11:57:57 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 11:57:57 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 11:57:57 Europe/Berlin] JSON parse error: Syntax error
