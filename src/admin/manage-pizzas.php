@@ -44,29 +44,85 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['save_pizza'])) {
         ];
 
         // Handle image upload
-        if (!empty($_FILES['image']['name']) && isValidUpload($_FILES['image'], ['image/jpeg', 'image/png'], 5242880)) {
-            $uploadDir = BASE_PATH . 'public/';
-            $data['image'] = $uploadDir . generateUniqueFilename($_FILES['image']['name']);
-            move_uploaded_file($_FILES['image']['tmp_name'], $data['image']);
-            $data['image'] = str_replace(BASE_PATH, '/', $data['image']); // Store relative path
-        }
-
         $pizza_id = isset($_POST['pizza_id']) ? (int)$_POST['pizza_id'] : null;
+        $editPizza = $pizza_id ? $pizza->getPizzaById($pizza_id) : [];
         $staff_id = getCurrentStaffId();
+        if (!empty($_FILES['image']['name']) && isValidUpload($_FILES['image'], ['image/jpeg', 'image/png'], 5242880)) {
+            $uploadDir = BASE_PATH . 'assets/public/uploads/';
+            error_log("BASE_PATH: " . BASE_PATH);
+            error_log("Attempting to save image to: $uploadDir");
+
+            // Create directory if it doesn't exist
+            if (!is_dir($uploadDir)) {
+                if (!mkdir($uploadDir, 0755, true)) {
+                    error_log("Failed to create directory: $uploadDir");
+                    setFlashMessage('Failed to create upload directory.', 'error');
+                    logActivity('upload_dir_failure', "Failed to create directory: $uploadDir", null, $staff_id);
+                    redirect('manage-pizzas.php');
+                }
+            }
+
+            // Check if directory is writable
+            if (!is_writable($uploadDir)) {
+                error_log("Directory is not writable: $uploadDir");
+                setFlashMessage('Upload directory is not writable.', 'error');
+                logActivity('upload_dir_not_writable', "Directory not writable: $uploadDir", null, $staff_id);
+                redirect('manage-pizzas.php');
+            }
+
+            // Check temporary file
+            if (!file_exists($_FILES['image']['tmp_name']) || !is_readable($_FILES['image']['tmp_name'])) {
+                error_log("Temporary file issue: {$_FILES['image']['tmp_name']}");
+                setFlashMessage('Invalid or inaccessible temporary file.', 'error');
+                logActivity('upload_temp_file_issue', "Temporary file issue: {$_FILES['image']['tmp_name']}", null, $staff_id);
+                $data['image'] = $editPizza['image_url'] ?? '';
+            } else {
+                $data['image'] = $uploadDir . generateUniqueFilename($_FILES['image']['name']);
+                if (move_uploaded_file($_FILES['image']['tmp_name'], $data['image'])) {
+                    $data['image'] = str_replace(BASE_PATH, '/', $data['image']);
+                    error_log("Image successfully uploaded to: {$data['image']}");
+                    logActivity('image_upload_success', "Uploaded image for pizza: {$data['name']} to {$data['image']}", null, $staff_id);
+                    // Delete old image if updating
+                    if ($pizza_id && !empty($editPizza['image_url']) && file_exists(BASE_PATH . $editPizza['image_url'])) {
+                        if (unlink(BASE_PATH . $editPizza['image_url'])) {
+                            error_log("Deleted old image: " . BASE_PATH . $editPizza['image_url']);
+                            logActivity('image_delete_success', "Deleted old image: {$editPizza['image_url']}", null, $staff_id);
+                        } else {
+                            error_log("Failed to delete old image: " . BASE_PATH . $editPizza['image_url']);
+                            logActivity('image_delete_failure', "Failed to delete old image: {$editPizza['image_url']}", null, $staff_id);
+                        }
+                    }
+                } else {
+                    error_log("Failed to move uploaded file to: {$data['image']}, Error: {$_FILES['image']['error']}");
+                    setFlashMessage('Failed to upload image.', 'error');
+                    logActivity('image_upload_failure', "Failed to upload image for pizza: {$data['name']}, Error: {$_FILES['image']['error']}", null, $staff_id);
+                    $data['image'] = $editPizza['image_url'] ?? '';
+                }
+            }
+        } else {
+            if (!empty($_FILES['image']['name'])) {
+                error_log("Invalid upload: Error code {$_FILES['image']['error']}, Type: {$_FILES['image']['type']}, Size: {$_FILES['image']['size']}");
+                setFlashMessage('Invalid image file or upload error.', 'error');
+                logActivity('invalid_upload', "Invalid image upload for pizza: {$data['name']}, Error: {$_FILES['image']['error']}", null, $staff_id);
+            }
+            $data['image'] = $editPizza['image_url'] ?? ''; // Retain existing image
+        }
 
         if ($pizza_id) {
             if ($pizza->update($pizza_id, $data, $staff_id)) {
                 setFlashMessage('Pizza updated successfully.', 'success');
-                logActivity('update_pizza', "Updated pizza: {$data['name']}", $staff_id);
+                logActivity('update_pizza', "Updated pizza: {$data['name']}", null, $staff_id);
             } else {
                 setFlashMessage('Failed to update pizza.', 'error');
+                logActivity('update_pizza_failure', "Failed to update pizza: {$data['name']}", null, $staff_id);
             }
         } else {
             if ($pizza->create($data, $staff_id)) {
                 setFlashMessage('Pizza added successfully.', 'success');
-                logActivity('add_pizza', "Added pizza: {$data['name']}", $staff_id);
+                logActivity('add_pizza', "Added pizza: {$data['name']}", null, $staff_id);
             } else {
                 setFlashMessage('Failed to add pizza.', 'error');
+                logActivity('add_pizza_failure', "Failed to add pizza: {$data['name']}", null, $staff_id);
             }
         }
     }
@@ -80,11 +136,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_pizza'])) {
     } else {
         $pizza_id = (int)$_POST['pizza_id'];
         $staff_id = getCurrentStaffId();
+        $pizzaData = $pizza->getPizzaById($pizza_id);
         if ($pizza->delete($pizza_id, $staff_id)) {
+            // Delete associated image
+            if (!empty($pizzaData['image_url']) && file_exists(BASE_PATH . $pizzaData['image_url'])) {
+                if (unlink(BASE_PATH . $pizzaData['image_url'])) {
+                    error_log("Deleted image for pizza ID $pizza_id: " . BASE_PATH . $pizzaData['image_url']);
+                    logActivity('image_delete_success', "Deleted image for pizza ID: $pizza_id", null, $staff_id);
+                } else {
+                    error_log("Failed to delete image for pizza ID $pizza_id: " . BASE_PATH . $pizzaData['image_url']);
+                    logActivity('image_delete_failure', "Failed to delete image for pizza ID: $pizza_id", null, $staff_id);
+                }
+            }
             setFlashMessage('Pizza deleted successfully.', 'success');
-            logActivity('delete_pizza', "Deleted pizza ID: $pizza_id", $staff_id);
+            logActivity('delete_pizza', "Deleted pizza ID: $pizza_id", null, $staff_id);
         } else {
             setFlashMessage('Failed to delete pizza.', 'error');
+            logActivity('delete_pizza_failure', "Failed to delete pizza ID: $pizza_id", null, $staff_id);
         }
     }
     redirect('manage-pizzas.php');
@@ -283,7 +351,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_pizza'])) {
             border: 2px solid var(--primary-color);
             border-radius: 50%;
             box-shadow: var(--shadow);
-            transition: transform 0.3s ease,
+            transition: transform 0.3s ease;
         }
 
         .user-icon i {
@@ -657,7 +725,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_pizza'])) {
         function updateCartCount() {
             const cart = JSON.parse(localStorage.getItem('crustPizzaCart')) || [];
             const cartCount = cart.reduce((total, item) => total + (item.quantity || 1), 0);
-            document.getElementById('cartCount').textContent = cartCount;
+            const cartCountElement = document.getElementById('cartCount');
+            if (cartCountElement) {
+                cartCountElement.textContent = cartCount;
+            }
         }
 
         document.addEventListener('DOMContentLoaded', function() {

@@ -11,35 +11,65 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-function updateCartCount() {
-  if (isLoggedIn()) {
-    ajax("api/cart_api.php?action=get", { method: "GET" })
-      .then((response) => {
-        if (response.success) {
-          const cartCount = response.data.items.reduce(
-            (total, item) => total + parseInt(item.quantity),
-            0
-          );
-          const cartCountElements = document.querySelectorAll(".cart-count");
-          cartCountElements.forEach((element) => {
-            element.textContent = cartCount;
-            element.style.display = cartCount > 0 ? "inline-block" : "none";
+document.addEventListener('DOMContentLoaded', function() {
+  if (!window.location.pathname.includes('pizza-details.php')) {
+      const observerOptions = {
+          threshold: 0.1,
+          rootMargin: '0px 0px -50px 0px'
+      };
+      const observer = new IntersectionObserver(function(entries) {
+          entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                  entry.target.style.opacity = '1';
+                  entry.target.style.transform = 'translateY(0)';
+              }
           });
-        }
-      })
-      .catch((error) => console.error("Error updating cart count:", error));
-  } else {
-    const localCart = JSON.parse(localStorage.getItem("cart") || "[]");
-    const cartCount = localCart.reduce(
-      (total, item) => total + (item.quantity || 1),
-      0
-    );
-    const cartCountElements = document.querySelectorAll(".cart-count");
-    cartCountElements.forEach((element) => {
+      }, observerOptions);
+      document.querySelectorAll('.fade-in-up').forEach(el => {
+          observer.observe(el);
+      });
+  }
+  updateCartCount();
+});
+
+function updateCartCount() {
+  try {
+      let cartCount = 0;
+      if (isLoggedIn()) {
+          ajax("api/cart_api.php?action=get", { method: "GET" })
+              .then((response) => {
+                  if (response.success) {
+                      cartCount = response.data.items.reduce(
+                          (total, item) => total + parseInt(item.quantity),
+                          0
+                      );
+                      updateCartCountDisplay(cartCount);
+                  }
+              })
+              .catch((error) => {
+                  console.error("Error updating cart count:", error);
+                  updateCartCountDisplay(0);
+              });
+      } else {
+          const localCart = JSON.parse(localStorage.getItem("cart") || "[]");
+          cartCount = localCart.reduce(
+              (total, item) => total + (item.quantity || 1),
+              0
+          );
+          updateCartCountDisplay(cartCount);
+      }
+  } catch (error) {
+      console.error("Error in updateCartCount:", error);
+      updateCartCountDisplay(0);
+  }
+}
+
+function updateCartCountDisplay(cartCount) {
+  const cartCountElements = document.querySelectorAll(".cart-count");
+  cartCountElements.forEach((element) => {
       element.textContent = cartCount;
       element.style.display = cartCount > 0 ? "inline-block" : "none";
-    });
-  }
+  });
 }
 
 function addToCart(

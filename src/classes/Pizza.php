@@ -32,7 +32,42 @@ class Pizza
         $this->conn = $db ?: Database::getInstance()->getConnection();
     }
 
-    public function getAllPizzas($page = 1, $limit = 20, $search = '', $category = '', $featured_only = false)
+    public function getPizzaById($pizza_id)
+    {
+        $query = "SELECT p.*, c.name as category_name,
+                         GROUP_CONCAT(pi.ingredient_id) as ingredients
+                  FROM " . $this->table_name . " p
+                  LEFT JOIN categories c ON p.category_id = c.category_id
+                  LEFT JOIN pizza_ingredients pi ON p.pizza_id = pi.pizza_id
+                  WHERE p.pizza_id = :pizza_id
+                  GROUP BY p.pizza_id
+                  LIMIT 1";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":pizza_id", $pizza_id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $pizza = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($pizza && $pizza['ingredients']) {
+            $pizza['ingredients'] = explode(',', $pizza['ingredients']);
+        } else {
+            $pizza['ingredients'] = [];
+        }
+        if ($pizza && !empty($pizza['image_url'])) {
+            $filename = basename($pizza['image_url']);
+            $pizza['image_url'] = 'assets/public/uploads/' . $filename;
+            $full_path = BASE_PATH . 'assets/public/uploads/' . $filename;
+            if (!file_exists($full_path)) {
+                error_log("Image file does not exist for pizza_id $pizza_id: $full_path");
+                $pizza['image_url'] = '/assets/public/uploads/placeholder.jpg';
+            }
+        } else {
+            $pizza['image_url'] = '/assets/public/uploads/placeholder.jpg';
+        }
+        return $pizza;
+    }
+
+    public function getAllPizzas($page = 1, $limit = 20, $search = '', $category = 0, $featured_only = false)
     {
         $offset = ($page - 1) * $limit;
 
@@ -40,11 +75,11 @@ class Pizza
         $params = [];
 
         if (!empty($search)) {
-            $whereConditions[] = "(p.name LIKE :search OR p.description LIKE :search)";
+            $whereConditions[] = "(p.name LIKE :search OR p.description LIKE :search OR i.name LIKE :search)";
             $params[':search'] = "%$search%";
         }
 
-        if (!empty($category)) {
+        if ($category !== 0) {
             $whereConditions[] = "p.category_id = :category";
             $params[':category'] = $category;
         }
@@ -53,12 +88,19 @@ class Pizza
             $whereConditions[] = "p.is_featured = 1";
         }
 
-        $whereClause = 'WHERE ' . implode(' AND ', $whereConditions);
+        $whereClause = empty($whereConditions) ? '' : 'WHERE ' . implode(' AND ', $whereConditions);
 
         // Get total count
-        $countQuery = "SELECT COUNT(*) as total FROM " . $this->table_name . " p " . $whereClause;
+        $countQuery = "SELECT COUNT(DISTINCT p.pizza_id) as total 
+                      FROM " . $this->table_name . " p 
+                      LEFT JOIN pizza_ingredients pi ON p.pizza_id = pi.pizza_id 
+                      LEFT JOIN ingredients i ON pi.ingredient_id = i.ingredient_id 
+                      " . $whereClause;
         $countStmt = $this->conn->prepare($countQuery);
-        $countStmt->execute($params);
+        foreach ($params as $key => $value) {
+            $countStmt->bindValue($key, $value);
+        }
+        $countStmt->execute();
         $totalPizzas = $countStmt->fetch()['total'];
 
         // Get pizzas with ingredients
@@ -81,36 +123,21 @@ class Pizza
         $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
         $stmt->execute();
 
+        $pizzas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Ensure image paths are correct
+        foreach ($pizzas as &$pizza) {
+            if (!empty($pizza['image_url'])) {
+                $pizza['image_url'] = 'assets/public/uploads/' . basename($pizza['image_url']);
+            }
+        }
+
         return [
-            'pizzas' => $stmt->fetchAll(PDO::FETCH_ASSOC),
+            'pizzas' => $pizzas,
             'total' => $totalPizzas,
             'pages' => ceil($totalPizzas / $limit),
             'current_page' => $page
         ];
-    }
-
-    public function getPizzaById($pizza_id)
-    {
-        $query = "SELECT p.*, c.name as category_name,
-                         GROUP_CONCAT(pi.ingredient_id) as ingredients
-                  FROM " . $this->table_name . " p
-                  LEFT JOIN categories c ON p.category_id = c.category_id
-                  LEFT JOIN pizza_ingredients pi ON p.pizza_id = pi.pizza_id
-                  WHERE p.pizza_id = :pizza_id
-                  GROUP BY p.pizza_id
-                  LIMIT 1";
-
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(":pizza_id", $pizza_id, PDO::PARAM_INT);
-        $stmt->execute();
-
-        $pizza = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($pizza && $pizza['ingredients']) {
-            $pizza['ingredients'] = explode(',', $pizza['ingredients']);
-        } else {
-            $pizza['ingredients'] = [];
-        }
-        return $pizza;
     }
 
     public function getPizzaIngredients($pizza_id)
@@ -140,23 +167,45 @@ class Pizza
         $stmt->bindParam(":category_id", $category_id, PDO::PARAM_INT);
         $stmt->execute();
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $pizzas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Ensure image paths are correct
+        foreach ($pizzas as &$pizza) {
+            if (!empty($pizza['image_url'])) {
+                $pizza['image_url'] = 'assets/public/uploads/' . basename($pizza['image_url']);
+            }
+        }
+
+        return $pizzas;
     }
 
     public function searchPizzas($search_term)
     {
-        $query = "SELECT p.*, c.name as category_name 
+        $query = "SELECT p.*, c.name as category_name,
+                         GROUP_CONCAT(i.name) as ingredient_list
                   FROM " . $this->table_name . " p
                   LEFT JOIN categories c ON p.category_id = c.category_id
-                  WHERE (p.name LIKE :search OR p.description LIKE :search)
+                  LEFT JOIN pizza_ingredients pi ON p.pizza_id = pi.pizza_id
+                  LEFT JOIN ingredients i ON pi.ingredient_id = i.ingredient_id
+                  WHERE (p.name LIKE :search OR p.description LIKE :search OR i.name LIKE :search)
                   AND p.is_available = 1
+                  GROUP BY p.pizza_id
                   ORDER BY p.popularity_score DESC, p.name";
 
         $stmt = $this->conn->prepare($query);
         $stmt->bindValue(':search', "%{$search_term}%");
         $stmt->execute();
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $pizzas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Ensure image paths are correct
+        foreach ($pizzas as &$pizza) {
+            if (!empty($pizza['image_url'])) {
+                $pizza['image_url'] = 'assets/public/uploads/' . basename($pizza['image_url']);
+            }
+        }
+
+        return $pizzas;
     }
 
     public function getFeaturedPizzas($limit = 6)
@@ -172,7 +221,16 @@ class Pizza
         $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
         $stmt->execute();
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $pizzas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Ensure image paths are correct
+        foreach ($pizzas as &$pizza) {
+            if (!empty($pizza['image_url'])) {
+                $pizza['image_url'] = 'assets/public/uploads/' . basename($pizza['image_url']);
+            }
+        }
+
+        return $pizzas;
     }
 
     public function calculateCustomPrice($pizza_id, $size, $custom_ingredients = [])
@@ -222,14 +280,14 @@ class Pizza
 
             $stmt = $this->conn->prepare($query);
 
-            // Sanitize and set defaults
+            // Fixed: Proper null coalescing operator usage and calculation logic
             $name = htmlspecialchars(strip_tags($data['name']));
             $description = htmlspecialchars(strip_tags($data['description']));
             $image_url = htmlspecialchars(strip_tags($data['image'] ?? ''));
             $allergens = htmlspecialchars(strip_tags($data['allergens'] ?? ''));
             $base_price_small = $data['base_price'] ?? 0;
-            $base_price_medium = $data['base_price'] * 1.2 ?? 0;
-            $base_price_large = $data['base_price'] * 1.5 ?? 0;
+            $base_price_medium = ($data['base_price'] ?? 0) * 1.2;
+            $base_price_large = ($data['base_price'] ?? 0) * 1.5;
             $cost_small = $base_price_small * 0.6;
             $cost_medium = $base_price_medium * 0.6;
             $cost_large = $base_price_large * 0.6;
@@ -242,7 +300,7 @@ class Pizza
             $is_vegan = $data['is_vegan'] ?? 0;
             $is_gluten_free_available = $data['is_gluten_free_available'] ?? 0;
             $popularity_score = $data['popularity_score'] ?? 0;
-            $category_id = $data['category_id'] ?? 1; // Default category
+            $category_id = $data['category_id'] ?? 1;
 
             // Bind parameters
             $stmt->bindParam(":name", $name);
@@ -273,7 +331,10 @@ class Pizza
                     $this->addPizzaIngredients($pizza_id, $data['ingredients']);
                 }
                 $this->conn->commit();
-                logActivity('pizza_created', "Pizza {$name} created", null, $staff_id);
+                // Fixed: Check if logActivity function exists before calling
+                if (function_exists('logActivity')) {
+                    logActivity('pizza_created', "Pizza {$name} created", null, $staff_id);
+                }
                 return true;
             }
 
@@ -306,14 +367,14 @@ class Pizza
 
             $stmt = $this->conn->prepare($query);
 
-            // Sanitize and set defaults
+            // Fixed: Proper null coalescing operator usage and calculation logic
             $name = htmlspecialchars(strip_tags($data['name']));
             $description = htmlspecialchars(strip_tags($data['description']));
             $image_url = htmlspecialchars(strip_tags($data['image'] ?? ''));
             $allergens = htmlspecialchars(strip_tags($data['allergens'] ?? ''));
             $base_price_small = $data['base_price'] ?? 0;
-            $base_price_medium = $data['base_price'] * 1.2 ?? 0;
-            $base_price_large = $data['base_price'] * 1.5 ?? 0;
+            $base_price_medium = ($data['base_price'] ?? 0) * 1.2;
+            $base_price_large = ($data['base_price'] ?? 0) * 1.5;
             $cost_small = $base_price_small * 0.6;
             $cost_medium = $base_price_medium * 0.6;
             $cost_large = $base_price_large * 0.6;
@@ -326,7 +387,7 @@ class Pizza
             $is_vegan = $data['is_vegan'] ?? 0;
             $is_gluten_free_available = $data['is_gluten_free_available'] ?? 0;
             $popularity_score = $data['popularity_score'] ?? 0;
-            $category_id = $data['category_id'] ?? 1; // Default category
+            $category_id = $data['category_id'] ?? 1;
 
             // Bind parameters
             $stmt->bindParam(":name", $name);
@@ -360,7 +421,10 @@ class Pizza
                     $this->addPizzaIngredients($pizza_id, $data['ingredients']);
                 }
                 $this->conn->commit();
-                logActivity('pizza_updated', "Pizza ID {$pizza_id} updated", null, $user_id);
+                // Fixed: Check if logActivity function exists before calling
+                if (function_exists('logActivity')) {
+                    logActivity('pizza_updated', "Pizza ID {$pizza_id} updated", null, $user_id);
+                }
                 return true;
             }
             $this->conn->rollback();
@@ -375,7 +439,7 @@ class Pizza
     private function addPizzaIngredients($pizza_id, $ingredient_ids)
     {
         $query = "INSERT INTO pizza_ingredients (pizza_id, ingredient_id, is_default, quantity) 
-              VALUES (:pizza_id, :ingredient_id, 1, 1)";
+                  VALUES (:pizza_id, :ingredient_id, 1, 1)";
         $stmt = $this->conn->prepare($query);
 
         foreach ($ingredient_ids as $id) {
@@ -400,7 +464,10 @@ class Pizza
 
             if ($stmt->execute()) {
                 $this->conn->commit();
-                logActivity('pizza_deleted', "Pizza ID {$pizza_id} deleted", null, $user_id);
+                // Fixed: Check if logActivity function exists before calling
+                if (function_exists('logActivity')) {
+                    logActivity('pizza_deleted', "Pizza ID {$pizza_id} deleted", null, $user_id);
+                }
                 return true;
             }
             $this->conn->rollback();

@@ -135,7 +135,6 @@ startSession();
             outline: none;
         }
 
-        /* Override style.css nav-link */
         .dropdown .nav-link::after,
         .dropdown-toggle::after {
             display: none !important;

@@ -189,7 +189,7 @@ if (!isLoggedIn()) {
                             userId,
                             csrfToken
                         });
-                        showNotification('Session error. Please log in again.', 'error');
+                        // Don't show notification for session errors during cart load
                         setTimeout(() => window.location.href = 'login.php?redirect=cart.php', 2000);
                         return;
                     }
@@ -301,14 +301,14 @@ if (!isLoggedIn()) {
                         localStorage.setItem('crustPizzaCart', JSON.stringify([]));
                         updateCartCount();
 
+                        // Don't show notifications for API errors or empty cart scenarios
                         if (!result.success) {
                             console.error('API Error:', result.message);
-                            // showNotification(result.message || 'Failed to load cart items.', 'error');
                         }
                     }
                 } catch (error) {
                     console.error('Error loading cart items:', error);
-                    // showNotification('Failed to load cart items. Please try again.', 'error');
+                    // Don't show notification for cart loading errors - just silently handle
                     document.getElementById('cartItems').innerHTML = '';
                     document.getElementById('emptyCartMessage').style.display = 'flex';
                     document.getElementById('cartContainer').style.display = 'none';

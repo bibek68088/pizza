@@ -5,12 +5,28 @@
  * Crust Pizza Online Ordering System
  */
 
+
+// Include necessary files
+require_once 'config/database.php';
+require_once 'includes/functions.php';
+require_once 'classes/Pizza.php';
+
+// Start session
+startSession();
+
+// Initialize database connection
+$database = new Database();
+$db = $database->getConnection();
+
+// Instantiate Pizza object
+$pizza = new Pizza($db);
+
 // Include the header
 require_once 'header.php';
 
 // Get search and filter parameters
 $search = isset($_GET['search']) ? sanitizeInput($_GET['search']) : '';
-$category = isset($_GET['category']) ? (int)$_GET['category'] : '';
+$category = isset($_GET['category']) ? (int)$_GET['category'] : 0; // Changed to 0 for "All Categories"
 
 // Get pizzas based on search/filter using the consistent getAllPizzas method
 $page = 1;
@@ -38,10 +54,10 @@ $categories = $categories_stmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
 
                 <div class="category-filter">
-                    <select name="category" class="form-control" style="width: 200px;">
-                        <option value="">All Categories</option>
+                    <select name="category" class="form-control" style="width: 200px;" onchange="this.form.submit()">
+                        <option value="0">All Categories</option>
                         <?php foreach ($categories as $cat): ?>
-                            <option value="<?php echo $cat['category_id']; ?>" <?php echo $category == $cat['category_id'] ? 'selected' : ''; ?>>
+                            <option value="<?php echo $cat['category_id']; ?>" <?php echo $category === (int)$cat['category_id'] ? 'selected' : ''; ?>>
                                 <?php echo htmlspecialchars($cat['name']); ?>
                             </option>
                         <?php endforeach; ?>
@@ -57,15 +73,22 @@ $categories = $categories_stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php displayFlashMessages(); ?>
 
         <!-- Results Info -->
-        <?php if (!empty($search) || !empty($category)): ?>
+        <?php if (!empty($search) || $category !== 0): ?>
             <div class="results-info" style="margin-bottom: 20px; padding: 10px; background: #f8f9fa; border-radius: 5px;">
                 <?php
                 $resultCount = count($pizzas);
-                if (!empty($search) && !empty($category)) {
-                    echo "Found {$resultCount} pizza(s) matching '{$search}' in selected category";
+                if (!empty($search) && $category !== 0) {
+                    $categoryName = '';
+                    foreach ($categories as $cat) {
+                        if ($cat['category_id'] == $category) {
+                            $categoryName = $cat['name'];
+                            break;
+                        }
+                    }
+                    echo "Found {$resultCount} pizza(s) matching '{$search}' in category '{$categoryName}'";
                 } elseif (!empty($search)) {
                     echo "Found {$resultCount} pizza(s) matching '{$search}'";
-                } elseif (!empty($category)) {
+                } elseif ($category !== 0) {
                     $categoryName = '';
                     foreach ($categories as $cat) {
                         if ($cat['category_id'] == $category) {
@@ -83,7 +106,7 @@ $categories = $categories_stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php if (empty($pizzas)): ?>
             <div class="text-center" style="padding: 40px;">
                 <h3>No pizzas found</h3>
-                <?php if (!empty($search) || !empty($category)): ?>
+                <?php if (!empty($search) || $category !== 0): ?>
                     <p>Try adjusting your search or filter criteria.</p>
                     <a href="menu.php" class="btn btn-primary">View All Pizzas</a>
                 <?php else: ?>
@@ -98,7 +121,9 @@ $categories = $categories_stmt->fetchAll(PDO::FETCH_ASSOC);
                     $pizza_id = isset($pizza_item['pizza_id']) ? $pizza_item['pizza_id'] : 0;
                     $name = isset($pizza_item['name']) ? htmlspecialchars($pizza_item['name']) : 'Pizza';
                     $description = isset($pizza_item['description']) ? htmlspecialchars($pizza_item['description']) : 'Delicious pizza with our signature sauce and cheese.';
-                    $image_url = isset($pizza_item['image_url']) && !empty($pizza_item['image_url']) ? $pizza_item['image_url'] : '/placeholder.svg?height=250&width=300';
+                    $image_url = isset($pizza_item['image_url']) && !empty($pizza_item['image_url'])
+                        ? 'assets/public/uploads/' . htmlspecialchars(basename($pizza_item['image_url']))
+                        : '/placeholder.svg?height=250&width=300';
 
                     // Set default prices if not available
                     $price_small = isset($pizza_item['base_price_small']) ? (float)$pizza_item['base_price_small'] : 15.90;
@@ -110,6 +135,8 @@ $categories = $categories_stmt->fetchAll(PDO::FETCH_ASSOC);
                     $ingredient_list = isset($pizza_item['ingredient_list']) ? htmlspecialchars($pizza_item['ingredient_list']) : '';
                     $is_featured = isset($pizza_item['is_featured']) && $pizza_item['is_featured'] == 1;
                     $is_vegan = isset($pizza_item['is_vegan']) && $pizza_item['is_vegan'] == 1;
+                    $is_gluten_free = isset($pizza_item['is_gluten_free_available']) && $pizza_item['is_gluten_free_available'] == 1;
+                    $allergens = isset($pizza_item['allergens']) ? htmlspecialchars($pizza_item['allergens']) : '';
                     ?>
                     <div class="pizza-card" data-price-small="<?php echo $price_small; ?>" data-price-medium="<?php echo $price_medium; ?>" data-price-large="<?php echo $price_large; ?>">
                         <?php if ($is_featured): ?>
@@ -120,6 +147,9 @@ $categories = $categories_stmt->fetchAll(PDO::FETCH_ASSOC);
                             <img src="<?php echo $image_url; ?>" alt="<?php echo $name; ?>" loading="lazy">
                             <?php if ($is_vegan): ?>
                                 <div class="vegan-badge">🌱 Vegan</div>
+                            <?php endif; ?>
+                            <?php if ($is_gluten_free): ?>
+                                <div class="gluten-free-badge">🌾 Gluten-Free</div>
                             <?php endif; ?>
                         </div>
 
@@ -135,6 +165,10 @@ $categories = $categories_stmt->fetchAll(PDO::FETCH_ASSOC);
 
                             <?php if (!empty($ingredient_list)): ?>
                                 <p class="ingredients"><strong>Ingredients:</strong> <?php echo $ingredient_list; ?></p>
+                            <?php endif; ?>
+
+                            <?php if (!empty($allergens)): ?>
+                                <p class="allergens"><strong>Allergens:</strong> <?php echo $allergens; ?></p>
                             <?php endif; ?>
 
                             <div class="pizza-options" style="margin-bottom: 15px;">
@@ -449,7 +483,8 @@ $categories = $categories_stmt->fetchAll(PDO::FETCH_ASSOC);
         transform: scale(1.05);
     }
 
-    .vegan-badge {
+    .vegan-badge,
+    .gluten-free-badge {
         position: absolute;
         bottom: 10px;
         right: 10px;
@@ -459,6 +494,11 @@ $categories = $categories_stmt->fetchAll(PDO::FETCH_ASSOC);
         border-radius: 15px;
         font-size: 0.8rem;
         font-weight: bold;
+    }
+
+    .gluten-free-badge {
+        bottom: 40px;
+        background: rgba(33, 150, 243, 0.9);
     }
 
     .pizza-info {
@@ -488,15 +528,10 @@ $categories = $categories_stmt->fetchAll(PDO::FETCH_ASSOC);
         white-space: nowrap;
     }
 
-    .pizza-description {
+    .pizza-description,
+    .ingredients,
+    .allergens {
         color: #666;
-        margin-bottom: 15px;
-        line-height: 1.5;
-    }
-
-    .ingredients {
-        font-size: 0.9rem;
-        color: #777;
         margin-bottom: 15px;
         line-height: 1.5;
     }

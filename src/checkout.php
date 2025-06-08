@@ -144,7 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $order->customer_phone = $customer_phone;
         $order->customer_email = $customer_email;
         $order->delivery_address = $delivery_address;
-        $order->delivery_instructions = $special_instructions; // Align with Order.php
+        $order->delivery_instructions = $special_instructions;
         $order->special_requests = $special_instructions;
         $order->subtotal = $subtotal;
         $order->tax = $tax;
@@ -265,6 +265,7 @@ function getUserData($user_details, $key, $default = '')
     <title>Checkout - Crust Pizza</title>
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://js.stripe.com/v3/"></script>
     <script>
         const isLoggedIn = <?php echo isLoggedIn() ? 'true' : 'false'; ?>;
     </script>
@@ -409,7 +410,7 @@ function getUserData($user_details, $key, $default = '')
                             <h3><i class="fas fa-credit-card"></i> Payment Method</h3>
                         </div>
                         <div class="card-body">
-                            <div class="payment-options" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="payment-options" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
                                 <label class="option-card" style="padding: 1.5rem; border: 2px solid #ddd; border-radius: 12px; cursor: pointer; text-align: center; transition: all 0.3s ease;">
                                     <input type="radio" name="payment_method" value="cash_on_delivery" checked style="margin-bottom: 1rem;">
                                     <i class="fas fa-money-bill-wave" style="font-size: 2rem; color: #28a745; margin-bottom: 0.5rem; display: block;"></i>
@@ -422,6 +423,17 @@ function getUserData($user_details, $key, $default = '')
                                     <strong>Card on Delivery</strong>
                                     <p style="margin: 0.5rem 0 0 0; color: #666; font-size: 0.9rem;">Pay by card on delivery</p>
                                 </label>
+                                <label class="option-card" style="padding: 1.5rem; border: 2px solid #ddd; border-radius: 12px; cursor: pointer; text-align: center; transition: all 0.3s ease;">
+                                    <input type="radio" name="payment_method" value="online" style="margin-bottom: 1rem;">
+                                    <i class="fas fa-globe" style="font-size: 2rem; color: #ff6b35; margin-bottom: 0.5rem; display: block;"></i>
+                                    <strong>Online Payment</strong>
+                                    <p style="margin: 0.5rem 0 0 0; color: #666; font-size: 0.9rem;">Pay securely online</p>
+                                </label>
+                            </div>
+                            <div class="card-details-section" style="display: none; margin-top: 1.5rem;">
+                                <label for="card-element">Credit or Debit Card</label>
+                                <div id="card-element" class="form-control" style="padding: 1rem; border: 2px solid #ddd; border-radius: 8px;"></div>
+                                <div id="card-errors" role="alert" style="color: #dc3545; margin-top: 0.5rem;"></div>
                             </div>
                         </div>
                     </div>

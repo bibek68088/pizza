@@ -2579,3 +2579,1720 @@
 
 [08-Jun-2025 13:37:31 Europe/Berlin] CSRF token validated successfully
 [08-Jun-2025 13:37:31 Europe/Berlin] Fetched 4 cart items for user_id=6
+[08-Jun-2025 17:09:48 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 17:09:48 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 17:09:48 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 2
+    [name] => Margherita
+    [size] => medium
+    [price] => 19.08
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 2
+    [csrf_token] => d60f2f941b4b0f276c8c9d873432052e53e28df7498c8b258232fe62b637dce7
+)
+
+[08-Jun-2025 17:09:48 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 17:09:48 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 17:09:48 Europe/Berlin] Added new item: cart_id=24, user_id=2, item_name=Margherita
+[08-Jun-2025 17:09:48 Europe/Berlin] Fetched 1 cart items for user_id=2
+[08-Jun-2025 17:10:04 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 17:10:04 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 17:10:04 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 17:10:04 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 17:10:04 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 17:10:04 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 9dcbedbe65562aee6a6a77ff00adc515a39c4b05d7b5666c742837ff6f179faa
+)
+
+[08-Jun-2025 17:10:04 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 17:10:04 Europe/Berlin] Fetched 0 cart items for user_id=6
+[08-Jun-2025 17:10:07 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 17:10:07 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 17:10:07 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 2
+    [name] => Margherita
+    [size] => medium
+    [price] => 19.08
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => 9dcbedbe65562aee6a6a77ff00adc515a39c4b05d7b5666c742837ff6f179faa
+)
+
+[08-Jun-2025 17:10:07 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 17:10:07 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 17:10:07 Europe/Berlin] Added new item: cart_id=25, user_id=6, item_name=Margherita
+[08-Jun-2025 17:10:07 Europe/Berlin] Fetched 1 cart items for user_id=6
+[08-Jun-2025 17:10:09 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 17:10:09 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 17:10:09 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 17:10:09 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 17:10:09 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 17:10:09 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 9dcbedbe65562aee6a6a77ff00adc515a39c4b05d7b5666c742837ff6f179faa
+)
+
+[08-Jun-2025 17:10:09 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 17:10:09 Europe/Berlin] Fetched 1 cart items for user_id=6
+[08-Jun-2025 17:11:55 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 17:11:55 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 17:11:55 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 17:11:55 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 9dcbedbe65562aee6a6a77ff00adc515a39c4b05d7b5666c742837ff6f179faa
+)
+
+[08-Jun-2025 17:11:55 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 17:11:55 Europe/Berlin] Fetched 1 cart items for user_id=6
+[08-Jun-2025 17:11:55 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 17:11:55 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 17:17:03 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 17:17:03 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 17:17:03 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 17:17:07 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 17:17:07 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 17:17:07 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 17:17:12 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 17:17:12 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 17:17:12 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 17:17:17 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 17:17:17 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 17:17:17 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 17:17:24 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 17:17:24 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 17:17:24 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 17:24:50 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 17:24:50 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 17:24:50 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 8
+    [name] => Prosciutto Rocket
+    [size] => medium
+    [price] => 27.48
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 2
+    [csrf_token] => f52ca28087ec9f90864600408bf4607bd5c3456239955a42dfc1fba5a82ebb51
+)
+
+[08-Jun-2025 17:24:50 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 17:24:50 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 17:24:50 Europe/Berlin] Added new item: cart_id=26, user_id=2, item_name=Prosciutto Rocket
+[08-Jun-2025 17:24:50 Europe/Berlin] Fetched 2 cart items for user_id=2
+[08-Jun-2025 17:39:53 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 17:39:53 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 17:39:53 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 1
+    [name] => Peri Peri Chicken
+    [size] => medium
+    [price] => 22.68
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 2
+    [csrf_token] => f52ca28087ec9f90864600408bf4607bd5c3456239955a42dfc1fba5a82ebb51
+)
+
+[08-Jun-2025 17:39:53 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 17:39:53 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 17:39:53 Europe/Berlin] Added new item: cart_id=27, user_id=2, item_name=Peri Peri Chicken
+[08-Jun-2025 17:39:53 Europe/Berlin] Fetched 3 cart items for user_id=2
+[08-Jun-2025 18:18:48 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 18:18:48 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 18:18:48 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 4
+    [name] => Meat Lovers
+    [size] => medium
+    [price] => 26.28
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => 9ed9013cc729a4abd230661acf96a49ac8406ff637ca0c45db8d18be57bf8eea
+)
+
+[08-Jun-2025 18:18:48 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 18:18:48 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 18:18:48 Europe/Berlin] Added new item: cart_id=28, user_id=6, item_name=Meat Lovers
+[08-Jun-2025 18:18:48 Europe/Berlin] Fetched 2 cart items for user_id=6
+[08-Jun-2025 18:18:52 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 18:18:52 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 18:18:52 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 3
+    [name] => Vegan Supreme
+    [size] => medium
+    [price] => 23.88
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => 9ed9013cc729a4abd230661acf96a49ac8406ff637ca0c45db8d18be57bf8eea
+)
+
+[08-Jun-2025 18:18:52 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 18:18:52 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 18:18:52 Europe/Berlin] Added new item: cart_id=29, user_id=6, item_name=Vegan Supreme
+[08-Jun-2025 18:18:52 Europe/Berlin] Fetched 3 cart items for user_id=6
+[08-Jun-2025 18:18:53 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 18:18:53 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 18:18:53 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 18:18:53 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 9ed9013cc729a4abd230661acf96a49ac8406ff637ca0c45db8d18be57bf8eea
+)
+
+[08-Jun-2025 18:18:53 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 18:18:53 Europe/Berlin] Fetched 3 cart items for user_id=6
+[08-Jun-2025 18:18:53 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 18:18:53 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 18:18:55 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 18:18:55 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 18:18:55 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 18:18:55 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 18:18:55 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 18:18:55 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 9ed9013cc729a4abd230661acf96a49ac8406ff637ca0c45db8d18be57bf8eea
+)
+
+[08-Jun-2025 18:18:55 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 18:18:55 Europe/Berlin] Fetched 3 cart items for user_id=6
+[08-Jun-2025 18:18:59 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 18:18:59 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 18:18:59 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 8
+    [name] => Prosciutto Rocket
+    [size] => medium
+    [price] => 27.48
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => 9ed9013cc729a4abd230661acf96a49ac8406ff637ca0c45db8d18be57bf8eea
+)
+
+[08-Jun-2025 18:18:59 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 18:18:59 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 18:18:59 Europe/Berlin] Added new item: cart_id=30, user_id=6, item_name=Prosciutto Rocket
+[08-Jun-2025 18:18:59 Europe/Berlin] Fetched 4 cart items for user_id=6
+[08-Jun-2025 18:19:00 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 18:19:00 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 18:19:00 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 18:19:00 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 9ed9013cc729a4abd230661acf96a49ac8406ff637ca0c45db8d18be57bf8eea
+)
+
+[08-Jun-2025 18:19:00 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 18:19:00 Europe/Berlin] Fetched 4 cart items for user_id=6
+[08-Jun-2025 18:19:00 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 18:19:00 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 18:19:06 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 18:19:06 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 18:19:06 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 2
+    [name] => Margherita
+    [size] => medium
+    [price] => 19.08
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => 9ed9013cc729a4abd230661acf96a49ac8406ff637ca0c45db8d18be57bf8eea
+)
+
+[08-Jun-2025 18:19:06 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 18:19:06 Europe/Berlin] findSimilarItem result: Array
+(
+    [cart_id] => 25
+    [quantity] => 1
+)
+
+[08-Jun-2025 18:19:06 Europe/Berlin] Updating existing item: cart_id=25, new_quantity=2
+[08-Jun-2025 18:19:06 Europe/Berlin] Error updating quantity: SQLSTATE=HY093, Message=SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 18:19:06 Europe/Berlin] addItem failed for user_id=6, pizza_id=2, item_name=Margherita
+[08-Jun-2025 18:19:08 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 18:19:08 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 18:19:08 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 4
+    [name] => Meat Lovers
+    [size] => medium
+    [price] => 26.28
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => 9ed9013cc729a4abd230661acf96a49ac8406ff637ca0c45db8d18be57bf8eea
+)
+
+[08-Jun-2025 18:19:08 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 18:19:08 Europe/Berlin] findSimilarItem result: Array
+(
+    [cart_id] => 28
+    [quantity] => 1
+)
+
+[08-Jun-2025 18:19:08 Europe/Berlin] Updating existing item: cart_id=28, new_quantity=2
+[08-Jun-2025 18:19:08 Europe/Berlin] Error updating quantity: SQLSTATE=HY093, Message=SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 18:19:08 Europe/Berlin] addItem failed for user_id=6, pizza_id=4, item_name=Meat Lovers
+[08-Jun-2025 18:19:09 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 18:19:09 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 18:19:09 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 3
+    [name] => Vegan Supreme
+    [size] => medium
+    [price] => 23.88
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => 9ed9013cc729a4abd230661acf96a49ac8406ff637ca0c45db8d18be57bf8eea
+)
+
+[08-Jun-2025 18:19:09 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 18:19:09 Europe/Berlin] findSimilarItem result: Array
+(
+    [cart_id] => 29
+    [quantity] => 1
+)
+
+[08-Jun-2025 18:19:09 Europe/Berlin] Updating existing item: cart_id=29, new_quantity=2
+[08-Jun-2025 18:19:09 Europe/Berlin] Error updating quantity: SQLSTATE=HY093, Message=SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 18:19:09 Europe/Berlin] addItem failed for user_id=6, pizza_id=3, item_name=Vegan Supreme
+[08-Jun-2025 18:19:12 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 18:19:12 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 18:19:12 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 8
+    [name] => Prosciutto Rocket
+    [size] => medium
+    [price] => 27.48
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => 9ed9013cc729a4abd230661acf96a49ac8406ff637ca0c45db8d18be57bf8eea
+)
+
+[08-Jun-2025 18:19:12 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 18:19:12 Europe/Berlin] findSimilarItem result: Array
+(
+    [cart_id] => 30
+    [quantity] => 1
+)
+
+[08-Jun-2025 18:19:12 Europe/Berlin] Updating existing item: cart_id=30, new_quantity=2
+[08-Jun-2025 18:19:12 Europe/Berlin] Error updating quantity: SQLSTATE=HY093, Message=SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 18:19:12 Europe/Berlin] addItem failed for user_id=6, pizza_id=8, item_name=Prosciutto Rocket
+[08-Jun-2025 18:19:13 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 18:19:13 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 18:19:13 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 6
+    [name] => Supreme
+    [size] => medium
+    [price] => 23.88
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => 9ed9013cc729a4abd230661acf96a49ac8406ff637ca0c45db8d18be57bf8eea
+)
+
+[08-Jun-2025 18:19:13 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 18:19:13 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 18:19:13 Europe/Berlin] Added new item: cart_id=31, user_id=6, item_name=Supreme
+[08-Jun-2025 18:19:13 Europe/Berlin] Fetched 5 cart items for user_id=6
+[08-Jun-2025 18:19:16 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 18:19:16 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 18:19:16 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 18:19:16 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 18:19:16 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 18:19:16 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 9ed9013cc729a4abd230661acf96a49ac8406ff637ca0c45db8d18be57bf8eea
+)
+
+[08-Jun-2025 18:19:16 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 18:19:16 Europe/Berlin] Fetched 5 cart items for user_id=6
+[08-Jun-2025 18:19:45 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 18:19:45 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 18:19:45 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 18:19:45 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 18:19:45 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 18:19:45 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 9ed9013cc729a4abd230661acf96a49ac8406ff637ca0c45db8d18be57bf8eea
+)
+
+[08-Jun-2025 18:19:45 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 18:19:45 Europe/Berlin] Fetched 5 cart items for user_id=6
+[08-Jun-2025 18:19:48 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 18:19:48 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 18:19:48 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 18:19:48 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 18:19:48 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 18:19:48 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 9ed9013cc729a4abd230661acf96a49ac8406ff637ca0c45db8d18be57bf8eea
+)
+
+[08-Jun-2025 18:19:48 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 18:19:48 Europe/Berlin] Fetched 5 cart items for user_id=6
+[08-Jun-2025 18:41:28 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 18:41:28 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 18:41:28 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 2
+    [name] => Margherita
+    [size] => medium
+    [price] => 19.08
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 2
+    [csrf_token] => b8e1aca29a539571df9ce64c85a680047452a7ea3fc899d2b4100515ec648986
+)
+
+[08-Jun-2025 18:41:28 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 18:41:28 Europe/Berlin] findSimilarItem result: Array
+(
+    [cart_id] => 24
+    [quantity] => 1
+)
+
+[08-Jun-2025 18:41:28 Europe/Berlin] Updating existing item: cart_id=24, new_quantity=2
+[08-Jun-2025 18:41:28 Europe/Berlin] Error updating quantity: SQLSTATE=HY093, Message=SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 18:41:28 Europe/Berlin] addItem failed for user_id=2, pizza_id=2, item_name=Margherita
+[08-Jun-2025 18:41:30 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 18:41:30 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 18:41:30 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 4
+    [name] => Meat Lovers
+    [size] => medium
+    [price] => 26.28
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 2
+    [csrf_token] => b8e1aca29a539571df9ce64c85a680047452a7ea3fc899d2b4100515ec648986
+)
+
+[08-Jun-2025 18:41:30 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 18:41:30 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 18:41:30 Europe/Berlin] Added new item: cart_id=32, user_id=2, item_name=Meat Lovers
+[08-Jun-2025 18:41:30 Europe/Berlin] Fetched 4 cart items for user_id=2
+[08-Jun-2025 18:44:45 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 18:44:45 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 18:44:45 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 18:44:45 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 18:44:45 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 18:44:45 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 761650835f45f2039712c21a8f09038c859f1a6428f09a96068beaff50798800
+)
+
+[08-Jun-2025 18:44:45 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 18:44:45 Europe/Berlin] Fetched 5 cart items for user_id=6
+[08-Jun-2025 18:46:51 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 18:46:51 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 18:46:51 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 18:46:51 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 18:46:51 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 18:46:51 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 761650835f45f2039712c21a8f09038c859f1a6428f09a96068beaff50798800
+)
+
+[08-Jun-2025 18:46:51 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 18:46:51 Europe/Berlin] Fetched 5 cart items for user_id=6
+[08-Jun-2025 18:49:29 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 18:49:29 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 18:49:29 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 18:49:29 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 18:49:29 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 18:49:29 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 761650835f45f2039712c21a8f09038c859f1a6428f09a96068beaff50798800
+)
+
+[08-Jun-2025 18:49:29 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 18:49:29 Europe/Berlin] Fetched 5 cart items for user_id=6
+[08-Jun-2025 18:58:36 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 18:58:36 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 18:58:36 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 18:58:36 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 761650835f45f2039712c21a8f09038c859f1a6428f09a96068beaff50798800
+)
+
+[08-Jun-2025 18:58:36 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 18:58:36 Europe/Berlin] Fetched 5 cart items for user_id=6
+[08-Jun-2025 18:58:36 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 18:58:36 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 18:58:56 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 18:58:56 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 18:58:56 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 18:58:56 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 761650835f45f2039712c21a8f09038c859f1a6428f09a96068beaff50798800
+)
+
+[08-Jun-2025 18:58:56 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 18:58:56 Europe/Berlin] Fetched 5 cart items for user_id=6
+[08-Jun-2025 18:58:56 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 18:58:56 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:00:08 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:00:08 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:00:08 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:00:08 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:00:08 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:00:08 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:00:42 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:00:42 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:00:42 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:00:42 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:00:42 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:00:42 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:00:46 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:00:46 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:00:46 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:00:46 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 761650835f45f2039712c21a8f09038c859f1a6428f09a96068beaff50798800
+)
+
+[08-Jun-2025 19:00:46 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:00:46 Europe/Berlin] Fetched 5 cart items for user_id=6
+[08-Jun-2025 19:00:46 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:00:46 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:00:48 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:00:48 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:00:48 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:00:48 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:00:48 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:00:48 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:00:54 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:00:54 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:00:54 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:00:54 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:00:54 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:00:54 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:01:04 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:01:04 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:01:04 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:01:04 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:01:04 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:01:04 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:01:53 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:01:53 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:01:53 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:01:53 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:01:53 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:01:53 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 761650835f45f2039712c21a8f09038c859f1a6428f09a96068beaff50798800
+)
+
+[08-Jun-2025 19:01:53 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:01:53 Europe/Berlin] Fetched 5 cart items for user_id=6
+[08-Jun-2025 19:02:21 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:02:21 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:02:21 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:02:21 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:02:21 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:02:21 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 761650835f45f2039712c21a8f09038c859f1a6428f09a96068beaff50798800
+)
+
+[08-Jun-2025 19:02:21 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:02:21 Europe/Berlin] Fetched 5 cart items for user_id=6
+[08-Jun-2025 19:04:01 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:04:01 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:04:01 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:04:01 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 761650835f45f2039712c21a8f09038c859f1a6428f09a96068beaff50798800
+)
+
+[08-Jun-2025 19:04:01 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:04:01 Europe/Berlin] Fetched 5 cart items for user_id=6
+[08-Jun-2025 19:04:01 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:04:01 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:06:15 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:06:15 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:06:15 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:06:15 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:06:15 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:06:15 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 761650835f45f2039712c21a8f09038c859f1a6428f09a96068beaff50798800
+)
+
+[08-Jun-2025 19:06:15 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:06:15 Europe/Berlin] Fetched 5 cart items for user_id=6
+[08-Jun-2025 19:06:28 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:06:28 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:06:28 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:06:28 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:06:28 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:06:28 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 761650835f45f2039712c21a8f09038c859f1a6428f09a96068beaff50798800
+)
+
+[08-Jun-2025 19:06:28 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:06:28 Europe/Berlin] Fetched 5 cart items for user_id=6
+[08-Jun-2025 19:06:46 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:06:46 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:06:46 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 6
+    [name] => Supreme
+    [size] => medium
+    [price] => 23.88
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => 761650835f45f2039712c21a8f09038c859f1a6428f09a96068beaff50798800
+)
+
+[08-Jun-2025 19:06:46 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:06:46 Europe/Berlin] findSimilarItem result: Array
+(
+    [cart_id] => 31
+    [quantity] => 1
+)
+
+[08-Jun-2025 19:06:46 Europe/Berlin] Updating existing item: cart_id=31, new_quantity=2
+[08-Jun-2025 19:06:46 Europe/Berlin] Error updating quantity: SQLSTATE=HY093, Message=SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 19:06:46 Europe/Berlin] addItem failed for user_id=6, pizza_id=6, item_name=Supreme
+[08-Jun-2025 19:06:49 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:06:49 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:06:49 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 3
+    [name] => Vegan Supreme
+    [size] => medium
+    [price] => 23.88
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => 761650835f45f2039712c21a8f09038c859f1a6428f09a96068beaff50798800
+)
+
+[08-Jun-2025 19:06:49 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:06:49 Europe/Berlin] findSimilarItem result: Array
+(
+    [cart_id] => 29
+    [quantity] => 1
+)
+
+[08-Jun-2025 19:06:49 Europe/Berlin] Updating existing item: cart_id=29, new_quantity=2
+[08-Jun-2025 19:06:49 Europe/Berlin] Error updating quantity: SQLSTATE=HY093, Message=SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 19:06:49 Europe/Berlin] addItem failed for user_id=6, pizza_id=3, item_name=Vegan Supreme
+[08-Jun-2025 19:06:51 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:06:51 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:06:51 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 8
+    [name] => Prosciutto Rocket
+    [size] => medium
+    [price] => 27.48
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => 761650835f45f2039712c21a8f09038c859f1a6428f09a96068beaff50798800
+)
+
+[08-Jun-2025 19:06:51 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:06:51 Europe/Berlin] findSimilarItem result: Array
+(
+    [cart_id] => 30
+    [quantity] => 1
+)
+
+[08-Jun-2025 19:06:51 Europe/Berlin] Updating existing item: cart_id=30, new_quantity=2
+[08-Jun-2025 19:06:51 Europe/Berlin] Error updating quantity: SQLSTATE=HY093, Message=SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 19:06:51 Europe/Berlin] addItem failed for user_id=6, pizza_id=8, item_name=Prosciutto Rocket
+[08-Jun-2025 19:06:53 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:06:53 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:06:53 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 7
+    [name] => BBQ Chicken
+    [size] => medium
+    [price] => 22.68
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => 761650835f45f2039712c21a8f09038c859f1a6428f09a96068beaff50798800
+)
+
+[08-Jun-2025 19:06:53 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:06:53 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 19:06:53 Europe/Berlin] Added new item: cart_id=33, user_id=6, item_name=BBQ Chicken
+[08-Jun-2025 19:06:53 Europe/Berlin] Fetched 6 cart items for user_id=6
+[08-Jun-2025 19:06:56 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:06:57 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:06:57 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 5
+    [name] => Hawaiian
+    [size] => medium
+    [price] => 21.48
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => 761650835f45f2039712c21a8f09038c859f1a6428f09a96068beaff50798800
+)
+
+[08-Jun-2025 19:06:57 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:06:57 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 19:06:57 Europe/Berlin] Added new item: cart_id=34, user_id=6, item_name=Hawaiian
+[08-Jun-2025 19:06:57 Europe/Berlin] Fetched 7 cart items for user_id=6
+[08-Jun-2025 19:06:58 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:06:58 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:06:58 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:06:58 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:06:58 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:06:58 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 761650835f45f2039712c21a8f09038c859f1a6428f09a96068beaff50798800
+)
+
+[08-Jun-2025 19:06:58 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:06:58 Europe/Berlin] Fetched 7 cart items for user_id=6
+[08-Jun-2025 19:06:59 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:06:59 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:06:59 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 761650835f45f2039712c21a8f09038c859f1a6428f09a96068beaff50798800
+)
+
+[08-Jun-2025 19:06:59 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:06:59 Europe/Berlin] Cleared cart: user_id=6
+[08-Jun-2025 19:06:59 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:06:59 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:06:59 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 761650835f45f2039712c21a8f09038c859f1a6428f09a96068beaff50798800
+)
+
+[08-Jun-2025 19:06:59 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:06:59 Europe/Berlin] Fetched 0 cart items for user_id=6
+[08-Jun-2025 19:07:03 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:07:03 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:07:03 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 1
+    [name] => Peri Peri Chicken
+    [size] => medium
+    [price] => 22.68
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => 761650835f45f2039712c21a8f09038c859f1a6428f09a96068beaff50798800
+)
+
+[08-Jun-2025 19:07:03 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:07:03 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 19:07:03 Europe/Berlin] Added new item: cart_id=35, user_id=6, item_name=Peri Peri Chicken
+[08-Jun-2025 19:07:03 Europe/Berlin] Fetched 1 cart items for user_id=6
+[08-Jun-2025 19:07:04 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:07:04 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:07:04 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 2
+    [name] => Margherita
+    [size] => medium
+    [price] => 19.08
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => 761650835f45f2039712c21a8f09038c859f1a6428f09a96068beaff50798800
+)
+
+[08-Jun-2025 19:07:04 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:07:04 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 19:07:04 Europe/Berlin] Added new item: cart_id=36, user_id=6, item_name=Margherita
+[08-Jun-2025 19:07:04 Europe/Berlin] Fetched 2 cart items for user_id=6
+[08-Jun-2025 19:07:07 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:07:07 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:07:07 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 3
+    [name] => Vegan Supreme
+    [size] => medium
+    [price] => 23.88
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => 761650835f45f2039712c21a8f09038c859f1a6428f09a96068beaff50798800
+)
+
+[08-Jun-2025 19:07:07 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:07:07 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 19:07:07 Europe/Berlin] Added new item: cart_id=37, user_id=6, item_name=Vegan Supreme
+[08-Jun-2025 19:07:07 Europe/Berlin] Fetched 3 cart items for user_id=6
+[08-Jun-2025 19:07:08 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:07:08 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:07:08 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 4
+    [name] => Meat Lovers
+    [size] => medium
+    [price] => 26.28
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => 761650835f45f2039712c21a8f09038c859f1a6428f09a96068beaff50798800
+)
+
+[08-Jun-2025 19:07:08 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:07:08 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 19:07:08 Europe/Berlin] Added new item: cart_id=38, user_id=6, item_name=Meat Lovers
+[08-Jun-2025 19:07:08 Europe/Berlin] Fetched 4 cart items for user_id=6
+[08-Jun-2025 19:07:11 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:07:11 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:07:11 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 6
+    [name] => Supreme
+    [size] => medium
+    [price] => 23.88
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => 761650835f45f2039712c21a8f09038c859f1a6428f09a96068beaff50798800
+)
+
+[08-Jun-2025 19:07:11 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:07:11 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 19:07:11 Europe/Berlin] Added new item: cart_id=39, user_id=6, item_name=Supreme
+[08-Jun-2025 19:07:11 Europe/Berlin] Fetched 5 cart items for user_id=6
+[08-Jun-2025 19:07:12 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:07:12 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:07:12 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 8
+    [name] => Prosciutto Rocket
+    [size] => medium
+    [price] => 27.48
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => 761650835f45f2039712c21a8f09038c859f1a6428f09a96068beaff50798800
+)
+
+[08-Jun-2025 19:07:12 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:07:12 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 19:07:12 Europe/Berlin] Added new item: cart_id=40, user_id=6, item_name=Prosciutto Rocket
+[08-Jun-2025 19:07:12 Europe/Berlin] Fetched 6 cart items for user_id=6
+[08-Jun-2025 19:07:14 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:07:14 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:07:14 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:07:14 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:07:14 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:07:14 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 761650835f45f2039712c21a8f09038c859f1a6428f09a96068beaff50798800
+)
+
+[08-Jun-2025 19:07:14 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:07:14 Europe/Berlin] Fetched 6 cart items for user_id=6
+[08-Jun-2025 19:08:12 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:08:12 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:08:12 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:08:12 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:08:12 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:08:12 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 761650835f45f2039712c21a8f09038c859f1a6428f09a96068beaff50798800
+)
+
+[08-Jun-2025 19:08:12 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:08:12 Europe/Berlin] Fetched 6 cart items for user_id=6
+[08-Jun-2025 19:08:21 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:08:21 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:08:21 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:08:21 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:08:21 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:08:21 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 761650835f45f2039712c21a8f09038c859f1a6428f09a96068beaff50798800
+)
+
+[08-Jun-2025 19:08:21 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:08:21 Europe/Berlin] Fetched 6 cart items for user_id=6
+[08-Jun-2025 19:09:18 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:09:18 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:09:18 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:09:18 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:09:18 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:09:18 Europe/Berlin] Received input: Array
+(
+    [user_id] => 1
+    [csrf_token] => 392a6a2533a7569925859669e66c8ebc965c666d12a20c70473d13944d0a7a6a
+)
+
+[08-Jun-2025 19:09:18 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:09:18 Europe/Berlin] Fetched 0 cart items for user_id=1
+[08-Jun-2025 19:09:31 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:09:31 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:09:31 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 2
+    [name] => Margherita
+    [size] => medium
+    [price] => 19.08
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 1
+    [csrf_token] => 392a6a2533a7569925859669e66c8ebc965c666d12a20c70473d13944d0a7a6a
+)
+
+[08-Jun-2025 19:09:31 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:09:31 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 19:09:31 Europe/Berlin] Added new item: cart_id=41, user_id=1, item_name=Margherita
+[08-Jun-2025 19:09:31 Europe/Berlin] Fetched 1 cart items for user_id=1
+[08-Jun-2025 19:09:32 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:09:32 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:09:32 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:09:32 Europe/Berlin] Received input: Array
+(
+    [user_id] => 1
+    [csrf_token] => 392a6a2533a7569925859669e66c8ebc965c666d12a20c70473d13944d0a7a6a
+)
+
+[08-Jun-2025 19:09:32 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:09:32 Europe/Berlin] Fetched 1 cart items for user_id=1
+[08-Jun-2025 19:09:32 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:09:32 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:09:33 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:09:33 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:09:33 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:09:33 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:09:33 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:09:33 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:11:47 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:11:47 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:11:47 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:11:47 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:11:47 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:11:47 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:14:16 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:14:16 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:14:16 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:14:16 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:14:16 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:14:16 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 5b1191d6141dd13b1cae1fc432667a5571ea69b31e7a8312cef7607d5ef21068
+)
+
+[08-Jun-2025 19:14:16 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:14:16 Europe/Berlin] Fetched 6 cart items for user_id=6
+[08-Jun-2025 19:14:18 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:14:18 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:14:18 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:14:18 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:14:18 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:14:18 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:14:54 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:14:54 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:14:54 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:14:54 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:14:54 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:14:54 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:15:07 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:15:07 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:15:07 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:15:07 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:15:07 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:15:07 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:17:40 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:17:40 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:17:40 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:17:40 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:17:40 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:17:40 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:17:43 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:17:43 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:17:43 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:17:43 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:17:43 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:17:43 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 5b1191d6141dd13b1cae1fc432667a5571ea69b31e7a8312cef7607d5ef21068
+)
+
+[08-Jun-2025 19:17:43 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:17:43 Europe/Berlin] Fetched 6 cart items for user_id=6
+[08-Jun-2025 19:17:45 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:17:45 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:17:45 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:17:45 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:17:45 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:17:45 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:17:47 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:17:47 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:17:47 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:17:47 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:17:47 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:17:47 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:21:25 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:21:25 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:21:25 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:21:25 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:21:25 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:21:25 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 5b1191d6141dd13b1cae1fc432667a5571ea69b31e7a8312cef7607d5ef21068
+)
+
+[08-Jun-2025 19:21:25 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:21:25 Europe/Berlin] Fetched 6 cart items for user_id=6
+[08-Jun-2025 19:21:27 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:21:27 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:21:27 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:21:27 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:21:27 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:21:27 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:21:30 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:21:30 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:21:30 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:21:30 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:21:30 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:21:30 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:21:59 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:21:59 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:21:59 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:21:59 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:21:59 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:21:59 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:22:40 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:22:40 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:22:40 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:22:40 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:22:40 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:22:40 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 5b1191d6141dd13b1cae1fc432667a5571ea69b31e7a8312cef7607d5ef21068
+)
+
+[08-Jun-2025 19:22:40 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:22:40 Europe/Berlin] Fetched 6 cart items for user_id=6
+[08-Jun-2025 19:22:50 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:22:50 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:22:50 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:22:50 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:22:50 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:22:50 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:22:58 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:22:58 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:22:58 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:22:58 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:22:58 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:22:58 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:24:58 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:24:58 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:24:58 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:24:58 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:24:58 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:24:58 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 0a37b1de606ea27fec9e45f34eb726977d3034b9886f964beacb5134f54714e2
+)
+
+[08-Jun-2025 19:24:58 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:24:58 Europe/Berlin] Fetched 0 cart items for user_id=6
+[08-Jun-2025 19:25:02 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:25:02 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:25:02 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 1
+    [name] => Peri Peri Chicken
+    [size] => medium
+    [price] => 22.68
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => 0a37b1de606ea27fec9e45f34eb726977d3034b9886f964beacb5134f54714e2
+)
+
+[08-Jun-2025 19:25:02 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:25:02 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 19:25:02 Europe/Berlin] Added new item: cart_id=42, user_id=6, item_name=Peri Peri Chicken
+[08-Jun-2025 19:25:02 Europe/Berlin] Fetched 1 cart items for user_id=6
+[08-Jun-2025 19:25:03 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:25:03 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:25:03 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:25:03 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:25:03 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:25:03 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 0a37b1de606ea27fec9e45f34eb726977d3034b9886f964beacb5134f54714e2
+)
+
+[08-Jun-2025 19:25:03 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:25:03 Europe/Berlin] Fetched 1 cart items for user_id=6
+[08-Jun-2025 19:32:54 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:32:54 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:32:54 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:32:54 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:32:54 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:32:54 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 0a37b1de606ea27fec9e45f34eb726977d3034b9886f964beacb5134f54714e2
+)
+
+[08-Jun-2025 19:32:54 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:32:54 Europe/Berlin] Fetched 1 cart items for user_id=6
+[08-Jun-2025 19:33:05 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:33:05 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:33:05 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:33:09 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:33:09 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:33:09 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:33:09 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:33:09 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:33:09 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 0a37b1de606ea27fec9e45f34eb726977d3034b9886f964beacb5134f54714e2
+)
+
+[08-Jun-2025 19:33:09 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:33:09 Europe/Berlin] Fetched 0 cart items for user_id=6
+[08-Jun-2025 19:36:14 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:36:14 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:36:14 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:36:14 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 0a37b1de606ea27fec9e45f34eb726977d3034b9886f964beacb5134f54714e2
+)
+
+[08-Jun-2025 19:36:14 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:36:14 Europe/Berlin] Fetched 0 cart items for user_id=6
+[08-Jun-2025 19:36:14 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:36:14 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:36:17 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:36:17 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:36:17 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 2
+    [name] => Margherita
+    [size] => medium
+    [price] => 19.08
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => 0a37b1de606ea27fec9e45f34eb726977d3034b9886f964beacb5134f54714e2
+)
+
+[08-Jun-2025 19:36:17 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:36:17 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 19:36:17 Europe/Berlin] Added new item: cart_id=43, user_id=6, item_name=Margherita
+[08-Jun-2025 19:36:17 Europe/Berlin] Fetched 1 cart items for user_id=6
+[08-Jun-2025 19:36:18 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:36:18 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:36:18 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:36:18 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 0a37b1de606ea27fec9e45f34eb726977d3034b9886f964beacb5134f54714e2
+)
+
+[08-Jun-2025 19:36:18 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:36:18 Europe/Berlin] Fetched 1 cart items for user_id=6
+[08-Jun-2025 19:36:18 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:36:18 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:37:16 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:37:16 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:37:16 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:37:16 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 0a37b1de606ea27fec9e45f34eb726977d3034b9886f964beacb5134f54714e2
+)
+
+[08-Jun-2025 19:37:16 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:37:16 Europe/Berlin] Fetched 1 cart items for user_id=6
+[08-Jun-2025 19:37:16 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:37:16 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:37:59 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:37:59 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:37:59 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:38:02 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:38:02 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:38:02 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:38:02 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:38:02 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:38:02 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 0a37b1de606ea27fec9e45f34eb726977d3034b9886f964beacb5134f54714e2
+)
+
+[08-Jun-2025 19:38:02 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:38:02 Europe/Berlin] Fetched 0 cart items for user_id=6
+[08-Jun-2025 19:38:15 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:38:15 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:38:15 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:38:15 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 0a37b1de606ea27fec9e45f34eb726977d3034b9886f964beacb5134f54714e2
+)
+
+[08-Jun-2025 19:38:15 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:38:15 Europe/Berlin] Fetched 0 cart items for user_id=6
+[08-Jun-2025 19:38:15 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:38:15 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:38:19 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:38:19 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:38:19 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 4
+    [name] => Meat Lovers
+    [size] => medium
+    [price] => 26.28
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => 0a37b1de606ea27fec9e45f34eb726977d3034b9886f964beacb5134f54714e2
+)
+
+[08-Jun-2025 19:38:19 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:38:19 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 19:38:19 Europe/Berlin] Added new item: cart_id=44, user_id=6, item_name=Meat Lovers
+[08-Jun-2025 19:38:19 Europe/Berlin] Fetched 1 cart items for user_id=6
+[08-Jun-2025 19:38:20 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:38:20 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:38:20 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 1
+    [name] => Peri Peri Chicken
+    [size] => medium
+    [price] => 22.68
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => 0a37b1de606ea27fec9e45f34eb726977d3034b9886f964beacb5134f54714e2
+)
+
+[08-Jun-2025 19:38:20 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:38:20 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 19:38:20 Europe/Berlin] Added new item: cart_id=45, user_id=6, item_name=Peri Peri Chicken
+[08-Jun-2025 19:38:20 Europe/Berlin] Fetched 2 cart items for user_id=6
+[08-Jun-2025 19:38:21 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:38:21 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:38:21 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:38:21 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:38:21 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:38:21 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 0a37b1de606ea27fec9e45f34eb726977d3034b9886f964beacb5134f54714e2
+)
+
+[08-Jun-2025 19:38:21 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:38:21 Europe/Berlin] Fetched 2 cart items for user_id=6
+[08-Jun-2025 19:38:25 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:38:25 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:38:25 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:38:25 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:38:25 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:38:25 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 0a37b1de606ea27fec9e45f34eb726977d3034b9886f964beacb5134f54714e2
+)
+
+[08-Jun-2025 19:38:25 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:38:25 Europe/Berlin] Fetched 2 cart items for user_id=6
+[08-Jun-2025 19:40:12 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:40:12 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:40:12 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 2
+    [name] => Margherita
+    [size] => medium
+    [price] => 19.08
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => 0a37b1de606ea27fec9e45f34eb726977d3034b9886f964beacb5134f54714e2
+)
+
+[08-Jun-2025 19:40:12 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:40:12 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 19:40:12 Europe/Berlin] Added new item: cart_id=46, user_id=6, item_name=Margherita
+[08-Jun-2025 19:40:12 Europe/Berlin] Fetched 3 cart items for user_id=6
+[08-Jun-2025 19:40:19 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:40:19 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:40:19 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 6
+    [name] => Supreme
+    [size] => medium
+    [price] => 23.88
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => 0a37b1de606ea27fec9e45f34eb726977d3034b9886f964beacb5134f54714e2
+)
+
+[08-Jun-2025 19:40:19 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:40:19 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 19:40:19 Europe/Berlin] Added new item: cart_id=47, user_id=6, item_name=Supreme
+[08-Jun-2025 19:40:19 Europe/Berlin] Fetched 4 cart items for user_id=6
+[08-Jun-2025 19:40:21 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:40:21 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:40:21 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:40:21 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 0a37b1de606ea27fec9e45f34eb726977d3034b9886f964beacb5134f54714e2
+)
+
+[08-Jun-2025 19:40:21 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:40:21 Europe/Berlin] Fetched 4 cart items for user_id=6
+[08-Jun-2025 19:40:21 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:40:21 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:45:30 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:45:30 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:45:30 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 1
+    [name] => Peri Peri Chicken
+    [size] => medium
+    [price] => 22.68
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => 0a37b1de606ea27fec9e45f34eb726977d3034b9886f964beacb5134f54714e2
+)
+
+[08-Jun-2025 19:45:30 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:45:30 Europe/Berlin] findSimilarItem result: Array
+(
+    [cart_id] => 45
+    [quantity] => 1
+)
+
+[08-Jun-2025 19:45:30 Europe/Berlin] Updating existing item: cart_id=45, new_quantity=2
+[08-Jun-2025 19:45:30 Europe/Berlin] Error updating quantity: SQLSTATE=HY093, Message=SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 19:45:30 Europe/Berlin] addItem failed for user_id=6, pizza_id=1, item_name=Peri Peri Chicken
+[08-Jun-2025 19:45:31 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:45:31 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:45:31 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 4
+    [name] => Meat Lovers
+    [size] => medium
+    [price] => 26.28
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => 0a37b1de606ea27fec9e45f34eb726977d3034b9886f964beacb5134f54714e2
+)
+
+[08-Jun-2025 19:45:31 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:45:31 Europe/Berlin] findSimilarItem result: Array
+(
+    [cart_id] => 44
+    [quantity] => 1
+)
+
+[08-Jun-2025 19:45:31 Europe/Berlin] Updating existing item: cart_id=44, new_quantity=2
+[08-Jun-2025 19:45:31 Europe/Berlin] Error updating quantity: SQLSTATE=HY093, Message=SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 19:45:31 Europe/Berlin] addItem failed for user_id=6, pizza_id=4, item_name=Meat Lovers
+[08-Jun-2025 19:45:33 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:45:33 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:45:33 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 3
+    [name] => Vegan Supreme
+    [size] => medium
+    [price] => 23.88
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => 0a37b1de606ea27fec9e45f34eb726977d3034b9886f964beacb5134f54714e2
+)
+
+[08-Jun-2025 19:45:33 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:45:33 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 19:45:33 Europe/Berlin] Added new item: cart_id=48, user_id=6, item_name=Vegan Supreme
+[08-Jun-2025 19:45:33 Europe/Berlin] Fetched 5 cart items for user_id=6
+[08-Jun-2025 19:45:36 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:45:36 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:45:36 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:45:36 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:45:36 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:45:36 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 0a37b1de606ea27fec9e45f34eb726977d3034b9886f964beacb5134f54714e2
+)
+
+[08-Jun-2025 19:45:36 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:45:36 Europe/Berlin] Fetched 5 cart items for user_id=6
+[08-Jun-2025 19:45:42 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:45:42 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:45:42 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 2
+    [name] => Margherita
+    [size] => medium
+    [price] => 19.08
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => 0a37b1de606ea27fec9e45f34eb726977d3034b9886f964beacb5134f54714e2
+)
+
+[08-Jun-2025 19:45:42 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:45:42 Europe/Berlin] findSimilarItem result: Array
+(
+    [cart_id] => 46
+    [quantity] => 1
+)
+
+[08-Jun-2025 19:45:42 Europe/Berlin] Updating existing item: cart_id=46, new_quantity=2
+[08-Jun-2025 19:45:42 Europe/Berlin] Error updating quantity: SQLSTATE=HY093, Message=SQLSTATE[HY093]: Invalid parameter number
+[08-Jun-2025 19:45:42 Europe/Berlin] addItem failed for user_id=6, pizza_id=2, item_name=Margherita
+[08-Jun-2025 19:45:45 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:45:45 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:45:45 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 8
+    [name] => Prosciutto Rocket
+    [size] => medium
+    [price] => 27.48
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => 0a37b1de606ea27fec9e45f34eb726977d3034b9886f964beacb5134f54714e2
+)
+
+[08-Jun-2025 19:45:45 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:45:45 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 19:45:45 Europe/Berlin] Added new item: cart_id=49, user_id=6, item_name=Prosciutto Rocket
+[08-Jun-2025 19:45:45 Europe/Berlin] Fetched 6 cart items for user_id=6
+[08-Jun-2025 19:45:46 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:45:46 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:45:46 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:45:46 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 0a37b1de606ea27fec9e45f34eb726977d3034b9886f964beacb5134f54714e2
+)
+
+[08-Jun-2025 19:45:46 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:45:46 Europe/Berlin] Fetched 6 cart items for user_id=6
+[08-Jun-2025 19:45:46 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:45:46 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:45:48 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:45:48 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:45:48 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 0a37b1de606ea27fec9e45f34eb726977d3034b9886f964beacb5134f54714e2
+)
+
+[08-Jun-2025 19:45:48 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:45:48 Europe/Berlin] Cleared cart: user_id=6
+[08-Jun-2025 19:45:48 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:45:48 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:45:48 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 0a37b1de606ea27fec9e45f34eb726977d3034b9886f964beacb5134f54714e2
+)
+
+[08-Jun-2025 19:45:48 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:45:48 Europe/Berlin] Fetched 0 cart items for user_id=6
+[08-Jun-2025 19:45:51 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:45:51 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:45:51 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 4
+    [name] => Meat Lovers
+    [size] => medium
+    [price] => 26.28
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => 0a37b1de606ea27fec9e45f34eb726977d3034b9886f964beacb5134f54714e2
+)
+
+[08-Jun-2025 19:45:51 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:45:51 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 19:45:51 Europe/Berlin] Added new item: cart_id=50, user_id=6, item_name=Meat Lovers
+[08-Jun-2025 19:45:51 Europe/Berlin] Fetched 1 cart items for user_id=6
+[08-Jun-2025 19:45:53 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:45:53 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:45:53 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:45:53 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 0a37b1de606ea27fec9e45f34eb726977d3034b9886f964beacb5134f54714e2
+)
+
+[08-Jun-2025 19:45:53 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:45:53 Europe/Berlin] Fetched 1 cart items for user_id=6
+[08-Jun-2025 19:45:53 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:45:53 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:46:01 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:46:01 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:46:01 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:46:01 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 0a37b1de606ea27fec9e45f34eb726977d3034b9886f964beacb5134f54714e2
+)
+
+[08-Jun-2025 19:46:01 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:46:01 Europe/Berlin] Fetched 1 cart items for user_id=6
+[08-Jun-2025 19:46:01 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:46:01 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:47:04 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:47:04 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:47:04 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 8
+    [name] => Prosciutto Rocket
+    [size] => medium
+    [price] => 27.48
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => 0a37b1de606ea27fec9e45f34eb726977d3034b9886f964beacb5134f54714e2
+)
+
+[08-Jun-2025 19:47:04 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:47:04 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 19:47:04 Europe/Berlin] Added new item: cart_id=51, user_id=6, item_name=Prosciutto Rocket
+[08-Jun-2025 19:47:04 Europe/Berlin] Fetched 2 cart items for user_id=6
+[08-Jun-2025 19:47:08 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:47:08 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:47:08 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 5
+    [name] => Hawaiian
+    [size] => medium
+    [price] => 21.48
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => 0a37b1de606ea27fec9e45f34eb726977d3034b9886f964beacb5134f54714e2
+)
+
+[08-Jun-2025 19:47:08 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:47:08 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 19:47:08 Europe/Berlin] Added new item: cart_id=52, user_id=6, item_name=Hawaiian
+[08-Jun-2025 19:47:08 Europe/Berlin] Fetched 3 cart items for user_id=6
+[08-Jun-2025 19:47:10 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:47:10 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 19:47:10 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:47:10 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 19:47:10 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 19:47:10 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 0a37b1de606ea27fec9e45f34eb726977d3034b9886f964beacb5134f54714e2
+)
+
+[08-Jun-2025 19:47:10 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 19:47:10 Europe/Berlin] Fetched 3 cart items for user_id=6
+[08-Jun-2025 20:06:13 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 20:06:13 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 20:06:13 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 20:06:13 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 20:06:13 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 20:06:13 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 0a37b1de606ea27fec9e45f34eb726977d3034b9886f964beacb5134f54714e2
+)
+
+[08-Jun-2025 20:06:13 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 20:06:13 Europe/Berlin] Fetched 3 cart items for user_id=6
+[08-Jun-2025 20:06:23 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 20:06:23 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 20:06:23 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 20:06:23 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 20:06:23 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 20:06:23 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 20:07:11 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 20:07:11 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 20:07:11 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 20:07:11 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 0a37b1de606ea27fec9e45f34eb726977d3034b9886f964beacb5134f54714e2
+)
+
+[08-Jun-2025 20:07:11 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 20:07:11 Europe/Berlin] Fetched 0 cart items for user_id=6
+[08-Jun-2025 20:07:11 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 20:07:11 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 20:07:15 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 20:07:15 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 20:07:15 Europe/Berlin] Received input: Array
+(
+    [pizza_id] => 4
+    [name] => Meat Lovers
+    [size] => medium
+    [price] => 26.28
+    [quantity] => 1
+    [item_type] => pizza
+    [custom_ingredients] => 
+    [special_instructions] => 
+    [user_id] => 6
+    [csrf_token] => 0a37b1de606ea27fec9e45f34eb726977d3034b9886f964beacb5134f54714e2
+)
+
+[08-Jun-2025 20:07:15 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 20:07:15 Europe/Berlin] findSimilarItem result: No matching item
+[08-Jun-2025 20:07:15 Europe/Berlin] Added new item: cart_id=53, user_id=6, item_name=Meat Lovers
+[08-Jun-2025 20:07:15 Europe/Berlin] Fetched 1 cart items for user_id=6
+[08-Jun-2025 20:07:16 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 20:07:16 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 20:07:16 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 20:07:16 Europe/Berlin] Received input: Array
+(
+    [user_id] => 6
+    [csrf_token] => 0a37b1de606ea27fec9e45f34eb726977d3034b9886f964beacb5134f54714e2
+)
+
+[08-Jun-2025 20:07:16 Europe/Berlin] CSRF token validated successfully
+[08-Jun-2025 20:07:16 Europe/Berlin] Fetched 1 cart items for user_id=6
+[08-Jun-2025 20:07:16 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 20:07:16 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 20:07:22 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 20:07:22 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 20:07:22 Europe/Berlin] JSON parse error: Syntax error
+[08-Jun-2025 20:07:22 Europe/Berlin] PHP Warning:  Constant BASE_PATH already defined in C:\xampp\htdocs\pizza\src\config\database.php on line 3
+[08-Jun-2025 20:07:22 Europe/Berlin] Cart class instantiated
+[08-Jun-2025 20:07:22 Europe/Berlin] JSON parse error: Syntax error

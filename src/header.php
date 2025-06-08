@@ -1,16 +1,12 @@
 <?php
 require_once 'config/database.php';
-require_once 'classes/Pizza.php';
 require_once 'includes/functions.php';
 
 startSession();
 
 $database = new Database();
 $db = $database->getConnection();
-$pizza = new Pizza($db);
 
-// Get featured pizzas for homepage
-$featured_pizzas = $pizza->getFeaturedPizzas(6);
 
 // Helper function to get dashboard URL based on user role
 function getDashboardUrl($role)
@@ -39,6 +35,11 @@ function getProfileUrl($role)
 
 // Determine the current page
 $current_page = basename($_SERVER['PHP_SELF']);
+
+// Generate CSRF token if not already set
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
 ?>
 
 <!DOCTYPE html>
@@ -58,12 +59,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <?php if (isLoggedIn()): ?>
             <meta name="user-id" content="<?php echo htmlspecialchars($_SESSION['user_id']); ?>">
         <?php endif; ?>
-        <?php
-        // Generate CSRF token if not already set
-        if (empty($_SESSION['csrf_token'])) {
-            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-        }
-        ?>
         <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
         <div class="nav-container">
             <div class="nav-brand">
@@ -77,7 +72,9 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 <a href="index.php" class="nav-link <?php echo $current_page === 'index.php' ? 'active' : ''; ?>">Home</a>
                 <a href="menu.php" class="nav-link <?php echo $current_page === 'menu.php' ? 'active' : ''; ?>">Menu</a>
                 <a href="build-pizza.php" class="nav-link <?php echo $current_page === 'build-pizza.php' ? 'active' : ''; ?>">Build Your Pizza</a>
-                <a href="track-order.php" class="nav-link <?php echo $current_page === 'track-order.php' ? 'active' : ''; ?>">Track Order</a>
+                <?php if (isLoggedIn() && $_SESSION['role'] !== 'admin' && !isStaff()): ?>
+                    <a href="track-order.php" class="nav-link <?php echo $current_page === 'track-order.php' ? 'active' : ''; ?>">Track Order</a>
+                <?php endif; ?>
                 <div class="dropdown">
                     <button class="dropdown-toggle" onclick="toggleDropdown()" aria-label="User Menu" aria-expanded="false" title="User Menu">
                         <span class="user-icon"><i class="fas fa-user"></i></span>
@@ -105,3 +102,127 @@ $current_page = basename($_SERVER['PHP_SELF']);
             </div>
         </div>
     </nav>
+
+    <script src="assets/js/main.js"></script>
+    <script>
+        // Function to update cart count in the header
+        function updateCartCount() {
+            try {
+                const cart = JSON.parse(localStorage.getItem('crustPizzaCart')) || [];
+                if (!Array.isArray(cart)) {
+                    console.error('Invalid cart data:', cart);
+                    localStorage.setItem('crustPizzaCart', JSON.stringify([]));
+                    const cartCountElement = document.getElementById('cartCount');
+                    if (cartCountElement) {
+                        cartCountElement.textContent = '0';
+                    }
+                    return;
+                }
+                const cartCount = cart.reduce((total, item) => {
+                    const qty = Number(item.quantity) || 1;
+                    return total + qty;
+                }, 0);
+                const cartCountElement = document.getElementById('cartCount');
+                if (cartCountElement) {
+                    cartCountElement.textContent = cartCount.toString();
+                }
+            } catch (error) {
+                console.error('Error updating cart count:', error);
+                localStorage.setItem('crustPizzaCart', JSON.stringify([]));
+                const cartCountElement = document.getElementById('cartCount');
+                if (cartCountElement) {
+                    cartCountElement.textContent = '0';
+                }
+            }
+        }
+
+        // Load cart count on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCartCount();
+        });
+
+        // Functions for dropdown and navigation menu (unchanged)
+        function toggleDropdown() {
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            const isOpen = dropdownMenu.classList.toggle('show');
+            document.querySelector('.dropdown-toggle').setAttribute('aria-expanded', isOpen);
+        }
+
+        function toggleNavMenu() {
+            const navMenu = document.getElementById('navMenu');
+            navMenu.classList.toggle('active');
+        }
+
+        document.addEventListener('click', function(event) {
+            const dropdown = document.querySelector('.dropdown');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            const navMenu = document.getElementById('navMenu');
+            const navToggle = document.querySelector('.nav-toggle');
+            if (!dropdown.contains(event.target) && !navToggle.contains(event.target)) {
+                dropdownMenu.classList.remove('show');
+                navMenu.classList.remove('active');
+                document.querySelector('.dropdown-toggle').setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                document.getElementById('dropdownMenu').classList.remove('show');
+                document.getElementById('navMenu').classList.remove('active');
+                document.querySelector('.dropdown-toggle').setAttribute('aria-expanded', 'false');
+            }
+        });
+    </script>
+    <style>
+        /* Cart Link and Counter Styles (aligned with cart.php) */
+        .cart-link {
+            position: relative;
+            display: flex;
+            align-items: center;
+            color: inherit;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            transition: color 0.2s ease;
+        }
+
+        .cart-link:hover {
+            color: #ff6b35;
+        }
+
+        .cart-link i {
+            font-size: 1.2rem;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: 0;
+            background: #ff6b35;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .cart-link {
+                padding: 0.5rem;
+            }
+
+            .cart-count {
+                width: 16px;
+                height: 16px;
+                font-size: 0.65rem;
+            }
+        }
+    </style>
+</body>
+
+</html>

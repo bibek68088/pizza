@@ -47,13 +47,14 @@ class Order
             $this->order_number = $this->generateOrderNumber();
 
             $query = "INSERT INTO " . $this->table_name . " 
-                      SET order_number=:order_number, user_id=:user_id, store_id=:store_id, 
-                          order_type=:order_type, priority=:priority, subtotal=:subtotal, 
-                          tax=:tax, delivery_fee=:delivery_fee, discount_amount=:discount_amount, 
-                          total=:total, payment_method=:payment_method, customer_name=:customer_name,
-                          customer_phone=:customer_phone, customer_email=:customer_email,
-                          delivery_address=:delivery_address, delivery_instructions=:delivery_instructions,
-                          estimated_prep_time=:estimated_prep_time, special_requests=:special_requests";
+                  SET order_number=:order_number, user_id=:user_id, store_id=:store_id, 
+                      order_type=:order_type, priority=:priority, subtotal=:subtotal, 
+                      tax=:tax, delivery_fee=:delivery_fee, discount_amount=:discount_amount, 
+                      total=:total, payment_method=:payment_method, customer_name=:customer_name,
+                      customer_phone=:customer_phone, customer_email=:customer_email,
+                      delivery_address=:delivery_address, delivery_instructions=:delivery_instructions,
+                      estimated_prep_time=:estimated_prep_time, special_requests=:special_requests,
+                      payment_reference=:payment_reference";
 
             $stmt = $this->conn->prepare($query);
 
@@ -64,6 +65,7 @@ class Order
             $this->delivery_address = htmlspecialchars(strip_tags($this->delivery_address ?? ''));
             $this->delivery_instructions = htmlspecialchars(strip_tags($this->delivery_instructions ?? ''));
             $this->special_requests = htmlspecialchars(strip_tags($this->special_requests ?? ''));
+            $this->payment_reference = htmlspecialchars(strip_tags($this->payment_reference ?? ''));
 
             // Bind parameters
             $stmt->bindParam(":order_number", $this->order_number);
@@ -84,6 +86,7 @@ class Order
             $stmt->bindParam(":delivery_instructions", $this->delivery_instructions);
             $stmt->bindParam(":estimated_prep_time", $this->estimated_prep_time, PDO::PARAM_INT);
             $stmt->bindParam(":special_requests", $this->special_requests);
+            $stmt->bindParam(":payment_reference", $this->payment_reference);
 
             if ($stmt->execute()) {
                 $this->order_id = $this->conn->lastInsertId();
@@ -104,7 +107,6 @@ class Order
             return false;
         }
     }
-
     // Generate unique order number (placeholder implementation)
     private function generateOrderNumber()
     {
@@ -167,27 +169,27 @@ class Order
 
     // Get orders by status with filtering
     public function getOrdersByStatus($status, $store_id = null, $conditions = [], $limit = 50)
-{
-    try {
-        $whereConditions = ['o.status = :status'];
-        $params = [':status' => $status];
+    {
+        try {
+            $whereConditions = ['o.status = :status'];
+            $params = [':status' => $status];
 
-        if ($store_id !== null) {
-            $whereConditions[] = 'o.store_id = :store_id';
-            $params[':store_id'] = $store_id;
-        }
-
-        // Add additional conditions
-        if (!empty($conditions)) {
-            foreach ($conditions as $key => $value) {
-                $whereConditions[] = "o.$key = :$key";
-                $params[":$key"] = $value;
+            if ($store_id !== null) {
+                $whereConditions[] = 'o.store_id = :store_id';
+                $params[':store_id'] = $store_id;
             }
-        }
 
-        $whereClause = 'WHERE ' . implode(' AND ', $whereConditions);
+            // Add additional conditions
+            if (!empty($conditions)) {
+                foreach ($conditions as $key => $value) {
+                    $whereConditions[] = "o.$key = :$key";
+                    $params[":$key"] = $value;
+                }
+            }
 
-        $query = "SELECT o.*, s.name as store_name, u.full_name as assigned_staff_name
+            $whereClause = 'WHERE ' . implode(' AND ', $whereConditions);
+
+            $query = "SELECT o.*, s.name as store_name, u.full_name as assigned_staff_name
                   FROM orders o
                   LEFT JOIN stores s ON o.store_id = s.store_id
                   LEFT JOIN users u ON o.assigned_staff_id = u.user_id
@@ -195,26 +197,26 @@ class Order
                   ORDER BY o.priority DESC, o.created_at ASC
                   LIMIT :limit";
 
-        $stmt = $this->conn->prepare($query);
-        foreach ($params as $key => $value) {
-            $stmt->bindValue($key, $value, is_int($value) ? PDO::PARAM_INT : PDO::PARAM_STR);
+            $stmt = $this->conn->prepare($query);
+            foreach ($params as $key => $value) {
+                $stmt->bindValue($key, $value, is_int($value) ? PDO::PARAM_INT : PDO::PARAM_STR);
+            }
+            $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Debug: Log query and results
+            error_log("Query: $query");
+            error_log("Params: " . print_r($params, true));
+            error_log("Results: " . print_r($results, true));
+
+            return $results;
+        } catch (PDOException $e) {
+            error_log("Database Error in getOrdersByStatus: " . $e->getMessage());
+            return [];
         }
-        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
-        $stmt->execute();
-
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        // Debug: Log query and results
-        error_log("Query: $query");
-        error_log("Params: " . print_r($params, true));
-        error_log("Results: " . print_r($results, true));
-
-        return $results;
-    } catch (PDOException $e) {
-        error_log("Database Error in getOrdersByStatus: " . $e->getMessage());
-        return [];
     }
-}
 
 
     // Get all orders with advanced filtering
@@ -647,7 +649,6 @@ class Order
         }
     }
 
-    // Placeholder for getCurrentStaffId (assumed to be defined elsewhere)
     private function getCurrentStaffId()
     {
         return isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;

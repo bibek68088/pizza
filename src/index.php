@@ -3,645 +3,672 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Include the header
+// Include required files
 require_once 'header.php';
-?>
+require_once 'config/database.php';
+require_once 'classes/Pizza.php';
+require_once 'includes/functions.php';
 
-<?php
-// Ensure $featured_pizzas is defined
-$featured_pizzas = isset($featured_pizzas) && is_array($featured_pizzas) ? $featured_pizzas : [];
-// Check if generate_csrf_token exists and session is started
-if (function_exists('generate_csrf_token')) {
-    $csrf_token = generateCSRFToken();
-} else {
-    $csrf_token = '';
-    error_log('generate_csrf_token function not found in index.php');
+// Start session for CSRF token
+startSession();
+
+// Initialize database connection
+try {
+    $database = Database::getInstance();
+    $db = $database->getConnection();
+    $pizza = new Pizza($db);
+
+    // Fetch featured pizzas
+    $featured_pizzas = $pizza->getFeaturedPizzas();
+    if (empty($featured_pizzas)) {
+        error_log('No featured pizzas found in database for index.php');
+    }
+} catch (Exception $e) {
+    error_log('Database error in index.php: ' . $e->getMessage());
+    $featured_pizzas = [];
+    setFlashMessage('Unable to load featured pizzas. Please try again later.', 'error');
+}
+
+// Generate CSRF token
+$csrf_token = function_exists('generateCSRFToken') ? generateCSRFToken() : '';
+if (empty($csrf_token)) {
+    error_log('generate_csrf_token function not found or failed in index.php');
 }
 ?>
-<input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
 
-<!-- Hero Section -->
-<section class="hero">
-    <div class="hero-content">
-        <h1>Gourmet Pizza Perfection</h1>
-        <p>Experience award-winning flavors crafted with premium ingredients and innovative recipes. From our iconic Peri Peri Chicken to our plant-based masterpieces - every bite tells a story of culinary excellence.</p>
-        <div class="hero-buttons">
-            <a href="menu.php" class="btn btn-primary">Order Now</a>
-            <a href="build-pizza.php" class="btn btn-secondary">Create Your Own</a>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crust Pizza - Gourmet Pizza Perfection</title>
+    <!-- Styles are included in header.php or assets/css/style.css -->
+</head>
+
+<body>
+    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Gourmet Pizza Perfection</h1>
+            <p>Experience award-winning flavors crafted with premium ingredients and innovative recipes. From our iconic Peri Peri Chicken to our plant-based masterpieces - every bite tells a story of culinary excellence.</p>
+            <div class="hero-buttons">
+                <a href="menu.php" class="btn btn-primary">Order Now</a>
+                <a href="build-pizza.php" class="btn btn-secondary">Create Your Own</a>
+            </div>
         </div>
-    </div>
-    <div class="hero-image">
-        <img src="https://images.unsplash.com/photo-1506354666786-959d6d497f1a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzV8fHBpenphfGVufDB8fDB8fHww" alt="Delicious Crust Pizza" />
-    </div>
-</section>
-
-<!-- Featured Pizzas Section -->
-<section class="featured-pizzas">
-    <div class="container">
-        <div class="section-header">
-            <h2>Signature Creations</h2>
-            <p class="section-subtitle">Discover our award-winning pizzas that have made Crust Pizza a household name across Australia. Each recipe is crafted with passion and perfected over years of culinary excellence.</p>
+        <div class="hero-image">
+            <img src="assets/public/pizza-banner.avif" alt="Delicious Crust Pizza" />
         </div>
+    </section>
 
-        <div class="pizza-grid">
-            <?php if (!empty($featured_pizzas)): ?>
-                <?php foreach ($featured_pizzas as $index => $pizza_item): ?>
-                    <?php
-                    // Ensure index is an integer
-                    $index = (int)$index;
+    <!-- Featured Pizzas Section -->
+    <section class="featured-pizzas">
+        <div class="container">
+            <div class="section-header">
+                <h2>Signature Creations</h2>
+                <p class="section-subtitle">Discover our award-winning pizzas that have made Crust Pizza a household name across Australia. Each recipe is crafted with passion and perfected over years of culinary excellence.</p>
+            </div>
 
-                    // Ensure we have all required fields with default values if missing
-                    $pizza_id = isset($pizza_item['pizza_id']) && $pizza_item['pizza_id'] > 0 ? (int)$pizza_item['pizza_id'] : 0;
-                    // Skip invalid pizza IDs
-                    if ($pizza_id <= 0) {
-                        error_log('Skipping invalid pizza_id: ' . $pizza_id);
-                        continue;
-                    }
-                    $name = isset($pizza_item['name']) ? htmlspecialchars($pizza_item['name']) : 'Pizza';
-                    $description = isset($pizza_item['description']) ? htmlspecialchars($pizza_item['description']) : 'Delicious pizza with our signature sauce and cheese.';
-                    $image_url = isset($pizza_item['image_url']) && !empty($pizza_item['image_url']) ? $pizza_item['image_url'] : '/placeholder.svg?height=280&width=400';
+            <div class="pizza-grid">
+                <?php if (!empty($featured_pizzas)): ?>
+                    <?php foreach ($featured_pizzas as $index => $pizza_item): ?>
+                        <?php
+                        // Validate pizza data
+                        $pizza_id = isset($pizza_item['pizza_id']) && $pizza_item['pizza_id'] > 0 ? (int)$pizza_item['pizza_id'] : 0;
+                        if ($pizza_id <= 0) {
+                            error_log('Skipping invalid pizza_id: ' . $pizza_id);
+                            continue;
+                        }
+                        $name = isset($pizza_item['name']) ? htmlspecialchars($pizza_item['name']) : 'Pizza';
+                        $description = isset($pizza_item['description']) ? htmlspecialchars($pizza_item['description']) : 'Delicious pizza with our signature sauce and cheese.';
+                        $image_url = isset($pizza_item['image_url']) && !empty($pizza_item['image_url']) && file_exists(BASE_PATH . $pizza_item['image_url'])
+                            ? htmlspecialchars($pizza_item['image_url'])
+                            : '/placeholder.svg?height=280&width=400';
+                        $price_small = isset($pizza_item['base_price_small']) ? (float)$pizza_item['base_price_small'] : 15.90;
+                        $price_medium = isset($pizza_item['base_price_medium']) ? (float)$pizza_item['base_price_medium'] : 21.90;
+                        $price_large = isset($pizza_item['base_price_large']) ? (float)$pizza_item['base_price_large'] : 27.90;
 
-                    // Set default prices if not available
-                    $price_small = isset($pizza_item['base_price_small']) ? (float)$pizza_item['base_price_small'] : 15.90;
-                    $price_medium = isset($pizza_item['base_price_medium']) ? (float)$pizza_item['base_price_medium'] : 21.90;
-                    $price_large = isset($pizza_item['base_price_large']) ? (float)$pizza_item['base_price_large'] : 27.90;
-
-                    // Add badges for first few pizzas
-                    $badges = ['Award Winner', 'Popular', 'Chef\'s Choice', 'Customer Favorite', 'New', 'Signature'];
-                    $badge_index = $index % count($badges);
-                    $badge = $badges[$badge_index];
-                    ?>
-                    <div class="pizza-card fade-in-up" style="animation-delay: <?php echo $index * 0.2; ?>s;" data-pizza-id="<?php echo $pizza_id; ?>" data-price-small="<?php echo $price_small; ?>" data-price-medium="<?php echo $price_medium; ?>" data-price-large="<?php echo $price_large; ?>">
-                        <div class="pizza-image">
-                            <img src="<?php echo $image_url; ?>" alt="<?php echo $name; ?>">
-                            <div class="pizza-badge"><?php echo $badge; ?></div>
-                        </div>
-                        <div class="pizza-info">
-                            <h3><?php echo $name; ?></h3>
-                            <p><?php echo $description; ?></p>
-                            <div class="pizza-prices">
-                                <div class="price-item">
-                                    <span class="price-label">Small</span>
-                                    <span class="price-value"><?php echo formatCurrency($price_small); ?></span>
+                        // Add badges
+                        $badges = ['Award Winner', 'Popular', 'Chef\'s Choice', 'Customer Favorite', 'New', 'Signature'];
+                        $badge = $badges[$index % count($badges)];
+                        ?>
+                        <div class="pizza-card fade-in-up" style="animation-delay: <?php echo $index * 0.2; ?>s;"
+                            data-pizza-id="<?php echo $pizza_id; ?>"
+                            data-price-small="<?php echo $price_small; ?>"
+                            data-price-medium="<?php echo $price_medium; ?>"
+                            data-price-large="<?php echo $price_large; ?>">
+                            <div class="pizza-image">
+                                <img src="<?php echo $image_url; ?>" alt="<?php echo $name; ?>">
+                                <div class="pizza-badge"><?php echo $badge; ?></div>
+                            </div>
+                            <div class="pizza-info">
+                                <h3><?php echo $name; ?></h3>
+                                <p><?php echo $description; ?></p>
+                                <div class="pizza-prices">
+                                    <div class="price-item">
+                                        <span class="price-label">Small</span>
+                                        <span class="price-value"><?php echo formatCurrency($price_small); ?></span>
+                                    </div>
+                                    <div class="price-item">
+                                        <span class="price-label">Medium</span>
+                                        <span class="price-value"><?php echo formatCurrency($price_medium); ?></span>
+                                    </div>
+                                    <div class="price-item">
+                                        <span class="price-label">Large</span>
+                                        <span class="price-value"><?php echo formatCurrency($price_large); ?></span>
+                                    </div>
                                 </div>
-                                <div class="price-item">
-                                    <span class="price-label">Medium</span>
-                                    <span class="price-value"><?php echo formatCurrency($price_medium); ?></span>
-                                </div>
-                                <div class="price-item">
-                                    <span class="price-label">Large</span>
-                                    <span class="price-value"><?php echo formatCurrency($price_large); ?></span>
+                                <div class="pizza-actions">
+                                    <a href="pizza-details.php?id=<?php echo $pizza_id; ?>" class="btn btn-outline">View Details</a>
+                                    <button class="btn btn-add-cart" onclick="addToCart(<?php echo $pizza_id; ?>, 'medium', event)">
+                                        <i class="fas fa-cart-plus"></i> Add to Cart
+                                    </button>
                                 </div>
                             </div>
-                            <div class="pizza-actions">
-                                <a href="pizza-details.php?id=<?php echo $pizza_id; ?>" class="btn btn-outline">View Details</a>
-                                <button class="btn btn-add-cart" onclick="addToCart(<?php echo $pizza_id; ?>, 'medium', event)">
-                                    <i class="fas fa-cart-plus"></i> Add to Cart
-                                </button>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <!-- Fallback if no pizzas found -->
+                    <div class="text-center" style="grid-column: 1 / -1; padding: 40px;">
+                        <h3>No featured pizzas available</h3>
+                        <p>Check back soon for our signature creations!</p>
+                        <a href="menu.php" class="btn btn-primary">Browse Full Menu</a>
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <div class="text-center" style="margin-top: 3rem;">
+                <a href="menu.php" class="btn btn-primary" style="padding: 18px 50px; font-size: 1.2rem;">
+                    <i class="fas fa-utensils"></i> Explore Full Menu
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2 style="color: white;">Why Choose Crust Pizza?</h2>
+                <p class="section-subtitle" style="color: rgba(255, 255, 255, 0.9);">Over 20 years of pizza perfection with 130+ stores across Australia. We're not just making pizza - we're crafting experiences.</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-rocket"></i>
+                    <h3>Lightning Fast Delivery</h3>
+                    <p>Fresh, hot pizzas delivered in 30 minutes or less, guaranteed. Track your order in real-time from kitchen to your door.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-award"></i>
+                    <h3>Award-Winning Recipes</h3>
+                    <p>International Pizza Award winners with signature flavors you won't find anywhere else. Taste the difference quality makes.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-seedling"></i>
+                    <h3>Premium Ingredients</h3>
+                    <p>Locally sourced, fresh ingredients with options for everyone - gluten-free, low-carb, vegan, and healthy choice ranges.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-mobile-alt"></i>
+                    <h3>Smart Ordering</h3>
+                    <p>Seamless online experience with easy customization, saved favorites, and intelligent recommendations just for you.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" style="padding: 100px 20px; background: #f8f9fa;">
+        <div class="container">
+            <div class="section-header">
+                <h2>Our Story Since 2001</h2>
+                <p class="section-subtitle">From a single store dream to Australia's gourmet pizza leader</p>
+            </div>
+
+            <div class="about-content" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 50px; align-items: center;">
+                <div class="about-text">
+                    <div class="timeline-item" style="margin-bottom: 40px; padding: 30px; background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-left: 5px solid #ff6b35;">
+                        <h3 style="color: #ff6b35; margin-bottom: 15px; font-size: 1.5rem;">The Beginning (2001)</h3>
+                        <p style="line-height: 1.6; color: #666;">Born from a dream to make gourmet pizzas accessible to everyone, our first Crust Pizza store opened in Annandale, New South Wales. What started as a simple vision has grown into something extraordinary.</p>
+                    </div>
+
+                    <div class="timeline-item" style="margin-bottom: 40px; padding: 30px; background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-left: 5px solid #f7931e;">
+                        <h3 style="color: #f7931e; margin-bottom: 15px; font-size: 1.5rem;">Expansion & Innovation</h3>
+                        <p style="line-height: 1.6; color: #666;">Our second store in Richmond, Victoria marked the beginning of our national expansion. Today, we operate 130+ stores across Australia, each maintaining our commitment to gourmet excellence and innovative flavors.</p>
+                    </div>
+
+                    <div class="timeline-item" style="padding: 30px; background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-left: 5px solid #ff6b35;">
+                        <h3 style="color: #ff6b35; margin-bottom: 15px; font-size: 1.5rem;">Award-Winning Excellence</h3>
+                        <p style="line-height: 1.6; color: #666;">Our innovative approach has earned us International Pizza Awards, with signature flavors like Peri Peri Chicken becoming household favorites. We continue leading industry trends with plant-based options and healthy alternatives.</p>
+                    </div>
+                </div>
+
+                <div class="about-image" style="text-align: center;">
+                    <img src="https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?w=500&h=600&fit=crop&crop=center" alt="Crust Pizza Story" style="border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); max-width: 100%; height: auto;">
+                </div>
+            </div>
+
+            <!-- Awards Section -->
+            <div class="awards-section" style="margin-top: 80px; text-align: center;">
+                <h3 style="font-size: 2.5rem; margin-bottom: 40px; color: #333;">Industry Recognition</h3>
+                <div class="awards-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px;">
+                    <div class="award-item" style="padding: 30px; background: linear-gradient(135deg, #ff6b35, #f7931e); color: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(255,107,53,0.3);">
+                        <i class="fas fa-trophy" style="font-size: 3rem; margin-bottom: 20px;"></i>
+                        <h4 style="margin-bottom: 10px;">International Pizza Awards</h4>
+                        <p>Multiple wins for innovative flavors</p>
+                    </div>
+                    <div class="award-item" style="padding: 30px; background: linear-gradient(135deg, #28a745, #20c997); color: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(40,167,69,0.3);">
+                        <i class="fas fa-leaf" style="font-size: 3rem; margin-bottom: 20px;"></i>
+                        <h4 style="margin-bottom: 10px;">Vegan Nourish Awards</h4>
+                        <p>2022 Finalist for Plant-Based Excellence</p>
+                    </div>
+                    <div class="award-item" style="padding: 30px; background: linear-gradient(135deg, #6f42c1, #e83e8c); color: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(111,66,193,0.3);">
+                        <i class="fas fa-star" style="font-size: 3rem; margin-bottom: 20px;"></i>
+                        <h4 style="margin-bottom: 10px;">QSR Industry Leader</h4>
+                        <p>First to offer comprehensive healthy options</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Innovation Timeline -->
+    <section class="innovation-timeline" style="padding: 100px 20px; background: white; color: black;">
+        <div class="container">
+            <div class="section-header">
+                <h2 style="color: black;">Innovation Timeline</h2>
+                <p class="section-subtitle" style="color: black;">Leading the industry with groundbreaking offerings</p>
+            </div>
+
+            <div class="timeline" style="position: relative; max-width: 800px; margin: 0 auto;">
+                <!-- Timeline Line -->
+                <div style="position: absolute; left: 50%; top: 0; bottom: 0; width: 4px; background: linear-gradient(180deg, #ff6b35, #f7931e); transform: translateX(-50%);"></div>
+
+                <!-- Timeline Items -->
+                <div class="timeline-items">
+                    <div class="timeline-item-horizontal" style="display: flex; align-items: center; margin-bottom: 60px; position: relative;">
+                        <div style="flex: 1; text-align: right; padding-right: 40px;">
+                            <div style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 25px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.2);">
+                                <h4 style="color: #ff6b35; margin-bottom: 10px; font-size: 1.3rem;">2001</h4>
+                                <h5 style="margin-bottom: 15px;">First Store Opens</h5>
+                                <p style="opacity: 0.9; line-height: 1.5;">Annandale, NSW - Where it all began</p>
+                            </div>
+                        </div>
+                        <div style="width: 20px; height: 20px; background: #ff6b35; border-radius: 50%; position: relative; z-index: 2; border: 4px solid white;" class="timeline-dot"></div>
+                        <div style="flex: 1; padding-left: 40px;"></div>
+                    </div>
+
+                    <div class="timeline-item-horizontal" style="display: flex; align-items: center; margin-bottom: 60px; position: relative;">
+                        <div style="flex: 1; padding-right: 40px;"></div>
+                        <div style="width: 20px; height: 20px; background: #f7931e; border-radius: 50%; position: relative; z-index: 2; border: 4px solid white;" class="timeline-dot"></div>
+                        <div style="flex: 1; text-align: left; padding-left: 40px;">
+                            <div style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 25px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.2);">
+                                <h4 style="color: #f7931e; margin-bottom: 10px; font-size: 1.3rem;">Early 2000s</h4>
+                                <h5 style="margin-bottom: 15px;">Gluten Free & Low Carb Pioneer</h5>
+                                <p style="opacity: 0.9; line-height: 1.5;">First QSR to offer comprehensive dietary alternatives</p>
                             </div>
                         </div>
                     </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <!-- Fallback if no pizzas found -->
-                <div class="text-center" style="grid-column: 1 / -1; padding: 40px;">
-                    <h3>No featured pizzas available</h3>
-                    <p>Check back soon for our signature creations!</p>
-                    <a href="menu.php" class="btn btn-primary">Browse Full Menu</a>
-                </div>
-            <?php endif; ?>
-        </div>
 
-        <div class="text-center" style="margin-top: 3rem;">
-            <a href="menu.php" class="btn btn-primary" style="padding: 18px 50px; font-size: 1.2rem;">
-                <i class="fas fa-utensils"></i> Explore Full Menu
-            </a>
-        </div>
-    </div>
-</section>
+                    <div class="timeline-item-horizontal" style="display: flex; align-items: center; margin-bottom: 60px; position: relative;">
+                        <div style="flex: 1; text-align: right; padding-right: 40px;">
+                            <div style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 25px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.2);">
+                                <h4 style="color: #28a745; margin-bottom: 10px; font-size: 1.3rem;">2015</h4>
+                                <h5 style="margin-bottom: 15px;">Healthy Choice Range</h5>
+                                <p style="opacity: 0.9; line-height: 1.5;">Introducing nutritious options without compromising taste</p>
+                            </div>
+                        </div>
+                        <div style="width: 20px; height: 20px; background: #28a745; border-radius: 50%; position: relative; z-index: 2; border: 4px solid white;" class="timeline-dot"></div>
+                        <div style="flex: 1; padding-left: 40px;"></div>
+                    </div>
 
-<!-- Features Section -->
-<section class="features">
-    <div class="container">
-        <div class="section-header">
-            <h2 style="color: white;">Why Choose Crust Pizza?</h2>
-            <p class="section-subtitle" style="color: rgba(255, 255, 255, 0.9);">Over 20 years of pizza perfection with 130+ stores across Australia. We're not just making pizza - we're crafting experiences.</p>
-        </div>
-
-        <div class="features-grid">
-            <div class="feature-card">
-                <i class="fas fa-rocket"></i>
-                <h3>Lightning Fast Delivery</h3>
-                <p>Fresh, hot pizzas delivered in 30 minutes or less, guaranteed. Track your order in real-time from kitchen to your door.</p>
-            </div>
-            <div class="feature-card">
-                <i class="fas fa-award"></i>
-                <h3>Award-Winning Recipes</h3>
-                <p>International Pizza Award winners with signature flavors you won't find anywhere else. Taste the difference quality makes.</p>
-            </div>
-            <div class="feature-card">
-                <i class="fas fa-seedling"></i>
-                <h3>Premium Ingredients</h3>
-                <p>Locally sourced, fresh ingredients with options for everyone - gluten-free, low-carb, vegan, and healthy choice ranges.</p>
-            </div>
-            <div class="feature-card">
-                <i class="fas fa-mobile-alt"></i>
-                <h3>Smart Ordering</h3>
-                <p>Seamless online experience with easy customization, saved favorites, and intelligent recommendations just for you.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- About Section -->
-<section class="about" style="padding: 100px 20px; background: #f8f9fa;">
-    <div class="container">
-        <div class="section-header">
-            <h2>Our Story Since 2001</h2>
-            <p class="section-subtitle">From a single store dream to Australia's gourmet pizza leader</p>
-        </div>
-
-        <div class="about-content" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 50px; align-items: center;">
-            <div class="about-text">
-                <div class="timeline-item" style="margin-bottom: 40px; padding: 30px; background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-left: 5px solid #ff6b35;">
-                    <h3 style="color: #ff6b35; margin-bottom: 15px; font-size: 1.5rem;">The Beginning (2001)</h3>
-                    <p style="line-height: 1.6; color: #666;">Born from a dream to make gourmet pizzas accessible to everyone, our first Crust Pizza store opened in Annandale, New South Wales. What started as a simple vision has grown into something extraordinary.</p>
-                </div>
-
-                <div class="timeline-item" style="margin-bottom: 40px; padding: 30px; background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-left: 5px solid #f7931e;">
-                    <h3 style="color: #f7931e; margin-bottom: 15px; font-size: 1.5rem;">Expansion & Innovation</h3>
-                    <p style="line-height: 1.6; color: #666;">Our second store in Richmond, Victoria marked the beginning of our national expansion. Today, we operate 130+ stores across Australia, each maintaining our commitment to gourmet excellence and innovative flavors.</p>
-                </div>
-
-                <div class="timeline-item" style="padding: 30px; background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-left: 5px solid #ff6b35;">
-                    <h3 style="color: #ff6b35; margin-bottom: 15px; font-size: 1.5rem;">Award-Winning Excellence</h3>
-                    <p style="line-height: 1.6; color: #666;">Our innovative approach has earned us International Pizza Awards, with signature flavors like Peri Peri Chicken becoming household favorites. We continue leading industry trends with plant-based options and healthy alternatives.</p>
-                </div>
-            </div>
-
-            <div class="about-image" style="text-align: center;">
-                <img src="https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?w=500&h=600&fit=crop&crop=center" alt="Crust Pizza Story" style="border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); max-width: 100%; height: auto;">
-            </div>
-        </div>
-
-        <!-- Awards Section -->
-        <div class="awards-section" style="margin-top: 80px; text-align: center;">
-            <h3 style="font-size: 2.5rem; margin-bottom: 40px; color: #333;">Industry Recognition</h3>
-            <div class="awards-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px;">
-                <div class="award-item" style="padding: 30px; background: linear-gradient(135deg, #ff6b35, #f7931e); color: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(255,107,53,0.3);">
-                    <i class="fas fa-trophy" style="font-size: 3rem; margin-bottom: 20px;"></i>
-                    <h4 style="margin-bottom: 10px;">International Pizza Awards</h4>
-                    <p>Multiple wins for innovative flavors</p>
-                </div>
-                <div class="award-item" style="padding: 30px; background: linear-gradient(135deg, #28a745, #20c997); color: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(40,167,69,0.3);">
-                    <i class="fas fa-leaf" style="font-size: 3rem; margin-bottom: 20px;"></i>
-                    <h4 style="margin-bottom: 10px;">Vegan Nourish Awards</h4>
-                    <p>2022 Finalist for Plant-Based Excellence</p>
-                </div>
-                <div class="award-item" style="padding: 30px; background: linear-gradient(135deg, #6f42c1, #e83e8c); color: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(111,66,193,0.3);">
-                    <i class="fas fa-star" style="font-size: 3rem; margin-bottom: 20px;"></i>
-                    <h4 style="margin-bottom: 10px;">QSR Industry Leader</h4>
-                    <p>First to offer comprehensive healthy options</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Innovation Timeline -->
-<section class="innovation-timeline" style="padding: 100px 20px; background: white; color: black;">
-    <div class="container">
-        <div class="section-header">
-            <h2 style="color: black;">Innovation Timeline</h2>
-            <p class="section-subtitle" style="color: black;">Leading the industry with groundbreaking offerings</p>
-        </div>
-
-        <div class="timeline" style="position: relative; max-width: 800px; margin: 0 auto;">
-            <!-- Timeline Line -->
-            <div style="position: absolute; left: 50%; top: 0; bottom: 0; width: 4px; background: linear-gradient(180deg, #ff6b35, #f7931e); transform: translateX(-50%);"></div>
-
-            <!-- Timeline Items -->
-            <div class="timeline-items">
-                <div class="timeline-item-horizontal" style="display: flex; align-items: center; margin-bottom: 60px; position: relative;">
-                    <div style="flex: 1; text-align: right; padding-right: 40px;">
-                        <div style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 25px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.2);">
-                            <h4 style="color: #ff6b35; margin-bottom: 10px; font-size: 1.3rem;">2001</h4>
-                            <h5 style="margin-bottom: 15px;">First Store Opens</h5>
-                            <p style="opacity: 0.9; line-height: 1.5;">Annandale, NSW - Where it all began</p>
+                    <div class="timeline-item-horizontal" style="display: flex; align-items: center; margin-bottom: 60px; position: relative;">
+                        <div style="flex: 1; padding-right: 40px;"></div>
+                        <div style="width: 20px; height: 20px; background: #6f42c1; border-radius: 50%; position: relative; z-index: 2; border: 4px solid white;" class="timeline-dot"></div>
+                        <div style="flex: 1; text-align: left; padding-left: 40px;">
+                            <div style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 25px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.2);">
+                                <h4 style="color: #6f42c1; margin-bottom: 10px; font-size: 1.3rem;">2016</h4>
+                                <h5 style="margin-bottom: 15px;">Vegan Cheese Revolution</h5>
+                                <p style="opacity: 0.9; line-height: 1.5;">Leading the plant-based movement in QSR</p>
+                            </div>
                         </div>
                     </div>
-                    <div style="width: 20px; height: 20px; background: #ff6b35; border-radius: 50%; position: relative; z-index: 2; border: 4px solid white;" class="timeline-dot"></div>
-                    <div style="flex: 1; padding-left: 40px;"></div>
-                </div>
 
-                <div class="timeline-item-horizontal" style="display: flex; align-items: center; margin-bottom: 60px; position: relative;">
-                    <div style="flex: 1; padding-right: 40px;"></div>
-                    <div style="width: 20px; height: 20px; background: #f7931e; border-radius: 50%; position: relative; z-index: 2; border: 4px solid white;" class="timeline-dot"></div>
-                    <div style="flex: 1; text-align: left; padding-left: 40px;">
-                        <div style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 25px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.2);">
-                            <h4 style="color: #f7931e; margin-bottom: 10px; font-size: 1.3rem;">Early 2000s</h4>
-                            <h5 style="margin-bottom: 15px;">Gluten Free & Low Carb Pioneer</h5>
-                            <p style="opacity: 0.9; line-height: 1.5;">First QSR to offer comprehensive dietary alternatives</p>
+                    <div class="timeline-item-horizontal" style="display: flex; align-items: center; position: relative;">
+                        <div style="flex: 1; text-align: right; padding-right: 40px;">
+                            <div style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 25px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.2);">
+                                <h4 style="color: #e83e8c; margin-bottom: 10px; font-size: 1.3rem;">2022</h4>
+                                <h5 style="margin-bottom: 15px;">Vegan Nourish Awards Finalist</h5>
+                                <p style="opacity: 0.9; line-height: 1.5;">Recognized for Plant-Based Protein leadership</p>
+                            </div>
                         </div>
+                        <div style="width: 20px; height: 20px; background: #e83e8c; border-radius: 50%; position: relative; z-index: 2; border: 4px solid white;" class="timeline-dot"></div>
+                        <div style="flex: 1; padding-left: 40px;"></div>
                     </div>
-                </div>
-
-                <div class="timeline-item-horizontal" style="display: flex; align-items: center; margin-bottom: 60px; position: relative;">
-                    <div style="flex: 1; text-align: right; padding-right: 40px;">
-                        <div style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 25px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.2);">
-                            <h4 style="color: #28a745; margin-bottom: 10px; font-size: 1.3rem;">2015</h4>
-                            <h5 style="margin-bottom: 15px;">Healthy Choice Range</h5>
-                            <p style="opacity: 0.9; line-height: 1.5;">Introducing nutritious options without compromising taste</p>
-                        </div>
-                    </div>
-                    <div style="width: 20px; height: 20px; background: #28a745; border-radius: 50%; position: relative; z-index: 2; border: 4px solid white;" class="timeline-dot"></div>
-                    <div style="flex: 1; padding-left: 40px;"></div>
-                </div>
-
-                <div class="timeline-item-horizontal" style="display: flex; align-items: center; margin-bottom: 60px; position: relative;">
-                    <div style="flex: 1; padding-right: 40px;"></div>
-                    <div style="width: 20px; height: 20px; background: #6f42c1; border-radius: 50%; position: relative; z-index: 2; border: 4px solid white;" class="timeline-dot"></div>
-                    <div style="flex: 1; text-align: left; padding-left: 40px;">
-                        <div style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 25px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.2);">
-                            <h4 style="color: #6f42c1; margin-bottom: 10px; font-size: 1.3rem;">2016</h4>
-                            <h5 style="margin-bottom: 15px;">Vegan Cheese Revolution</h5>
-                            <p style="opacity: 0.9; line-height: 1.5;">Leading the plant-based movement in QSR</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="timeline-item-horizontal" style="display: flex; align-items: center; position: relative;">
-                    <div style="flex: 1; text-align: right; padding-right: 40px;">
-                        <div style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 25px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.2);">
-                            <h4 style="color: #e83e8c; margin-bottom: 10px; font-size: 1.3rem;">2022</h4>
-                            <h5 style="margin-bottom: 15px;">Vegan Nourish Awards Finalist</h5>
-                            <p style="opacity: 0.9; line-height: 1.5;">Recognized for Plant-Based Protein leadership</p>
-                        </div>
-                    </div>
-                    <div style="width: 20px; height: 20px; background: #e83e8c; border-radius: 50%; position: relative; z-index: 2; border: 4px solid white;" class="timeline-dot"></div>
-                    <div style="flex: 1; padding-left: 40px;"></div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<!-- Include the footer -->
-<?php require_once 'footer.php'; ?>
+    <!-- Include the footer -->
+    <?php require_once 'footer.php'; ?>
 
-<!-- JavaScript and Styles -->
-<script src="assets/js/main.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Update cart count on page load
-        updateCartCount();
+    <!-- JavaScript -->
+    <script src="assets/js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Update cart count on page load
+            updateCartCount();
 
-        // Add scroll effect to navbar
-        window.addEventListener('scroll', function() {
-            const navbar = document.querySelector('.navbar');
-            if (window.scrollY > 50) {
-                navbar.style.background = 'rgba(255, 255, 255, 0.98)';
-                navbar.style.boxShadow = '0 4px 25px rgba(0, 0, 0, 0.15)';
-            } else {
-                navbar.style.background = 'rgba(255, 255, 255, 0.95)';
-                navbar.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.1)';
+            // Add scroll effect to navbar
+            window.addEventListener('scroll', function() {
+                const navbar = document.querySelector('.navbar');
+                if (window.scrollY > 50) {
+                    navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+                    navbar.style.boxShadow = '0 4px 25px rgba(0, 0, 0, 0.15)';
+                } else {
+                    navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+                    navbar.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.1)';
+                }
+            });
+
+            // Intersection Observer for fade-in animations
+            if ('IntersectionObserver' in window) {
+                const observerOptions = {
+                    threshold: 0.1,
+                    rootMargin: '0px 0px -50px 0px'
+                };
+
+                const observer = new IntersectionObserver(function(entries) {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        }
+                    });
+                }, observerOptions);
+
+                document.querySelectorAll('.fade-in-up').forEach(el => {
+                    observer.observe(el);
+                });
             }
         });
 
-        // Intersection Observer for fade-in animations
-        if ('IntersectionObserver' in window) {
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            };
-
-            const observer = new IntersectionObserver(function(entries) {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            }, observerOptions);
-
-            document.querySelectorAll('.fade-in-up').forEach(el => {
-                observer.observe(el);
-            });
+        function toggleDropdown() {
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            const isOpen = dropdownMenu.classList.toggle('show');
+            document.querySelector('.dropdown-toggle').setAttribute('aria-expanded', isOpen);
         }
-    });
 
-    function toggleDropdown() {
-        const dropdownMenu = document.getElementById('dropdownMenu');
-        const isOpen = dropdownMenu.classList.toggle('show');
-        document.querySelector('.dropdown-toggle').setAttribute('aria-expanded', isOpen);
-    }
-
-    function toggleNavMenu() {
-        const navMenu = document.getElementById('navMenu');
-        navMenu.classList.toggle('active');
-    }
-
-    // Close dropdown and nav menu when clicking outside
-    document.addEventListener('click', function(event) {
-        const dropdown = document.querySelector('.dropdown');
-        const dropdownMenu = document.getElementById('dropdownMenu');
-        const navMenu = document.getElementById('navMenu');
-        const navToggle = document.querySelector('.nav-toggle');
-        if (!dropdown.contains(event.target) && !navToggle.contains(event.target)) {
-            dropdownMenu.classList.remove('show');
-            navMenu.classList.remove('active');
-            document.querySelector('.dropdown-toggle').setAttribute('aria-expanded', 'false');
+        function toggleNavMenu() {
+            const navMenu = document.getElementById('navMenu');
+            navMenu.classList.toggle('active');
         }
-    });
 
-    // Close dropdown and nav menu on Escape key
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'Escape') {
-            document.getElementById('dropdownMenu').classList.remove('show');
-            document.getElementById('navMenu').classList.remove('active');
-            document.querySelector('.dropdown-toggle').setAttribute('aria-expanded', 'false');
-        }
-    });
+        // Close dropdown and nav menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.querySelector('.dropdown');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            const navMenu = document.getElementById('navMenu');
+            const navToggle = document.querySelector('.nav-toggle');
+            if (!dropdown.contains(event.target) && !navToggle.contains(event.target)) {
+                dropdownMenu.classList.remove('show');
+                navMenu.classList.remove('active');
+                document.querySelector('.dropdown-toggle').setAttribute('aria-expanded', 'false');
+            }
+        });
 
-    function updateCartCount() {
-        try {
-            const cart = JSON.parse(localStorage.getItem('crustPizzaCart')) || [];
-            if (!Array.isArray(cart)) {
-                console.error('Invalid cart data:', cart);
+        // Close dropdown and nav menu on Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                document.getElementById('dropdownMenu').classList.remove('show');
+                document.getElementById('navMenu').classList.remove('active');
+                document.querySelector('.dropdown-toggle').setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        function updateCartCount() {
+            try {
+                const cart = JSON.parse(localStorage.getItem('crustPizzaCart')) || [];
+                if (!Array.isArray(cart)) {
+                    console.error('Invalid cart data:', cart);
+                    localStorage.setItem('crustPizzaCart', JSON.stringify([]));
+                    document.getElementById('cartCount').textContent = '0';
+                    return;
+                }
+                const cartCount = cart.reduce((total, item) => {
+                    const qty = Number(item.quantity) || 1;
+                    return total + qty;
+                }, 0);
+                const cartCountElement = document.getElementById('cartCount');
+                if (cartCountElement) {
+                    cartCountElement.textContent = cartCount.toString();
+                }
+            } catch (error) {
+                console.error('Error updating cart count:', error);
                 localStorage.setItem('crustPizzaCart', JSON.stringify([]));
                 document.getElementById('cartCount').textContent = '0';
-                return;
             }
-            const cartCount = cart.reduce((total, item) => {
-                const qty = Number(item.quantity) || 1;
-                return total + qty;
-            }, 0);
-            const cartCountElement = document.getElementById('cartCount');
-            if (cartCountElement) {
-                cartCountElement.textContent = cartCount.toString();
-            }
-        } catch (error) {
-            console.error('Error updating cart count:', error);
-            localStorage.setItem('crustPizzaCart', JSON.stringify([]));
-            document.getElementById('cartCount').textContent = '0';
         }
-    }
 
-    function addToCart(pizzaId, size = "medium", quantity = 1, event) {
-        try {
-            // Validate pizzaId
-            if (!pizzaId || pizzaId <= 0) {
-                console.error('Invalid pizzaId:', pizzaId);
-                showNotification('Invalid pizza selection. Please try again.', 'error');
-                return false;
-            }
-
-            // Check if user is logged in
-            if (!isUserLoggedIn()) {
-                showNotification("Please log in to add items to your cart", 'warning');
-                return false;
-            }
-
-            // Get pizza details from the card
-            let pizzaCard, button;
-            if (event) {
-                button = event.currentTarget || (event.target && event.target.closest('button'));
-                if (button) {
-                    pizzaCard = button.closest('.pizza-card');
-                }
-            }
-
-            // Fallback: Find pizza card by pizzaId if event-based selection fails
-            if (!pizzaCard) {
-                pizzaCard = document.querySelector(`.pizza-card[data-pizza-id="${pizzaId}"]`);
-                button = pizzaCard?.querySelector('.btn-add-cart');
-            }
-
-            if (!pizzaCard) {
-                console.error('Pizza card not found for pizzaId:', pizzaId, 'event:', event);
-                showNotification('Pizza details not found', 'error');
-                return false;
-            }
-
-            const pizzaName = pizzaCard.querySelector('h3')?.textContent?.trim() || 'Unknown Pizza';
-            const priceData = {
-                small: parseFloat(pizzaCard.dataset.priceSmall) || 15.90,
-                medium: parseFloat(pizzaCard.dataset.priceMedium) || 21.90,
-                large: parseFloat(pizzaCard.dataset.priceLarge) || 27.90
-            };
-
-            if (!priceData[size]) {
-                console.error('Invalid size or price for pizzaId:', pizzaId, 'size:', size);
-                showNotification('Invalid pizza size or price', 'error');
-                return false;
-            }
-
-            const cartItem = {
-                pizza_id: pizzaId,
-                name: pizzaName,
-                size: size,
-                price: priceData[size],
-                quantity: Number(quantity) || 1,
-                item_type: 'pizza',
-                custom_ingredients: null,
-                special_instructions: null
-            };
-
-            const userId = getUserId();
-            if (!userId) {
-                console.error('User ID not found');
-                showNotification('User session not found. Please log in again.', 'error');
-                return false;
-            }
-
-            const csrfToken = getCSRFToken();
-            if (!csrfToken) {
-                console.error('CSRF token not found');
-                showNotification('Security token missing. Please refresh the page.', 'error');
-                return false;
-            }
-
-            const data = {
-                ...cartItem,
-                user_id: userId,
-                csrf_token: csrfToken
-            };
-
-            // Apply loading animation if button exists
-            let originalText;
-            if (button) {
-                originalText = button.innerHTML;
-                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
-                button.disabled = true;
-            }
-
-            return fetch('api/cart_api.php?action=add', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(result => {
-                    if (button) {
-                        button.innerHTML = originalText;
-                        button.disabled = false;
-                    }
-                    if (result.success) {
-                        let cart = JSON.parse(localStorage.getItem('crustPizzaCart')) || [];
-                        if (!Array.isArray(cart)) {
-                            cart = [];
-                        }
-                        cart.push({
-                            ...cartItem,
-                            cart_id: result.cart_id || Date.now()
-                        });
-                        localStorage.setItem('crustPizzaCart', JSON.stringify(cart));
-                        updateCartCount();
-                        showNotification(`${pizzaName} (${size}) added to cart!`, 'success');
-                        return true;
-                    } else {
-                        console.error('API Error:', result.message || 'Unknown error');
-                        showNotification(result.message || 'Failed to add item to cart', 'error');
-                        return false;
-                    }
-                })
-                .catch(error => {
-                    if (button) {
-                        button.innerHTML = originalText;
-                        button.disabled = false;
-                    }
-                    console.error('Error adding to cart:', error.message);
-                    showNotification('An error occurred while adding to cart', 'error');
+        function addToCart(pizzaId, size = "medium", quantity = 1, event) {
+            try {
+                // Validate pizzaId
+                if (!pizzaId || pizzaId <= 0) {
+                    console.error('Invalid pizzaId:', pizzaId);
+                    showNotification('Invalid pizza selection. Please try again.', 'error');
                     return false;
-                });
-        } catch (error) {
-            console.error('Unexpected error in addToCart:', error);
-            showNotification('Unexpected error occurred', 'error');
-            return false;
-        }
-    }
-
-    function isUserLoggedIn() {
-        const logoutLink = document.querySelector('a[href="logout.php"]');
-        const loginLink = document.querySelector('a.dropdown-item[href="login.php"]');
-        return logoutLink !== null && loginLink === null;
-    }
-
-    function showNotification(message, type = "info") {
-        const existingNotifications = document.querySelectorAll(".cart-notification");
-        existingNotifications.forEach((notification) => notification.remove());
-
-        const notification = document.createElement("div");
-        notification.className = `cart-notification ${type}`;
-
-        let icon = 'info-circle';
-        if (type === 'success') icon = 'check-circle';
-        if (type === 'error') icon = 'exclamation-circle';
-        if (type === 'warning') icon = 'exclamation-triangle';
-
-        notification.innerHTML = `
-            <i class="fas fa-${icon}"></i> 
-            ${message}
-        `;
-
-        document.body.appendChild(notification);
-
-        setTimeout(() => {
-            notification.classList.add("slide-out");
-            setTimeout(() => {
-                if (notification.parentElement) {
-                    notification.remove();
                 }
-            }, 300);
-        }, 3000);
-    }
 
-    function getUserId() {
-        return document.querySelector('meta[name="user-id"]')?.content || null;
-    }
+                // Check if user is logged in
+                if (!isUserLoggedIn()) {
+                    showNotification("Please log in to add items to your cart", 'warning');
+                    return false;
+                }
 
-    function getCSRFToken() {
-        return document.querySelector('input[name="csrf_token"]')?.value || null;
-    }
-</script>
+                // Get pizza details from the card
+                let pizzaCard, button;
+                if (event) {
+                    button = event.currentTarget || (event.target && event.target.closest('button'));
+                    if (button) {
+                        pizzaCard = button.closest('.pizza-card');
+                    }
+                }
 
-<style>
-    /* Cart notification styles */
-    .cart-notification {
-        position: fixed;
-        top: 100px;
-        right: 20px;
-        background: linear-gradient(135deg, #28a745, #20c997);
-        color: white;
-        padding: 15px 25px;
-        border-radius: 10px;
-        box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
-        z-index: 9999;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        animation: slideIn 0.3s ease-out;
-    }
+                // Fallback: Find pizza card by pizzaId if event-based selection fails
+                if (!pizzaCard) {
+                    pizzaCard = document.querySelector(`.pizza-card[data-pizza-id="${pizzaId}"]`);
+                    button = pizzaCard?.querySelector('.btn-add-cart');
+                }
 
-    .cart-notification.error {
-        background: linear-gradient(135deg, #dc3545, #e74c3c);
-        box-shadow: 0 8px 25px rgba(220, 53, 69, 0.4);
-    }
+                if (!pizzaCard) {
+                    console.error('Pizza card not found for pizzaId:', pizzaId, 'event:', event);
+                    showNotification('Pizza details not found', 'error');
+                    return false;
+                }
 
-    .cart-notification.warning {
-        background: linear-gradient(135deg, #ffc107, #f39c12);
-        box-shadow: 0 8px 25px rgba(255, 193, 7, 0.4);
-    }
+                const pizzaName = pizzaCard.querySelector('h3')?.textContent?.trim() || 'Unknown Pizza';
+                const priceData = {
+                    small: parseFloat(pizzaCard.dataset.priceSmall) || 15.90,
+                    medium: parseFloat(pizzaCard.dataset.priceMedium) || 21.90,
+                    large: parseFloat(pizzaCard.dataset.priceLarge) || 27.90
+                };
 
-    .cart-notification.info {
-        background: linear-gradient(135deg, #17a2b8, #3498db);
-        box-shadow: 0 8px 25px rgba(23, 162, 184, 0.4);
-    }
+                if (!priceData[size]) {
+                    console.error('Invalid size or price for pizzaId:', pizzaId, 'size:', size);
+                    showNotification('Invalid pizza size or price', 'error');
+                    return false;
+                }
 
-    .cart-notification.slide-out {
-        animation: slideOut 0.3s ease-in;
-    }
+                const cartItem = {
+                    pizza_id: pizzaId,
+                    name: pizzaName,
+                    size: size,
+                    price: priceData[size],
+                    quantity: Number(quantity) || 1,
+                    item_type: 'pizza',
+                    custom_ingredients: null,
+                    special_instructions: null
+                };
 
-    @keyframes slideIn {
-        from {
-            transform: translateX(100%);
+                const userId = getUserId();
+                if (!userId) {
+                    console.error('User ID not found');
+                    showNotification('User session not found. Please log in again.', 'error');
+                    return false;
+                }
+
+                const csrfToken = getCSRFToken();
+                if (!csrfToken) {
+                    console.error('CSRF token not found');
+                    showNotification('Security token missing. Please refresh the page.', 'error');
+                    return false;
+                }
+
+                const data = {
+                    ...cartItem,
+                    user_id: userId,
+                    csrf_token: csrfToken
+                };
+
+                // Apply loading animation if button exists
+                let originalText;
+                if (button) {
+                    originalText = button.innerHTML;
+                    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+                    button.disabled = true;
+                }
+
+                return fetch('api/cart_api.php?action=add', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(result => {
+                        if (button) {
+                            button.innerHTML = originalText;
+                            button.disabled = false;
+                        }
+                        if (result.success) {
+                            let cart = JSON.parse(localStorage.getItem('crustPizzaCart')) || [];
+                            if (!Array.isArray(cart)) {
+                                cart = [];
+                            }
+                            cart.push({
+                                ...cartItem,
+                                cart_id: result.cart_id || Date.now()
+                            });
+                            localStorage.setItem('crustPizzaCart', JSON.stringify(cart));
+                            updateCartCount();
+                            showNotification(`${pizzaName} (${size}) added to cart!`, 'success');
+                            return true;
+                        } else {
+                            console.error('API Error:', result.message || 'Unknown error');
+                            showNotification(result.message || 'Failed to add item to cart', 'error');
+                            return false;
+                        }
+                    })
+                    .catch(error => {
+                        if (button) {
+                            button.innerHTML = originalText;
+                            button.disabled = false;
+                        }
+                        console.error('Error adding to cart:', error.message);
+                        showNotification('An error occurred while adding to cart', 'error');
+                        return false;
+                    });
+            } catch (error) {
+                console.error('Unexpected error in addToCart:', error);
+                showNotification('Unexpected error occurred', 'error');
+                return false;
+            }
+        }
+
+        function isUserLoggedIn() {
+            const logoutLink = document.querySelector('a[href="logout.php"]');
+            const loginLink = document.querySelector('a.dropdown-item[href="login.php"]');
+            return logoutLink !== null && loginLink === null;
+        }
+
+        function showNotification(message, type = "info") {
+            const existingNotifications = document.querySelectorAll(".cart-notification");
+            existingNotifications.forEach((notification) => notification.remove());
+
+            const notification = document.createElement("div");
+            notification.className = `cart-notification ${type}`;
+
+            let icon = 'info-circle';
+            if (type === 'success') icon = 'check-circle';
+            if (type === 'error') icon = 'exclamation-circle';
+            if (type === 'warning') icon = 'exclamation-triangle';
+
+            notification.innerHTML = `
+                <i class="fas fa-${icon}"></i> 
+                ${message}
+            `;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.classList.add("slide-out");
+                setTimeout(() => {
+                    if (notification.parentElement) {
+                        notification.remove();
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        function getUserId() {
+            return document.querySelector('meta[name="user-id"]')?.content || null;
+        }
+
+        function getCSRFToken() {
+            return document.querySelector('input[name="csrf_token"]')?.value || null;
+        }
+    </script>
+
+    <style>
+        /* Cart notification styles */
+        .cart-notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+            z-index: 9999;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .cart-notification.error {
+            background: linear-gradient(135deg, #dc3545, #e74c3c);
+            box-shadow: 0 8px 25px rgba(220, 53, 69, 0.4);
+        }
+
+        .cart-notification.warning {
+            background: linear-gradient(135deg, #ffc107, #f39c12);
+            box-shadow: 0 8px 25px rgba(255, 193, 7, 0.4);
+        }
+
+        .cart-notification.info {
+            background: linear-gradient(135deg, #17a2b8, #3498db);
+            box-shadow: 0 8px 25px rgba(23, 162, 184, 0.4);
+        }
+
+        .cart-notification.slide-out {
+            animation: slideOut 0.3s ease-in;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        /* Fade-in animation for pizza cards */
+        .fade-in-up {
             opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
         }
-
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
-
-    @keyframes slideOut {
-        from {
-            transform: translateX(0);
-            opacity: 1;
-        }
-
-        to {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-    }
-
-    /* Fade-in animation for pizza cards */
-    .fade-in-up {
-        opacity: 0;
-        transform: translateY(30px);
-        transition: opacity 0.8s ease, transform 0.8s ease;
-    }
-</style>
-
+    </style>
 </body>
 
 </html>
