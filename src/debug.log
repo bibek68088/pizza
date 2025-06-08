@@ -1097,3 +1097,43 @@
 2025-06-08 13:24:30 - Redirecting for role: customer
 2025-06-08 13:24:30 - Redirecting to: index.php
 >>>>>>> bb31561702464354ab0f25413f7d8175a10d2889
+2025-06-08 15:33:29 - --- New request to login.php ---
+2025-06-08 15:33:29 - Session ID: an22jockhmoiior9if2eblck6g
+2025-06-08 15:33:29 - Session data before processing: Array
+(
+    [csrf_token] => dec203159bac2fbe489be4c619a80fa75699a637923502bb6664452598fbeb08
+    [flash_message] => Access denied.
+    [flash_type] => error
+    [flash_message_time] => 1749389380
+)
+
+2025-06-08 15:33:31 - --- New request to login.php ---
+2025-06-08 15:33:31 - Session ID: an22jockhmoiior9if2eblck6g
+2025-06-08 15:33:31 - Session data before processing: Array
+(
+    [csrf_token] => dec203159bac2fbe489be4c619a80fa75699a637923502bb6664452598fbeb08
+    [flash_message_time] => 1749389380
+)
+
+2025-06-08 15:33:31 - POST request received: Array
+(
+    [csrf_token] => dec203159bac2fbe489be4c619a80fa75699a637923502bb6664452598fbeb08
+    [username] => counter1@crustpizza.com.au
+    [password] => password123
+    [login] => 1
+)
+
+2025-06-08 15:33:31 - Username: counter1@crustpizza.com.au
+2025-06-08 15:33:31 - Login successful for user ID: 5
+2025-06-08 15:33:31 - Session data set: Array
+(
+    [csrf_token] => dec203159bac2fbe489be4c619a80fa75699a637923502bb6664452598fbeb08
+    [flash_message_time] => 1749389380
+    [user_id] => 5
+    [username] => counter1
+    [full_name] => Sarah Johnson
+    [role] => counter
+)
+
+2025-06-08 15:33:31 - Redirecting for role: counter
+2025-06-08 15:33:31 - Redirecting to: staff/counter/dashboard.php
