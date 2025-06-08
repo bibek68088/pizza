@@ -755,3 +755,153 @@
 
 2025-06-08 12:10:54 - Redirecting for role: admin
 2025-06-08 12:10:54 - Redirecting to: admin/dashboard.php
+2025-06-08 13:05:39 - --- New request to login.php ---
+2025-06-08 13:05:39 - Session ID: 9f5551roj1smj4h2t6gkg53g7t
+2025-06-08 13:05:39 - Session data before processing: Array
+(
+    [csrf_token] => c72e22fcadfdab58fc412a76f2deeaa3f5486067831398b335621d4296fce75a
+)
+
+2025-06-08 13:06:35 - --- New request to login.php ---
+2025-06-08 13:06:35 - Session ID: 9f5551roj1smj4h2t6gkg53g7t
+2025-06-08 13:06:35 - Session data before processing: Array
+(
+    [csrf_token] => c72e22fcadfdab58fc412a76f2deeaa3f5486067831398b335621d4296fce75a
+)
+
+2025-06-08 13:06:48 - --- New request to login.php ---
+2025-06-08 13:06:48 - Session ID: 9f5551roj1smj4h2t6gkg53g7t
+2025-06-08 13:06:48 - Session data before processing: Array
+(
+    [csrf_token] => c72e22fcadfdab58fc412a76f2deeaa3f5486067831398b335621d4296fce75a
+)
+
+2025-06-08 13:06:58 - --- New request to login.php ---
+2025-06-08 13:06:58 - Session ID: 9f5551roj1smj4h2t6gkg53g7t
+2025-06-08 13:06:58 - Session data before processing: Array
+(
+    [csrf_token] => c72e22fcadfdab58fc412a76f2deeaa3f5486067831398b335621d4296fce75a
+)
+
+2025-06-08 13:06:58 - POST request received: Array
+(
+    [csrf_token] => c72e22fcadfdab58fc412a76f2deeaa3f5486067831398b335621d4296fce75a
+    [username] => kitchen1@crustpizza.com.au
+    [password] => password123
+    [login] => 1
+)
+
+2025-06-08 13:06:58 - Username: kitchen1@crustpizza.com.au
+2025-06-08 13:06:58 - Login successful for user ID: 3
+2025-06-08 13:06:58 - Session data set: Array
+(
+    [csrf_token] => c72e22fcadfdab58fc412a76f2deeaa3f5486067831398b335621d4296fce75a
+    [user_id] => 3
+    [username] => kitchen1
+    [full_name] => Mario Rossi
+    [role] => kitchen
+)
+
+2025-06-08 13:06:58 - Redirecting for role: kitchen
+2025-06-08 13:06:58 - Redirecting to: staff/kitchen/dashboard.php
+2025-06-08 13:13:03 - --- New request to login.php ---
+2025-06-08 13:13:03 - Session ID: 9f5551roj1smj4h2t6gkg53g7t
+2025-06-08 13:13:03 - Session data before processing: Array
+(
+    [csrf_token] => 4fb40a93b606ff6a6f47f84475dd3292d02c3218c125508ffc34676a563b01a7
+)
+
+2025-06-08 13:13:12 - --- New request to login.php ---
+2025-06-08 13:13:12 - Session ID: 9f5551roj1smj4h2t6gkg53g7t
+2025-06-08 13:13:12 - Session data before processing: Array
+(
+    [csrf_token] => 4fb40a93b606ff6a6f47f84475dd3292d02c3218c125508ffc34676a563b01a7
+)
+
+2025-06-08 13:13:12 - POST request received: Array
+(
+    [csrf_token] => 4fb40a93b606ff6a6f47f84475dd3292d02c3218c125508ffc34676a563b01a7
+    [username] => delivery1@crustpizza.com.au
+    [password] => password123
+    [login] => 1
+)
+
+2025-06-08 13:13:12 - Username: delivery1@crustpizza.com.au
+2025-06-08 13:13:12 - Login failed: Invalid credentials
+2025-06-08 13:13:46 - --- New request to login.php ---
+2025-06-08 13:13:46 - Session ID: 9f5551roj1smj4h2t6gkg53g7t
+2025-06-08 13:13:46 - Session data before processing: Array
+(
+    [csrf_token] => 4fb40a93b606ff6a6f47f84475dd3292d02c3218c125508ffc34676a563b01a7
+)
+
+2025-06-08 13:13:54 - --- New request to login.php ---
+2025-06-08 13:13:54 - Session ID: 9f5551roj1smj4h2t6gkg53g7t
+2025-06-08 13:13:54 - Session data before processing: Array
+(
+    [csrf_token] => 4fb40a93b606ff6a6f47f84475dd3292d02c3218c125508ffc34676a563b01a7
+)
+
+2025-06-08 13:13:54 - POST request received: Array
+(
+    [csrf_token] => 4fb40a93b606ff6a6f47f84475dd3292d02c3218c125508ffc34676a563b01a7
+    [username] => delivery1@crustpizza.com.au
+    [password] => password123
+    [login] => 1
+)
+
+2025-06-08 13:13:54 - Username: delivery1@crustpizza.com.au
+2025-06-08 13:13:54 - Login successful for user ID: 4
+2025-06-08 13:13:54 - Session data set: Array
+(
+    [csrf_token] => 4fb40a93b606ff6a6f47f84475dd3292d02c3218c125508ffc34676a563b01a7
+    [user_id] => 4
+    [username] => delivery1
+    [full_name] => James Wilson
+    [role] => delivery
+)
+
+2025-06-08 13:13:54 - Redirecting for role: delivery
+2025-06-08 13:13:54 - Redirecting to: staff/delivery/dashboard.php
+2025-06-08 13:18:18 - --- New request to login.php ---
+2025-06-08 13:18:18 - Session ID: 9f5551roj1smj4h2t6gkg53g7t
+2025-06-08 13:18:18 - Session data before processing: Array
+(
+    [csrf_token] => 92d5f88999f70993ed2b4d7531a8cd139db5698fde35f35db1cf2d46a316e069
+)
+
+2025-06-08 13:18:54 - --- New request to login.php ---
+2025-06-08 13:18:54 - Session ID: 9f5551roj1smj4h2t6gkg53g7t
+2025-06-08 13:18:54 - Session data before processing: Array
+(
+    [csrf_token] => 92d5f88999f70993ed2b4d7531a8cd139db5698fde35f35db1cf2d46a316e069
+)
+
+2025-06-08 13:19:00 - --- New request to login.php ---
+2025-06-08 13:19:00 - Session ID: 9f5551roj1smj4h2t6gkg53g7t
+2025-06-08 13:19:00 - Session data before processing: Array
+(
+    [csrf_token] => 92d5f88999f70993ed2b4d7531a8cd139db5698fde35f35db1cf2d46a316e069
+)
+
+2025-06-08 13:19:00 - POST request received: Array
+(
+    [csrf_token] => 92d5f88999f70993ed2b4d7531a8cd139db5698fde35f35db1cf2d46a316e069
+    [username] => delivery1@crustpizza.com.au
+    [password] => password123
+    [login] => 1
+)
+
+2025-06-08 13:19:00 - Username: delivery1@crustpizza.com.au
+2025-06-08 13:19:00 - Login successful for user ID: 4
+2025-06-08 13:19:00 - Session data set: Array
+(
+    [csrf_token] => 92d5f88999f70993ed2b4d7531a8cd139db5698fde35f35db1cf2d46a316e069
+    [user_id] => 4
+    [username] => delivery1
+    [full_name] => James Wilson
+    [role] => delivery
+)
+
+2025-06-08 13:19:00 - Redirecting for role: delivery
+2025-06-08 13:19:00 - Redirecting to: staff/delivery/dashboard.php
