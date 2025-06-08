@@ -1,38 +1,46 @@
 <?php
-require_once 'config/database.php';
-require_once 'classes/User.php';
-require_once 'includes/functions.php';
+require_once '../config/database.php';
+require_once '../classes/User.php';
+require_once '../includes/functions.php';
 
 startSession();
 
-// Redirect if not logged in
-if (!isLoggedIn()) {
-    setFlashMessage('Please log in to view your profile', 'warning');
-    redirect('login.php');
+if (!hasPermission('admin_access')) {
+    setFlashMessage('Access denied.', 'error');
+    redirect(BASE_PATH . 'login.php');
 }
 
-$database = new Database();
+$database = Database::getInstance();
 $db = $database->getConnection();
 $user = new User($db);
 
-$message = '';
-$error = '';
+$currentUser = $user->getUserById($_SESSION['user_id']);
 
-// Get user details
-$user->getUserById($_SESSION['user_id']);
-
-// Handle profile update
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile'])) {
-    $user->full_name = sanitizeInput($_POST['full_name']);
-    $user->phone = sanitizeInput($_POST['phone']);
-    $user->address = sanitizeInput($_POST['address']);
-
-    if ($user->update()) {
-        $_SESSION['full_name'] = $user->full_name;
-        $message = 'Profile updated successfully!';
+    if (!validateCSRFToken($_POST['csrf_token'])) {
+        setFlashMessage('Invalid CSRF token.', 'error');
     } else {
-        $error = 'Failed to update profile';
+        $data = [
+            'full_name' => sanitizeInput($_POST['full_name']),
+            'email' => sanitizeInput($_POST['email']),
+            'phone' => sanitizeInput($_POST['phone'])
+        ];
+
+        if (!validateEmail($data['email'])) {
+            setFlashMessage('Invalid email address.', 'error');
+        } elseif (!validatePhone($data['phone'])) {
+            setFlashMessage('Invalid phone number.', 'error');
+        } else {
+            if ($user->update($data)) {
+                $_SESSION['full_name'] = $data['full_name'];
+                setFlashMessage('Profile updated successfully.', 'success');
+                logActivity('update_profile', "Updated profile for user ID: {$_SESSION['user_id']}", $_SESSION['user_id']);
+            } else {
+                setFlashMessage('Failed to update profile.', 'error');
+            }
+        }
     }
+    redirect('edit-profile.php');
 }
 ?>
 
@@ -42,67 +50,51 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Profile - Crust Pizza</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <title>Edit Profile - Crust Pizza</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body>
-    <?php include 'header.php'; ?>
+    <?php include './admin-header.php'; ?>
 
     <main>
         <div class="container">
             <div class="page-header">
-                <h1><i class="fas fa-user"></i> Your Profile</h1>
+                <h1><i class="fas fa-user"></i> Edit Profile</h1>
                 <p>Manage your account details</p>
             </div>
 
-            <?php if ($message): ?>
-                <div class="alert alert-success"><?php echo $message; ?></div>
-            <?php endif; ?>
+            <?php displayFlashMessages(); ?>
 
-            <?php if ($error): ?>
-                <div class="alert alert-error"><?php echo $error; ?></div>
-            <?php endif; ?>
-
-            <!-- Profile Information -->
             <div class="card">
                 <div class="card-header">
                     <h3 style="margin: 0;">Profile Information</h3>
                 </div>
                 <div class="card-body">
                     <form method="POST">
+                        <input type="hidden" name="csrf_token" value="<?php echo generateCSRFToken(); ?>">
                         <div class="form-group">
                             <label for="username">Username</label>
                             <input type="text" id="username" class="form-control"
-                                value="<?php echo htmlspecialchars($user->username); ?>" disabled>
+                                value="<?php echo htmlspecialchars($currentUser['username'] ?? ''); ?>" disabled>
                             <small style="color: #666;">Username cannot be changed</small>
                         </div>
-
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" id="email" class="form-control"
-                                value="<?php echo htmlspecialchars($user->email); ?>" disabled>
-                            <small style="color: #666;">Email cannot be changed</small>
-                        </div>
-
                         <div class="form-group">
                             <label for="full_name">Full Name</label>
-                            <input type="text" name="full_name" id="full_name" class="form-control"
-                                value="<?php echo htmlspecialchars($user->full_name); ?>" required>
+                            <input type="text" name="full_name" id="full_name" class="form-control" required
+                                value="<?php echo htmlspecialchars($currentUser['full_name'] ?? ''); ?>">
                         </div>
-
                         <div class="form-group">
-                            <label for="phone">Phone Number</label>
-                            <input type="tel" name="phone" id="phone" class="form-control"
-                                value="<?php echo htmlspecialchars($user->phone); ?>" required>
+                            <label for="email">Email</label>
+                            <input type="email" name="email" id="email" class="form-control" required
+                                value="<?php echo htmlspecialchars($currentUser['email'] ?? ''); ?>">
                         </div>
-
                         <div class="form-group">
-                            <label for="address">Address</label>
-                            <textarea name="address" id="address" class="form-control" rows="3" required><?php echo htmlspecialchars($user->address); ?></textarea>
+                            <label for="phone">Phone</label>
+                            <input type="text" name="phone" id="phone" class="form-control" required
+                                value="<?php echo htmlspecialchars($currentUser['phone'] ?? ''); ?>">
                         </div>
-
                         <button type="submit" name="update_profile" class="btn btn-primary">
                             <i class="fas fa-save"></i> Update Profile
                         </button>
@@ -112,10 +104,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile'])) {
         </div>
     </main>
 
-    <?php include 'footer.php'; ?>
+    <?php include './admin-footer.php'; ?>
 
-    <script src="assets/js/main.js"></script>
+    <script src="../assets/js/main.js"></script>
     <script>
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
         function toggleDropdown() {
             const dropdownMenu = document.getElementById('dropdownMenu');
             const isOpen = dropdownMenu.classList.toggle('show');
@@ -127,12 +121,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile'])) {
             navMenu.classList.toggle('active');
         }
 
-        // Close dropdown and nav menu when clicking outside
+        // Close dropdown/nav when clicking outside
         document.addEventListener('click', function(event) {
             const dropdown = document.querySelector('.dropdown');
             const dropdownMenu = document.getElementById('dropdownMenu');
             const navMenu = document.getElementById('navMenu');
             const navToggle = document.querySelector('.nav-toggle');
+
             if (!dropdown.contains(event.target) && !navToggle.contains(event.target)) {
                 dropdownMenu.classList.remove('show');
                 navMenu.classList.remove('active');
@@ -140,7 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile'])) {
             }
         });
 
-        // Close dropdown and nav menu on Escape key
+        // Close dropdown/nav on escape key
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape') {
                 document.getElementById('dropdownMenu').classList.remove('show');
@@ -149,14 +144,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile'])) {
             }
         });
 
+        // Update cart count from localStorage
         function updateCartCount() {
             const cart = JSON.parse(localStorage.getItem('crustPizzaCart')) || [];
             const cartCount = cart.reduce((total, item) => total + (item.quantity || 1), 0);
             document.getElementById('cartCount').textContent = cartCount;
         }
 
+        // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
             updateCartCount();
+
+            // Navbar scroll effect
             window.addEventListener('scroll', function() {
                 const navbar = document.querySelector('.navbar');
                 if (window.scrollY > 50) {
@@ -200,13 +199,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile'])) {
             margin: 0;
         }
 
-        /* Override style.css nav-link */
-        .dropdown .nav-link::after,
-        .dropdown-toggle::after {
-            display: none !important;
-        }
-
-        /* Navbar Toggle */
         .nav-toggle {
             display: none;
             background: none;
@@ -319,7 +311,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile'])) {
 
         .dropdown-item:hover,
         .dropdown-item:focus {
-            background: linear-gradient(45deg, var(--primary-color, #ff6b35), var(--hover-color));
+            background: linear-gradient(45deg, var(--primary-color), var(--hover-color));
             color: #fff;
             outline: none;
         }
@@ -352,20 +344,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile'])) {
 
             .nav-menu.active {
                 display: flex;
-                flex-grow: 0;
             }
 
             .nav-link,
             .dropdown {
                 padding: 0;
-                width: 100% !important;
+                width: 100%;
                 text-align: left;
             }
 
             .dropdown-menu {
                 position: static;
                 width: 100%;
-                min-width: 0px !important;
+                min-width: 0;
                 box-shadow: none;
                 margin-top: 0;
                 padding: 0 0 0 20px;

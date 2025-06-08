@@ -1,14 +1,55 @@
 <?php
+// Ensure errors are visible
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// Start output buffering
+ob_start();
+
+// Log file for debugging
+define('LOG_FILE', 'C:/xampp/htdocs/pizza/src/debug.log');
+function debug_log($message)
+{
+    file_put_contents(LOG_FILE, date('Y-m-d H:i:s') . " - $message\n", FILE_APPEND);
+}
+
+debug_log("--- New request to login.php ---");
 
 require_once 'config/database.php';
 require_once 'classes/User.php';
 require_once 'includes/functions.php';
 
 startSession();
+debug_log("Session ID: " . session_id());
+debug_log("Session data before processing: " . print_r($_SESSION, true));
 
 // Redirect if already logged in
 if (isLoggedIn()) {
-    redirect('index.php');
+    debug_log("User already logged in, redirecting");
+    ob_end_flush();
+    redirectByRole($_SESSION['role']);
+    exit;
+}
+
+// Simple redirect function
+function redirectByRole($role)
+{
+    $role = strtolower($role);
+    debug_log("Redirecting for role: $role");
+    $validRoles = ['admin', 'kitchen', 'delivery', 'counter'];
+
+    $url = 'index.php';
+    if ($role === 'admin') {
+        $url = 'admin/dashboard.php';
+    } elseif (in_array($role, $validRoles)) {
+        $path = "staff/$role/dashboard.php";
+        $url = file_exists($path) ? $path : 'index.php';
+    }
+
+    debug_log("Redirecting to: $url");
+    header("Location: $url");
+    exit;
 }
 
 $database = new Database();
@@ -17,25 +58,45 @@ $user = new User($db);
 
 $login_error = '';
 
-// Handle login form submission
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
-    $username = sanitizeInput($_POST['username']);
-    $password = $_POST['password'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    debug_log("POST request received: " . print_r($_POST, true));
+
+    $username = isset($_POST['username']) ? sanitizeInput($_POST['username']) : '';
+    $password = isset($_POST['password']) ? $_POST['password'] : '';
+
+    debug_log("Username: $username");
 
     if (empty($username) || empty($password)) {
         $login_error = 'Please fill in all fields';
+        debug_log("Empty username or password");
     } else {
-        if ($user->login($username, $password)) {
-            $_SESSION['user_id'] = $user->user_id;
-            $_SESSION['username'] = $user->username;
-            $_SESSION['full_name'] = $user->full_name;
-            setFlashMessage('Welcome back, ' . $user->full_name . '!', 'success');
-            redirect('index.php');
-        } else {
-            $login_error = 'Invalid username or password';
+        try {
+            if ($user->login($username, $password)) {
+                debug_log("Login successful for user ID: {$user->user_id}");
+                $_SESSION['user_id'] = $user->user_id;
+                $_SESSION['username'] = $user->username;
+                $_SESSION['full_name'] = $user->full_name;
+                $_SESSION['role'] = $user->role;
+                debug_log("Session data set: " . print_r($_SESSION, true));
+
+                setFlashMessage('Welcome back, ' . $user->full_name . '!', 'success');
+
+                session_write_close();
+                ob_end_flush();
+                redirectByRole($user->role);
+                exit;
+            } else {
+                $login_error = 'Invalid username or password';
+                debug_log("Login failed: Invalid credentials");
+            }
+        } catch (Exception $e) {
+            $login_error = 'Login error occurred';
+            debug_log("Login exception: " . $e->getMessage());
         }
     }
 }
+
+ob_end_flush();
 ?>
 
 <!DOCTYPE html>
@@ -47,15 +108,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
     <title>Login - Crust Pizza</title>
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
     <style>
         .login-container {
             min-height: calc(100vh - 140px);
-            /* Account for header and footer */
             background: white;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 4rem 2rem;
+            margin-top: 50px;
         }
 
         .login-card {
@@ -155,30 +217,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
             border: 1px solid #f5c6cb;
             color: #721c24;
         }
+
+        .alert-success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
     </style>
 </head>
 
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-brand">
-                <i class="fas fa-pizza-slice"></i>
-                <p><a href="index.php" style="text-decoration: none; color: inherit;">Crust Pizza</a></p>
-            </div>
-            <div class="nav-menu">
-                <a href="index.php" class="nav-link">Home</a>
-                <a href="menu.php" class="nav-link">Menu</a>
-                <a href="build-pizza.php" class="nav-link">Build Your Pizza</a>
-                <a href="track-order.php" class="nav-link">Track Order</a>
-                <a href="login.php" class="nav-link active">Login</a>
-                <a href="cart.php" class="nav-link cart-link">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-count" id="cartCount">0</span>
-                </a>
-            </div>
-        </div>
-    </nav>
+
+    <?php include 'header.php'; ?>
 
     <!-- Login Content -->
     <div class="login-container">
@@ -191,59 +241,41 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
             <?php if ($login_error): ?>
                 <div class="alert alert-error"><?php echo htmlspecialchars($login_error); ?></div>
             <?php endif; ?>
+            <?php displayFlashMessages(); ?>
 
-            <form method="POST">
+            <form method="POST" id="loginForm">
+                <input type="hidden" name="csrf_token" value="<?php echo generateCSRFToken(); ?>">
                 <div class="form-group">
-                    <label for="username">Username or Email</label>
-                    <input type="text" id="username" name="username" class="form-control" required>
+                    <label for="username">Email</label>
+                    <input type="text" id="username" name="username" placeholder="Email" class="form-control" required>
                 </div>
-
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" id="password" name="password" class="form-control" required>
+                    <input type="password" id="password" name="password" placeholder="********" class="form-control" required>
                 </div>
-
-                <button type="submit" name="login" class="btn-login">
-                    Sign In
-                </button>
+                <button type="submit" name="login" value="1" class="btn-login">Sign In</button>
             </form>
 
             <div class="auth-links">
                 <p>Don't have an account? <a href="register.php">Register</a></p>
+                <p>Forgot password? <a href="forgot-password.php">Reset Password</a></p>
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>Crust Pizza</h3>
-                    <p>Delivering gourmet pizza experiences since 2024</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Quick Links</h4>
-                    <ul>
-                        <li><a href="menu.php">Menu</a></li>
-                        <li><a href="build-pizza.php">Build Your Pizza</a></li>
-                        <li><a href="track-order.php">Track Order</a></li>
-                        <li><a href="contact.php">Contact Us</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Contact Info</h4>
-                    <p><i class="fas fa-phone"></i> 1300 CRUST (1300 278 787)</p>
-                    <p><i class="fas fa-envelope"></i> info@crustpizza.com.au</p>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 Crust Pizza. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+    <?php include 'footer.php'; ?>
 
     <script src="assets/js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('loginForm');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    console.log('Form submitting');
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>

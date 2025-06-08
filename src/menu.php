@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Menu Page - Display all available pizzas
+ * Crust Pizza Online Ordering System
+ */
+
 require_once 'config/database.php';
 require_once 'classes/Pizza.php';
 require_once 'includes/functions.php';
@@ -23,6 +28,9 @@ if (!empty($search)) {
     $pizzas = $pizza->getAllPizzas();
 }
 
+// Debug the structure of the first pizza to understand the data format
+// Uncomment this to see the structure: var_dump($pizzas[0] ?? null); exit;
+
 // Get categories for filter
 $categories_query = "SELECT * FROM categories WHERE is_active = 1 ORDER BY name";
 $categories_stmt = $db->prepare($categories_query);
@@ -40,44 +48,41 @@ $categories = $categories_stmt->fetchAll(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Notification styles from index.php */
+        /* Notification styles */
         .cart-notification {
             position: fixed;
-            top: 100px;
+            top: 20px;
             right: 20px;
-            background: linear-gradient(135deg, #28a745, #20c997);
+            background: #4CAF50;
             color: white;
             padding: 15px 25px;
-            border-radius: 10px;
-            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
-            z-index: 9999;
-            font-weight: 600;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
             display: flex;
             align-items: center;
             gap: 10px;
-            animation: slideIn 0.3s ease-out;
-        }
-
-        .cart-notification.error {
-            background: linear-gradient(135deg, #dc3545, #e74c3c);
-            box-shadow: 0 8px 25px rgba(220, 53, 69, 0.4);
+            animation: slide-in 0.3s ease-out forwards;
+            max-width: 350px;
         }
 
         .cart-notification.warning {
-            background: linear-gradient(135deg, #ffc107, #f39c12);
-            box-shadow: 0 8px 25px rgba(255, 193, 7, 0.4);
+            background: #ff9800;
         }
 
-        .cart-notification.info {
-            background: linear-gradient(135deg, #17a2b8, #3498db);
-            box-shadow: 0 8px 25px rgba(23, 162, 184, 0.4);
+        .cart-notification.error {
+            background: #f44336;
+        }
+
+        .cart-notification i {
+            font-size: 1.2rem;
         }
 
         .cart-notification.slide-out {
-            animation: slideOut 0.3s ease-in;
+            animation: slide-out 0.3s ease-in forwards;
         }
 
-        @keyframes slideIn {
+        @keyframes slide-in {
             from {
                 transform: translateX(100%);
                 opacity: 0;
@@ -89,7 +94,7 @@ $categories = $categories_stmt->fetchAll(PDO::FETCH_ASSOC);
             }
         }
 
-        @keyframes slideOut {
+        @keyframes slide-out {
             from {
                 transform: translateX(0);
                 opacity: 1;
@@ -104,7 +109,7 @@ $categories = $categories_stmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 
 <body>
-    <!-- Navigation from index.php -->
+    <!-- Enhanced Navigation -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-brand">
@@ -130,7 +135,7 @@ $categories = $categories_stmt->fetchAll(PDO::FETCH_ASSOC);
                             <a class="dropdown-item" href="logout.php">Logout</a>
                         <?php else: ?>
                             <a class="dropdown-item" href="login.php">Login</a>
-                            <a class="dropdown-item" href="register.php">Sign Up</a>
+                            <a class="dropdown-item" href="signup.php">Sign Up</a>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -231,90 +236,148 @@ $categories = $categories_stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </main>
 
-    <!-- Footer from index.php -->
+    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
                     <h3>Crust Pizza</h3>
-                    <p>Australia's favorite gourmet pizza destination since 2001. From our family to yours, we're committed to delivering exceptional taste and quality in every bite.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
-                    </div>
+                    <p>Gourmet pizza delivered fresh since 2001</p>
                 </div>
-
                 <div class="footer-section">
                     <h4>Quick Links</h4>
                     <ul>
-                        <li><a href="menu.php"><i class="fas fa-pizza-slice"></i> Our Menu</a></li>
-                        <li><a href="build-pizza.php"><i class="fas fa-tools"></i> Build Your Pizza</a></li>
-                        <li><a href="track-order.php"><i class="fas fa-truck"></i> Track Your Order</a></li>
-                        <li><a href="locations.php"><i class="fas fa-map-marker-alt"></i> Find a Store</a></li>
+                        <li><a href="menu.php">Menu</a></li>
+                        <li><a href="build-pizza.php">Build Your Pizza</a></li>
+                        <li><a href="track-order.php">Track Order</a></li>
+                        <li><a href="contact.php">Contact Us</a></li>
                     </ul>
                 </div>
-
-                <div class="footer-section">
-                    <h4>Customer Care</h4>
-                    <ul>
-                        <li><a href="#"><i class="fas fa-phone"></i> Contact Us</a></li>
-                        <li><a href="#"><i class="fas fa-question-circle"></i> FAQ</a></li>
-                        <li><a href="#"><i class="fas fa-comment"></i> Feedback</a></li>
-                        <li><a href="#"><i class="fas fa-file-contract"></i> Terms & Conditions</a></li>
-                        <li><a href="#"><i class="fas fa-shield-alt"></i> Privacy Policy</a></li>
-                    </ul>
-                </div>
-
                 <div class="footer-section">
                     <h4>Contact Info</h4>
-                    <ul>
-                    <li><i class="fas fa-phone"></i> <strong>1300 278 787</strong></li>
-                    <li><i class="fas fa-envelope"></i> info@crustpizza.com.au</li>
-                    <li><i class="fas fa-clock"></i> Mon-Sun: 11AM - 11PM</li>
-                    <li><i class="fas fa-map-marker-alt"></i> 130+ locations across Australia</li>
-                    </ul>
+                    <p><i class="fas fa-phone"></i> 1300 CRUST (1300 278 787)</p>
+                    <p><i class="fas fa-envelope"></i> info@crustpizza.com.au</p>
                 </div>
             </div>
-
             <div class="footer-bottom">
-                <p>© <span id="currentYear"></span> Crust Pizza. All rights reserved.</p>
+                <p>&copy; 2024 Crust Pizza. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
     <script src="assets/js/main.js"></script>
     <script>
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        // Update the addToCartFromMenu function to check login status
+        function addToCartFromMenu(pizzaId) {
+            <?php if (!isLoggedIn()): ?>
+                // Show login required notification
+                showNotification("Please log in to add items to your cart", "warning");
+                return;
+            <?php else: ?>
+                const sizeSelector = document.getElementById(`size-${pizzaId}`);
+                const size = sizeSelector.value;
+
+                // Get pizza card to extract price data and name
+                const pizzaCard = sizeSelector.closest('.pizza-card');
+                const priceData = {
+                    small: parseFloat(pizzaCard.dataset.priceSmall),
+                    medium: parseFloat(pizzaCard.dataset.priceMedium),
+                    large: parseFloat(pizzaCard.dataset.priceLarge)
+                };
+
+                // Get pizza name from the card
+                const pizzaName = pizzaCard.querySelector('h3').textContent;
+
+                // Create cart item with consistent structure
+                const cartItem = {
+                    pizza_id: pizzaId,
+                    name: pizzaName,
+                    size: size,
+                    price: priceData[size],
+                    quantity: 1,
+                    item_type: "pizza",
+                    custom_ingredients: null,
+                    special_instructions: null
+                };
+
+                const userId = getUserId();
+                if (!userId) {
+                    showNotification('User session not found. Please log in again.', 'error');
+                    return false;
+                }
+
+                const data = {
+                    ...cartItem,
+                    user_id: userId,
+                    csrf_token: getCSRFToken()
+                };
+
+                fetch('api/cart_api.php?action=add', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result.success) {
+                            updateCartCount();
+                            showNotification(`${pizzaName} (${size}) added to cart!`, 'success');
+                        } else {
+                            showNotification(result.message || 'Failed to add item to cart', 'error');
+                        }
+                    })
+                    .catch(error => {
+                        showNotification('An error occurred while adding to cart', 'error');
+                        console.error('Error adding to cart:', error);
+                    });
+            <?php endif; ?>
+        }
+
+        function showNotification(message, type = "info") {
+            // Remove existing notifications
+            const existingNotifications = document.querySelectorAll(".cart-notification");
+            existingNotifications.forEach((notification) => notification.remove());
+
+            // Create notification element
+            const notification = document.createElement("div");
+            notification.className = `cart-notification ${type}`;
+
+            // Set icon based on notification type
+            let icon = 'info-circle';
+            if (type === 'success') icon = 'check-circle';
+            if (type === 'error') icon = 'exclamation-circle';
+            if (type === 'warning') icon = 'exclamation-triangle';
+
+            notification.innerHTML = `
+        <i class="fas fa-${icon}"></i> 
+        ${message}
+    `;
+
+            document.body.appendChild(notification);
+
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                notification.classList.add("slide-out");
+                setTimeout(() => {
+                    if (notification.parentElement) {
+                        notification.remove();
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('crustPizzaCart')) || [];
+            const cartCount = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+            document.getElementById('cartCount').textContent = cartCount;
+        }
+
+        // Initialize cart count on page load
         document.addEventListener('DOMContentLoaded', function() {
             updateCartCount();
-            // Add scroll effect to navbar
-            window.addEventListener('scroll', function() {
-                const navbar = document.querySelector('.navbar');
-                if (window.scrollY > 50) {
-                    navbar.style.background = 'rgba(255, 255, 255, 0.98)';
-                    navbar.style.boxShadow = '0 4px 25px rgba(0, 0, 0, 0.15)';
-                } else {
-                    navbar.style.background = 'rgba(255, 255, 255, 0.95)';
-                    navbar.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.1)';
-                }
-            });
         });
-
-        function addToCartFromMenu(pizzaId) {
-            if (!isUserLoggedIn()) {
-                showNotification("Please log in to add items to your cart", "warning");
-                setTimeout(() => {
-                    window.location.href = 'login.php?redirect=menu.php';
-                }, 1500);
-                return;
-            }
-
-            const sizeSelector = document.getElementById(`size-${pizzaId}`);
-            const size = sizeSelector.value;
-            addToCart(pizzaId, size, 1);
-        }
 
         function toggleDropdown() {
             const dropdownMenu = document.getElementById('dropdownMenu');
@@ -327,6 +390,7 @@ $categories = $categories_stmt->fetchAll(PDO::FETCH_ASSOC);
             navMenu.classList.toggle('active');
         }
 
+        // Close dropdown and nav menu when clicking outside
         document.addEventListener('click', function(event) {
             const dropdown = document.querySelector('.dropdown');
             const dropdownMenu = document.getElementById('dropdownMenu');
@@ -339,6 +403,7 @@ $categories = $categories_stmt->fetchAll(PDO::FETCH_ASSOC);
             }
         });
 
+        // Close dropdown and nav menu on Escape key
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape') {
                 document.getElementById('dropdownMenu').classList.remove('show');
@@ -347,44 +412,19 @@ $categories = $categories_stmt->fetchAll(PDO::FETCH_ASSOC);
             }
         });
 
-        function updateCartCount() {
-            const cart = JSON.parse(localStorage.getItem('crustPizzaCart')) || [];
-            const cartCount = cart.reduce((total, item) => total + (item.quantity || 1), 0);
-            document.getElementById('cartCount').textContent = cartCount;
-        }
-
         function isUserLoggedIn() {
-            const logoutLink = document.querySelector('a[href="logout.php"]');
-            const loginLink = document.querySelector('a.dropdown-item[href="login.php"]');
-            return logoutLink !== null && loginLink === null;
+            const userId = getUserId();
+            return !!userId;
         }
 
-        function showNotification(message, type = "info") {
-            const existingNotifications = document.querySelectorAll(".cart-notification");
-            existingNotifications.forEach((notification) => notification.remove());
-            const notification = document.createElement("div");
-            notification.className = `cart-notification ${type}`;
+        function getUserId() {
+            const userIdMeta = document.querySelector('meta[name="user-id"]');
+            return userIdMeta ? userIdMeta.getAttribute('content') : null;
+        }
 
-            // Set icon based on notification type
-            let icon = 'info-circle';
-            if (type === 'success') icon = 'check-circle';
-            if (type === 'error') icon = 'exclamation-circle';
-            if (type === 'warning') icon = 'exclamation-triangle';
-
-            notification.innerHTML = `
-                <i class="fas fa-${icon}"></i> 
-                ${message}
-            `;
-
-            document.body.appendChild(notification);
-            setTimeout(() => {
-                    notification.classList.add("slide-out");
-                    setTimeout(() => {
-                        if (notification.parentElement) {
-                            notification.remove();
-                        }
-                    }, 300);
-            }, 3000);
+        function getCSRFToken() {
+            const tokenInput = document.querySelector('input[name="csrf_token"]');
+            return tokenInput ? tokenInput.value : '';
         }
     </script>
 </body>

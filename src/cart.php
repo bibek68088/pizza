@@ -1,5 +1,4 @@
 <?php
-
 require_once 'config/database.php';
 require_once 'includes/functions.php';
 
@@ -67,43 +66,7 @@ if (!isLoggedIn()) {
 </head>
 
 <body>
-    <!-- Enhanced Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-brand">
-                <i class="fas fa-pizza-slice"></i>
-                <p><a href="index.php" style="text-decoration: none; color: inherit;">Crust Pizza</a></p>
-            </div>
-            <button class="nav-toggle" onclick="toggleNavMenu()" aria-label="Toggle Navigation">
-                <i class="fas fa-bars"></i>
-            </button>
-            <div class="nav-menu" id="navMenu">
-                <a href="index.php" class="nav-link">Home</a>
-                <a href="menu.php" class="nav-link">Menu</a>
-                <a href="build-pizza.php" class="nav-link">Build Your Pizza</a>
-                <a href="track-order.php" class="nav-link">Track Order</a>
-                <div class="dropdown">
-                    <button class="dropdown-toggle" onclick="toggleDropdown()" aria-label="User Menu" aria-expanded="false" title="User Menu">
-                        <span class="user-icon"><i class="fas fa-user"></i></span>
-                        <span class="dropdown-arrow"></span>
-                    </button>
-                    <div class="dropdown-menu" id="dropdownMenu">
-                        <?php if (isLoggedIn()): ?>
-                            <a class="dropdown-item" href="profile.php">Profile</a>
-                            <a class="dropdown-item" href="logout.php">Logout</a>
-                        <?php else: ?>
-                            <a class="dropdown-item" href="login.php">Login</a>
-                            <a class="dropdown-item" href="signup.php">Sign Up</a>
-                        <?php endif; ?>
-                    </div>
-                </div>
-                <a href="cart.php" class="nav-link cart-link active">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-count" id="cartCount">0</span>
-                </a>
-            </div>
-        </div>
-    </nav>
+    <?php include 'header.php'; ?>
 
     <main style="margin-top: 80px; padding: 40px 20px;">
         <div class="container">
@@ -120,7 +83,7 @@ if (!isLoggedIn()) {
                     <div class="card">
                         <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
                             <h3 style="margin: 0;"><i class="fas fa-shopping-bag"></i> Cart Items</h3>
-                            <button class="btn btn-outline" onclick="clearCart()" style="padding: 0.4rem 0.75rem; font-size: 0.85rem; min-width: auto;">
+                            <button class="btn btn-outline" onclick="CrustPizza.clearCart()" style="padding: 0.4rem 0.75rem; font-size: 0.85rem; min-width: auto;">
                                 <i class="fas fa-trash"></i> Clear
                             </button>
                         </div>
@@ -209,140 +172,29 @@ if (!isLoggedIn()) {
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>Crust Pizza</h3>
-                    <p>Gourmet pizza delivered fresh since 2001</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Quick Links</h4>
-                    <ul>
-                        <li><a href="menu.php"><i class="fas fa-pizza-slice"></i> Menu</a></li>
-                        <li><a href="build-pizza.php"><i class="fas fa-magic"></i> Build Your Pizza</a></li>
-                        <li><a href="track-order.php"><i class="fas fa-search"></i> Track Order</a></li>
-                        <li><a href="contact.php"><i class="fas fa-envelope"></i> Contact Us</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Contact Info</h4>
-                    <p><i class="fas fa-phone"></i> 1300 CRUST (1300 278 787)</p>
-                    <p><i class="fas fa-envelope"></i> info@crustpizza.com.au</p>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 Crust Pizza. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+    <?php include 'footer.php'; ?>
 
     <script src="assets/js/main.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            loadCartItems();
+            CrustPizza.loadCartItems();
         });
 
-        function loadCartItems() {
-            const cart = CrustPizza.getCart();
-            const cartItemsContainer = document.getElementById('cartItems');
-            const cartContainer = document.getElementById('cartContainer');
-            const emptyCartMessage = document.getElementById('emptyCartMessage');
-
-            if (cart.length === 0) {
-                cartContainer.style.display = 'none';
-                emptyCartMessage.style.display = 'flex';
-                return;
+        function updateQuantity(cartId, quantity) {
+            if (confirm(`Update quantity to ${quantity}?`)) {
+                CrustPizza.updateCartQuantity(cartId, quantity);
             }
-
-            cartContainer.style.display = 'grid';
-            emptyCartMessage.style.display = 'none';
-
-            let cartHTML = '';
-            cart.forEach((item, index) => {
-                cartHTML += `
-                    <div class="cart-item">
-                        <div class="cart-item-info">
-                            <h4>${item.name}</h4>
-                            ${item.size ? `<p class="item-detail">Size: ${item.size.charAt(0).toUpperCase() + item.size.slice(1)}</p>` : ''}
-                            ${item.customIngredients ? `<p class="item-detail">Ingredients: ${item.customIngredients.join(', ')}</p>` : ''}
-                            ${item.specialInstructions ? `<p class="item-detail">Instructions: ${item.specialInstructions}</p>` : ''}
-                            <p class="item-price">${formatCurrency(item.price)}</p>
-                        </div>
-                        <div class="cart-item-controls">
-                            <div class="quantity-controls">
-                                <button class="quantity-btn" onclick="updateQuantity(${index}, ${item.quantity - 1})">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                                <span class="quantity-display">${item.quantity}</span>
-                                <button class="quantity-btn" onclick="updateQuantity(${index}, ${item.quantity + 1})">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </div>
-                            <button class="remove-btn" onclick="removeFromCart(${index})" title="Remove item">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-            });
-
-            cartItemsContainer.innerHTML = cartHTML;
-            updateCartSummary();
         }
 
-        function updateQuantity(index, newQuantity) {
-            if (newQuantity <= 0) {
-                removeFromCart(index);
-                return;
-            }
-
-            const cart = CrustPizza.getCart();
-            cart[index].quantity = newQuantity;
-            CrustPizza.saveCart(cart);
-            loadCartItems();
-        }
-
-        function removeFromCart(index) {
+        function removeFromCart(cartId) {
             if (confirm('Remove this item from your cart?')) {
-                CrustPizza.removeFromCart(index);
-                loadCartItems();
+                CrustPizza.removeFromCart(cartId);
             }
         }
 
         function clearCart() {
             if (confirm('Are you sure you want to clear your cart?')) {
                 CrustPizza.clearCart();
-                loadCartItems();
-            }
-        }
-
-        function updateCartSummary() {
-            const cart = CrustPizza.getCart();
-            let subtotal = 0;
-
-            cart.forEach(item => {
-                subtotal += item.price * item.quantity;
-            });
-
-            const tax = subtotal * 0.1; // 10% GST
-            const deliveryFee = subtotal > 30 ? 0 : 5.99; // Free delivery over $30
-            const total = subtotal + tax + deliveryFee;
-
-            document.getElementById('cartSubtotal').textContent = formatCurrency(subtotal);
-            document.getElementById('cartTax').textContent = formatCurrency(tax);
-            document.getElementById('deliveryFee').textContent = formatCurrency(deliveryFee);
-            document.getElementById('cartTotal').textContent = formatCurrency(total);
-
-            // Enable/disable checkout button
-            const checkoutBtn = document.getElementById('checkoutBtn');
-            if (cart.length === 0) {
-                checkoutBtn.classList.add('disabled');
-                checkoutBtn.style.pointerEvents = 'none';
-            } else {
-                checkoutBtn.classList.remove('disabled');
-                checkoutBtn.style.pointerEvents = 'auto';
             }
         }
 
@@ -357,7 +209,6 @@ if (!isLoggedIn()) {
             navMenu.classList.toggle('active');
         }
 
-        // Close dropdown and nav menu when clicking outside
         document.addEventListener('click', function(event) {
             const dropdown = document.querySelector('.dropdown');
             const dropdownMenu = document.getElementById('dropdownMenu');
@@ -370,7 +221,6 @@ if (!isLoggedIn()) {
             }
         });
 
-        // Close dropdown and nav menu on Escape key
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape') {
                 document.getElementById('dropdownMenu').classList.remove('show');

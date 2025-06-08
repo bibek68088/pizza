@@ -1,12 +1,10 @@
 <?php
-
 require_once 'config/database.php';
 require_once 'classes/User.php';
 require_once 'includes/functions.php';
 
 startSession();
 
-// Redirect if already logged in
 if (isLoggedIn()) {
     redirect('index.php');
 }
@@ -15,47 +13,33 @@ $database = new Database();
 $db = $database->getConnection();
 $user = new User($db);
 
-$register_error = '';
-$register_success = '';
+$error = '';
+$success = '';
 
-// Handle registration form submission
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
-    $username = sanitizeInput($_POST['username']);
-    $email = sanitizeInput($_POST['email']);
-    $password = $_POST['password'];
-    $confirm_password = $_POST['confirm_password'];
-    $full_name = sanitizeInput($_POST['full_name']);
-    $phone = sanitizeInput($_POST['phone']);
-    $address = sanitizeInput($_POST['address']);
-
-    // Validation
-    if (empty($username) || empty($email) || empty($password) || empty($full_name) || empty($phone) || empty($address)) {
-        $register_error = 'Please fill in all fields';
-    } elseif (!validateEmail($email)) {
-        $register_error = 'Please enter a valid email address';
-    } elseif (!validatePhone($phone)) {
-        $register_error = 'Please enter a valid Australian phone number';
-    } elseif (strlen($password) < 6) {
-        $register_error = 'Password must be at least 6 characters long';
-    } elseif ($password !== $confirm_password) {
-        $register_error = 'Passwords do not match';
-    } elseif ($user->usernameExists($username)) {
-        $register_error = 'Username already exists';
-    } elseif ($user->emailExists($email)) {
-        $register_error = 'Email already registered';
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['reset_password'])) {
+    if (!validateCSRFToken($_POST['csrf_token'])) {
+        $error = 'Invalid CSRF token.';
+    } elseif (!checkRateLimit('forgot_password')) {
+        $error = 'Too many requests. Please try again later.';
     } else {
-        // Create new user
-        $user->username = $username;
-        $user->email = $email;
-        $user->password_hash = hashPassword($password);
-        $user->full_name = $full_name;
-        $user->phone = $phone;
-        $user->address = $address;
-
-        if ($user->create()) {
-            $register_success = 'Account created successfully! You can now log in.';
+        $email = sanitizeInput($_POST['email']);
+        if (!validateEmail($email)) {
+            $error = 'Invalid email address.';
         } else {
-            $register_error = 'Error creating account. Please try again.';
+            $resetToken = $user->generateResetToken($email);
+            if ($resetToken) {
+                $resetLink = "http://{$_SERVER['HTTP_HOST']}/reset-password.php?token=$resetToken";
+                $subject = "Crust Pizza Password Reset";
+                $message = "Dear Customer,\n\nClick the following link to reset your password:\n$resetLink\n\nThis link will expire in 1 hour.\n\nCrust Pizza Team";
+                if (sendEmail($email, $subject, $message)) {
+                    $success = 'Password reset link sent to your email.';
+                    logActivity('password_reset_request', "Requested password reset for email: $email");
+                } else {
+                    $error = 'Failed to send reset email. Please try again.';
+                }
+            } else {
+                $error = 'Email not found.';
+            }
         }
     }
 }
@@ -67,11 +51,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up - Crust Pizza</title>
+    <title>Forgot Password - Crust Pizza</title>
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        .register-container {
+        .login-container {
             min-height: calc(100vh - 140px);
             background: white;
             display: flex;
@@ -81,28 +65,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
             margin-top: 50px;
         }
 
-        .register-card {
+        .login-card {
             background: white;
             border-radius: 10px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             border: 1px solid #e9ecef;
             width: 100%;
-            max-width: 550px;
+            max-width: 450px;
             padding: 3rem;
         }
 
-        .register-header {
+        .login-header {
             text-align: center;
             margin-bottom: 2rem;
         }
 
-        .register-header h1 {
+        .login-header h1 {
             color: #333;
             margin-bottom: 0.5rem;
             font-size: 2rem;
         }
 
-        .register-header p {
+        .login-header p {
             color: #666;
             margin: 0;
         }
@@ -125,7 +109,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
             border-radius: 5px;
             font-size: 1rem;
             transition: border-color 0.3s ease;
-            box-sizing: border-box;
         }
 
         .form-control:focus {
@@ -133,13 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
             border-color: #ff6b35;
         }
 
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-
-        .btn-register {
+        .btn-login {
             width: 100%;
             padding: 0.75rem;
             background: #ff6b35;
@@ -152,7 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
             transition: background-color 0.3s ease;
         }
 
-        .btn-register:hover {
+        .btn-login:hover {
             background: #e55a2b;
         }
 
@@ -192,13 +169,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
             color: #155724;
         }
 
-        @media (max-width: 768px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Cart notification styles from index.php */
         .cart-notification {
             position: fixed;
             top: 100px;
@@ -262,7 +232,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
 </head>
 
 <body>
-    <!-- Navigation from index.php -->
+    <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-brand">
@@ -276,11 +246,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
                 <a href="index.php" class="nav-link">Home</a>
                 <a href="menu.php" class="nav-link">Menu</a>
                 <a href="build-pizza.php" class="nav-link">Build Your Pizza</a>
-                <a href="track-order.php" class="nav-link">Track Order</a>
+                <a href="track-down.php" class="nav-link">Track Order</a>
                 <div class="dropdown">
                     <button class="dropdown-toggle" onclick="toggleDropdown()" aria-label="User Menu" aria-expanded="false" title="User Menu">
-                        <span class="user-icon"><i class="fas fa-user"></i></span>
-                        <span class="dropdown-arrow"></span>
+                        <span率先看清形势<i class="fas fa-user"></i></span>
+                            <span class="dropdown-arrow"></span>
                     </button>
                     <div class="dropdown-menu" id="dropdownMenu">
                         <?php if (isLoggedIn()): ?>
@@ -294,87 +264,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
                 </div>
                 <a href="cart.php" class="nav-link cart-link">
                     <i class="fas fa-shopping-cart"></i>
-                    <?php if (isLoggedIn()): ?>
-                        <span class="cart-count" id="cartCount">0</span>
-                    <?php endif; ?>
+                    <span class="cart-count" id="cartCount">0</span>
                 </a>
             </div>
         </div>
     </nav>
 
-    <!-- Registration Content -->
-    <div class="register-container">
-        <div class="register-card">
-            <div class="register-header">
-                <h1>Create Account</h1>
-                <p>Join Crust Pizza and enjoy gourmet pizzas</p>
+    <!-- Forgot Password Content -->
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <h1>Forgot Password</h1>
+                <p>Enter your email to receive a password reset link</p>
             </div>
 
-            <?php if ($register_error): ?>
-                <div class="alert alert-error"><?php echo htmlspecialchars($register_error); ?></div>
+            <?php displayFlashMessages(); ?>
+            <?php if ($success): ?>
+                <div class="alert alert-success"><?php echo htmlspecialchars($success); ?></div>
             <?php endif; ?>
-
-            <?php if ($register_success): ?>
-                <div class="alert alert-success"><?php echo htmlspecialchars($register_success); ?></div>
+            <?php if ($error): ?>
+                <div class="alert alert-error"><?php echo htmlspecialchars($error); ?></div>
             <?php endif; ?>
 
             <form method="POST">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="username">Username</label>
-                        <input type="text" id="username" name="username" class="form-control" placeholder="Username"
-                            value="<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username']) : ''; ?>" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" class="form-control" placeholder="Email"
-                            value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>" required>
-                    </div>
-                </div>
-
+                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(generateCSRFToken()); ?>">
                 <div class="form-group">
-                    <label for="full_name">Full Name</label>
-                    <input type="text" id="full_name" name="full_name" class="form-control" placeholder="Full Name"
-                        value="<?php echo isset($_POST['full_name']) ? htmlspecialchars($_POST['full_name']) : ''; ?>" required>
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Email" class="form-control" required>
                 </div>
-
-                <div class="form-group">
-                    <label for="phone">Phone Number</label>
-                    <input type="tel" id="phone" name="phone" class="form-control" placeholder="Phone Number"
-                        value="<?php echo isset($_POST['phone']) ? htmlspecialchars($_POST['phone']) : ''; ?>" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="address">Address</label>
-                    <textarea id="address" name="address" class="form-control" rows="3"
-                        placeholder="Address" required><?php echo isset($_POST['address']) ? htmlspecialchars($_POST['address']) : ''; ?></textarea>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" id="password" name="password" class="form-control" placeholder="********" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="confirm_password">Confirm Password</label>
-                        <input type="password" id="confirm_password" name="confirm_password" class="form-control" placeholder="********" required>
-                    </div>
-                </div>
-
-                <button type="submit" name="register" class="btn-register">
-                    Create Account
-                </button>
+                <button type="submit" name="reset_password" class="btn-login">Send Reset Link</button>
             </form>
 
             <div class="auth-links">
-                <p>Already have an account? <a href="login.php">Log In</a></p>
+                <p>Remembered your password? <a href="login.php">Log In</a></p>
+                <p>Don't have an account? <a href="register.php">Register</a></p>
             </div>
         </div>
     </div>
 
-    <!-- Footer from index.php -->
+    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
@@ -388,7 +316,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
                         <a href="#"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
-
                 <div class="footer-section">
                     <h4>Quick Links</h4>
                     <ul>
@@ -398,7 +325,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
                         <li><a href="locations.php"><i class="fas fa-map-marker-alt"></i> Find a Store</a></li>
                     </ul>
                 </div>
-
                 <div class="footer-section">
                     <h4>Customer Care</h4>
                     <ul>
@@ -409,7 +335,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
                         <li><a href="#"><i class="fas fa-shield-alt"></i> Privacy Policy</a></li>
                     </ul>
                 </div>
-
                 <div class="footer-section">
                     <h4>Contact Info</h4>
                     <ul>
@@ -420,7 +345,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
                     </ul>
                 </div>
             </div>
-
             <div class="footer-bottom">
                 <p>© <span id="currentYear"></span> Crust Pizza. All rights reserved.</p>
             </div>
@@ -480,13 +404,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
         });
 
         function updateCartCount() {
-            if (!isUserLoggedIn()) return;
             const cart = JSON.parse(localStorage.getItem('crustPizzaCart')) || [];
             const cartCount = cart.reduce((total, item) => total + (item.quantity || 1), 0);
-            const cartCountElement = document.getElementById('cartCount');
-            if (cartCountElement) {
-                cartCountElement.textContent = cartCount;
-            }
+            document.getElementById('cartCount').textContent = cartCount;
         }
 
         function showNotification(message, type = "info") {
@@ -505,7 +425,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
                 <i class="fas fa-${icon}"></i> 
                 ${message}
             `;
-
             document.body.appendChild(notification);
             setTimeout(() => {
                 notification.classList.add("slide-out");

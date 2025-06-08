@@ -10,6 +10,7 @@ $database = new Database();
 $db = $database->getConnection();
 $pizza = new Pizza($db);
 
+// Get featured pizzas (first 6 pizzas for homepage)
 $featured_pizzas = array_slice($pizza->getAllPizzas(), 0, 6);
 ?>
 
@@ -51,7 +52,7 @@ $featured_pizzas = array_slice($pizza->getAllPizzas(), 0, 6);
                             <a class="dropdown-item" href="logout.php">Logout</a>
                         <?php else: ?>
                             <a class="dropdown-item" href="login.php">Login</a>
-                            <a class="dropdown-item" href="register.php">Sign Up</a>
+                            <a class="dropdown-item" href="signup.php">Sign Up</a>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -74,7 +75,7 @@ $featured_pizzas = array_slice($pizza->getAllPizzas(), 0, 6);
             </div>
         </div>
         <div class="hero-image">
-            <img src="./assets/public/pizza-banner.avif" alt="Delicious Crust Pizza" />
+            <img src="https://images.unsplash.com/photo-1506354666786-959d6d497f1a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzV8fHBpenphfGVufDB8fDB8fHww" alt="Delicious Crust Pizza" />
         </div>
     </section>
 
@@ -87,101 +88,67 @@ $featured_pizzas = array_slice($pizza->getAllPizzas(), 0, 6);
             </div>
 
             <div class="pizza-grid">
-                <!-- Pizza Card 1 -->
-                <div class="pizza-card fade-in-up">
-                    <div class="pizza-image">
-                        <img src="./assets/public/pizza1.jpg" alt="Peri Peri Chicken Pizza">
-                        <div class="pizza-badge">Award Winner</div>
-                    </div>
-                    <div class="pizza-info">
-                        <h3>Peri Peri Chicken</h3>
-                        <p>Our signature pizza featuring tender chicken, roasted capsicum, red onion, and our famous peri peri sauce on a crispy base with mozzarella.</p>
-                        <div class="pizza-prices">
-                            <div class="price-item">
-                                <span class="price-label">Small</span>
-                                <span class="price-value">$18.90</span>
-                            </div>
-                            <div class="price-item">
-                                <span class="price-label">Medium</span>
-                                <span class="price-value">$24.90</span>
-                            </div>
-                            <div class="price-item">
-                                <span class="price-label">Large</span>
-                                <span class="price-value">$32.90</span>
-                            </div>
-                        </div>
-                        <div class="pizza-actions">
-                            <a href="pizza-details.php?id=1" class="btn btn-outline">View Details</a>
-                            <button class="btn btn-add-cart" onclick="addToCart(1, 'medium')">
-                                <i class="fas fa-cart-plus"></i> Add to Cart
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                <?php if (!empty($featured_pizzas)): ?>
+                    <?php foreach ($featured_pizzas as $index => $pizza_item): ?>
+                        <?php
+                        // Ensure index is an integer
+                        $index = (int)$index;
 
-                <!-- Pizza Card 2 -->
-                <div class="pizza-card fade-in-up" style="animation-delay: 0.2s;">
-                    <div class="pizza-image">
-                        <img src="./assets/public/pizza2.jpg" alt="Mediterranean Delight">
-                        <div class="pizza-badge">Popular</div>
-                    </div>
-                    <div class="pizza-info">
-                        <h3>Mediterranean Delight</h3>
-                        <p>A fresh combination of sun-dried tomatoes, olives, feta cheese, spinach, and herbs on our signature thin crust.</p>
-                        <div class="pizza-prices">
-                            <div class="price-item">
-                                <span class="price-label">Small</span>
-                                <span class="price-value">$17.90</span>
-                            </div>
-                            <div class="price-item">
-                                <span class="price-label">Medium</span>
-                                <span class="price-value">$23.90</span>
-                            </div>
-                            <div class="price-item">
-                                <span class="price-label">Large</span>
-                                <span class="price-value">$31.90</span>
-                            </div>
-                        </div>
-                        <div class="pizza-actions">
-                            <a href="pizza-details.php?id=2" class="btn btn-outline">View Details</a>
-                            <button class="btn btn-add-cart" onclick="addToCart(2, 'medium')">
-                                <i class="fas fa-cart-plus"></i> Add to Cart
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                        // Ensure we have all required fields with default values if missing
+                        $pizza_id = isset($pizza_item['pizza_id']) ? $pizza_item['pizza_id'] : 0;
+                        $name = isset($pizza_item['name']) ? htmlspecialchars($pizza_item['name']) : 'Pizza';
+                        $description = isset($pizza_item['description']) ? htmlspecialchars($pizza_item['description']) : 'Delicious pizza with our signature sauce and cheese.';
+                        $image_url = isset($pizza_item['image_url']) && !empty($pizza_item['image_url']) ? $pizza_item['image_url'] : '/placeholder.svg?height=280&width=400';
 
-                <!-- Pizza Card 3 -->
-                <div class="pizza-card fade-in-up" style="animation-delay: 0.4s;">
-                    <div class="pizza-image">
-                        <img src="./assets/public/pizza3.jpg" alt="Plant-Based Supreme">
-                        <div class="pizza-badge">Vegan</div>
-                    </div>
-                    <div class="pizza-info">
-                        <h3>Plant-Based Supreme</h3>
-                        <p>Our innovative vegan pizza with plant-based pepperoni, mushrooms, capsicum, and dairy-free cheese on a wholesome base.</p>
-                        <div class="pizza-prices">
-                            <div class="price-item">
-                                <span class="price-label">Small</span>
-                                <span class="price-value">$19.90</span>
+                        // Set default prices if not available
+                        $price_small = isset($pizza_item['base_price_small']) ? (float)$pizza_item['base_price_small'] : 15.90;
+                        $price_medium = isset($pizza_item['base_price_medium']) ? (float)$pizza_item['base_price_medium'] : 21.90;
+                        $price_large = isset($pizza_item['base_price_large']) ? (float)$pizza_item['base_price_large'] : 27.90;
+
+                        // Add badges for first few pizzas
+                        $badges = ['Award Winner', 'Popular', 'Chef\'s Choice', 'Customer Favorite', 'New', 'Signature'];
+                        $badge_index = $index % count($badges);
+                        $badge = $badges[$badge_index];
+                        ?>
+                        <div class="pizza-card fade-in-up" style="animation-delay: <?php echo $index * 0.2; ?>s;" data-price-small="<?php echo $price_small; ?>" data-price-medium="<?php echo $price_medium; ?>" data-price-large="<?php echo $price_large; ?>">
+                            <div class="pizza-image">
+                                <img src="<?php echo $image_url; ?>" alt="<?php echo $name; ?>">
+                                <div class="pizza-badge"><?php echo $badge; ?></div>
                             </div>
-                            <div class="price-item">
-                                <span class="price-label">Medium</span>
-                                <span class="price-value">$25.90</span>
-                            </div>
-                            <div class="price-item">
-                                <span class="price-label">Large</span>
-                                <span class="price-value">$33.90</span>
+                            <div class="pizza-info">
+                                <h3><?php echo $name; ?></h3>
+                                <p><?php echo $description; ?></p>
+                                <div class="pizza-prices">
+                                    <div class="price-item">
+                                        <span class="price-label">Small</span>
+                                        <span class="price-value"><?php echo formatCurrency($price_small); ?></span>
+                                    </div>
+                                    <div class="price-item">
+                                        <span class="price-label">Medium</span>
+                                        <span class="price-value"><?php echo formatCurrency($price_medium); ?></span>
+                                    </div>
+                                    <div class="price-item">
+                                        <span class="price-label">Large</span>
+                                        <span class="price-value"><?php echo formatCurrency($price_large); ?></span>
+                                    </div>
+                                </div>
+                                <div class="pizza-actions">
+                                    <a href="pizza-details.php?id=<?php echo $pizza_id; ?>" class="btn btn-outline">View Details</a>
+                                    <button class="btn btn-add-cart" onclick="addToCart(<?php echo $pizza_id; ?>, 'medium')">
+                                        <i class="fas fa-cart-plus"></i> Add to Cart
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                        <div class="pizza-actions">
-                            <a href="pizza-details.php?id=3" class="btn btn-outline">View Details</a>
-                            <button class="btn btn-add-cart" onclick="addToCart(3, 'medium')">
-                                <i class="fas fa-cart-plus"></i> Add to Cart
-                            </button>
-                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <!-- Fallback if no pizzas found -->
+                    <div class="text-center" style="grid-column: 1 / -1; padding: 40px;">
+                        <h3>No featured pizzas available</h3>
+                        <p>Check back soon for our signature creations!</p>
+                        <a href="menu.php" class="btn btn-primary">Browse Full Menu</a>
                     </div>
-                </div>
+                <?php endif; ?>
             </div>
 
             <div class="text-center" style="margin-top: 3rem;">
@@ -252,7 +219,7 @@ $featured_pizzas = array_slice($pizza->getAllPizzas(), 0, 6);
                 </div>
 
                 <div class="about-image" style="text-align: center;">
-                    <img src="./assets/public/story-pizza.jpg" alt="Crust Pizza Story" style="border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); max-width: 100%; height: auto;">
+                    <img src="https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?w=500&h=600&fit=crop&crop=center" alt="Crust Pizza Story" style="border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); max-width: 100%; height: auto;">
                 </div>
             </div>
 
@@ -281,7 +248,7 @@ $featured_pizzas = array_slice($pizza->getAllPizzas(), 0, 6);
     </section>
 
     <!-- Innovation Timeline -->
-    <section class="innovation-timeline" style="padding: 100px 20px; background: white; color: white;">
+    <section class="innovation-timeline" style="padding: 100px 20px; background: white; color: black;">
         <div class="container">
             <div class="section-header">
                 <h2 style="color: black;">Innovation Timeline</h2>
@@ -406,16 +373,13 @@ $featured_pizzas = array_slice($pizza->getAllPizzas(), 0, 6);
             </div>
 
             <div class="footer-bottom">
-                <p>© <span id="currentYear"></span> Crust Pizza. All rights reserved.</p>
+                <p>© 2024 Crust Pizza. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
     <script src="assets/js/main.js"></script>
     <script>
-        // Set the current year in the copyright notice
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
-
         document.addEventListener('DOMContentLoaded', function() {
             // Update cart count on page load
             updateCartCount();
@@ -508,90 +472,92 @@ $featured_pizzas = array_slice($pizza->getAllPizzas(), 0, 6);
         }
 
         function addToCart(pizzaId, size = "medium", quantity = 1) {
+            // Check if user is logged in first
             if (!isUserLoggedIn()) {
                 showNotification("Please log in to add items to your cart", "warning");
                 return false;
             }
-            const cart = JSON.parse(localStorage.getItem("crustPizzaCart")) || [];
-            const pizzas = {
-                1: {
-                    name: 'Peri Peri Chicken',
-                    prices: {
-                        small: 18.90,
-                        medium: 24.90,
-                        large: 32.90
-                    }
-                },
-                2: {
-                    name: 'Mediterranean Delight',
-                    prices: {
-                        small: 17.90,
-                        medium: 23.90,
-                        large: 31.90
-                    }
-                },
-                3: {
-                    name: 'Plant-Based Supreme',
-                    prices: {
-                        small: 19.90,
-                        medium: 25.90,
-                        large: 33.90
-                    }
-                }
-            };
 
-            const pizza = pizzas[pizzaId];
-            if (!pizza) return false;
-
-            // Create cart item object
-            const cartItem = {
-                id: pizzaId,
-                name: pizza.name,
-                size: size,
-                price: pizza.prices[size],
-                quantity: quantity,
-                added_at: new Date().toISOString(),
-                item_type: "pizza",
-            };
-
-            // Check if item already exists in cart
-            const existingItemIndex = cart.findIndex((item) =>
-                item.id == pizzaId && item.size === size
-            );
-
-            if (existingItemIndex > -1) {
-                // Update quantity if item exists
-                cart[existingItemIndex].quantity += quantity;
-                showNotification(`Updated ${size} ${pizza.name} quantity in cart`, "success");
-            } else {
-                // Add new item to cart
-                cart.push(cartItem);
-                showNotification(`${pizza.name} (${size}) added to cart!`, "success");
+            // Get pizza details from the card
+            const pizzaCard = document.querySelector(`[data-price-small][data-price-medium][data-price-large]`);
+            if (!pizzaCard) {
+                showNotification('Pizza details not found', 'error');
+                return false;
             }
 
-            // Save to localStorage
-            localStorage.setItem("crustPizzaCart", JSON.stringify(cart));
+            const pizzaName = pizzaCard.querySelector('h3').textContent;
+            const priceData = {
+                small: parseFloat(pizzaCard.dataset.priceSmall),
+                medium: parseFloat(pizzaCard.dataset.priceMedium),
+                large: parseFloat(pizzaCard.dataset.priceLarge)
+            };
 
-            // Update cart count display
-            updateCartCount();
+            const cartItem = {
+                pizza_id: pizzaId,
+                name: pizzaName,
+                size: size,
+                price: priceData[size],
+                quantity: quantity,
+                item_type: 'pizza',
+                custom_ingredients: null,
+                special_instructions: null
+            };
+
+            const userId = getUserId();
+            if (!userId) {
+                showNotification('User session not found. Please log in again.', 'error');
+                return false;
+            }
+
+            const data = {
+                ...cartItem,
+                user_id: userId,
+                csrf_token: getCSRFToken()
+            };
+
+            fetch('api/cart_api.php?action=add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        updateCartCount();
+                        showNotification(`${pizzaName} (${size}) added to cart!`, 'success');
+                    } else {
+                        showNotification(result.message || 'Failed to add item to cart', 'error');
+                    }
+                })
+                .catch(error => {
+                    showNotification('An error occurred while adding to cart', 'error');
+                    console.error('Error adding to cart:', error);
+                });
 
             return true;
         }
 
         function isUserLoggedIn() {
+            // Check if logout link exists (indicates user is logged in)
             const logoutLink = document.querySelector('a[href="logout.php"]');
             const loginLink = document.querySelector('a.dropdown-item[href="login.php"]');
 
+            // User is logged in if logout link exists and login link doesn't
             return logoutLink !== null && loginLink === null;
         }
 
         function showNotification(message, type = "info") {
+            // Remove existing notifications
             const existingNotifications = document.querySelectorAll(".cart-notification");
             existingNotifications.forEach((notification) => notification.remove());
 
+            // Create notification element
             const notification = document.createElement("div");
             notification.className = `cart-notification ${type}`;
 
+            // Set icon based on notification type
             let icon = 'info-circle';
             if (type === 'success') icon = 'check-circle';
             if (type === 'error') icon = 'exclamation-circle';
@@ -604,6 +570,7 @@ $featured_pizzas = array_slice($pizza->getAllPizzas(), 0, 6);
 
             document.body.appendChild(notification);
 
+            // Auto remove after 3 seconds
             setTimeout(() => {
                 notification.classList.add("slide-out");
                 setTimeout(() => {
@@ -613,8 +580,21 @@ $featured_pizzas = array_slice($pizza->getAllPizzas(), 0, 6);
                 }, 300);
             }, 3000);
         }
+
+        function getUserId() {
+            // Retrieve user ID from session or localStorage
+            // This is a placeholder - implement your actual logic
+            return 1; // Example: return a hardcoded user ID
+        }
+
+        function getCSRFToken() {
+            // Retrieve CSRF token from a hidden field or session
+            // This is a placeholder - implement your actual logic
+            return 'your_csrf_token'; // Example: return a hardcoded token
+        }
     </script>
     <style>
+        /* Cart notification styles */
         .cart-notification {
             position: fixed;
             top: 100px;

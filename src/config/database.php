@@ -1,4 +1,7 @@
 <?php
+// Define the base path to the project root
+define('BASE_PATH', dirname(__DIR__) . DIRECTORY_SEPARATOR);
+
 class Database
 {
     private $host = 'localhost';
