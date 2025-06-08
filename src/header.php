@@ -94,12 +94,14 @@ $current_page = basename($_SERVER['PHP_SELF']);
                         <?php endif; ?>
                     </div>
                 </div>
-                <a href="cart.php" class="nav-link cart-link">
-                    <i class="fas fa-shopping-cart"></i>
-                    <?php if (isLoggedIn()): ?>
-                        <span class="cart-count" id="cartCount">0</span>
-                    <?php endif; ?>
-                </a>
+                <?php if (!isStaff()): ?>
+                    <a href="cart.php" class="nav-link cart-link">
+                        <i class="fas fa-shopping-cart"></i>
+                        <?php if (isLoggedIn() && !isStaff()): ?>
+                            <span class="cart-count" id="cartCount">0</span>
+                        <?php endif; ?>
+                    </a>
+                <?php endif; ?>
             </div>
         </div>
     </nav>

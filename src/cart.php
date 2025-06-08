@@ -25,10 +25,12 @@ if (!isLoggedIn()) {
                 </div>
                 <h2 style="color: #333; margin-bottom: 1rem;">Login Required</h2>
                 <p style="color: #666; margin-bottom: 2rem;">You need to be logged in to view your cart. Redirecting to login page...</p>
-                <div style="display: #ff6b35; align-items: center; gap: 10px; color                    <i class="fas fa-spinner fa-spinner"></i>
-                    <span>Redirecting in <span id="countdown">3</span> seconds</span>
+                <div style="display: flex; align-items: center; gap: 10px; color: #ff6b35;">
+                    <i class="fas fa-spinner fa-spin"></i>
                 </div>
+                <span>Redirecting in <span id="countdown">3</span> seconds</span>
             </div>
+        </div>
         </div>
 
         <script>
@@ -46,7 +48,8 @@ if (!isLoggedIn()) {
             }, 1000);
         </script>
     </body>
-</html>
+
+    </html>
 <?php
     exit();
 }
@@ -56,11 +59,11 @@ if (!isLoggedIn()) {
 <html lang="en">
 
 <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale="1.0">
-        <title>Shopping Cart - Crust Pizza</title>
-        <link rel="stylesheet" href="assets/css/cart.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=" 1.0">
+    <title>Shopping Cart - Crust Pizza</title>
+    <link rel="stylesheet" href="assets/css/cart.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body>
@@ -182,7 +185,10 @@ if (!isLoggedIn()) {
                     const csrfToken = document.querySelector('input[name="csrf_token"]')?.value;
 
                     if (!userId || !csrfToken) {
-                        console.error('Missing userId or csrfToken:', { userId, csrfToken });
+                        console.error('Missing userId or csrfToken:', {
+                            userId,
+                            csrfToken
+                        });
                         showNotification('Session error. Please log in again.', 'error');
                         setTimeout(() => window.location.href = 'login.php?redirect=cart.php', 2000);
                         return;
@@ -269,7 +275,7 @@ if (!isLoggedIn()) {
 
                         // Update cart summary
                         const tax = subtotal * 0.10; // 10% GST
-                        const deliveryFee = subtotal > 50 ? 0 : 5.00; // Example: Free delivery over $50
+                        const deliveryFee = subtotal > 50 ? 0 : 5.00;
                         const total = subtotal + tax + deliveryFee;
 
                         document.getElementById('cartSubtotal').textContent = `$${subtotal.toFixed(2)}`;
@@ -297,12 +303,12 @@ if (!isLoggedIn()) {
 
                         if (!result.success) {
                             console.error('API Error:', result.message);
-                            showNotification(result.message || 'Failed to load cart items.', 'error');
+                            // showNotification(result.message || 'Failed to load cart items.', 'error');
                         }
                     }
                 } catch (error) {
                     console.error('Error loading cart items:', error);
-                    showNotification('Failed to load cart items. Please try again.', 'error');
+                    // showNotification('Failed to load cart items. Please try again.', 'error');
                     document.getElementById('cartItems').innerHTML = '';
                     document.getElementById('emptyCartMessage').style.display = 'flex';
                     document.getElementById('cartContainer').style.display = 'none';
@@ -848,6 +854,7 @@ if (!isLoggedIn()) {
                 transform: translateX(100%);
                 opacity: 0;
             }
+
             to {
                 transform: translateX(0);
                 opacity: 1;
@@ -859,6 +866,7 @@ if (!isLoggedIn()) {
                 transform: translateX(0);
                 opacity: 1;
             }
+
             to {
                 transform: translateX(100%);
                 opacity: 0;
@@ -915,4 +923,5 @@ if (!isLoggedIn()) {
         }
     </style>
 </body>
+
 </html>

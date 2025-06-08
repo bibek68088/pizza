@@ -797,6 +797,7 @@
 
 2025-06-08 13:15:15 - Redirecting for role: customer
 2025-06-08 13:15:15 - Redirecting to: index.php
+<<<<<<< HEAD
 2025-06-08 13:18:55 - --- New request to login.php ---
 2025-06-08 13:18:55 - Session ID: an22jockhmoiior9if2eblck6g
 2025-06-08 13:18:55 - Session data before processing: Array
@@ -815,10 +816,31 @@
 (
     [csrf_token] => 03313e38c8f73948f6a37babecc4fac667436c2ec7f5545a18763b22098fb8aa
     [username] => kitchen1@crustpizza.com.au
+=======
+2025-06-08 13:24:25 - --- New request to login.php ---
+2025-06-08 13:24:25 - Session ID: 9f5551roj1smj4h2t6gkg53g7t
+2025-06-08 13:24:25 - Session data before processing: Array
+(
+    [csrf_token] => ab6b8f3fb29505fde80ddab08fa09835ad325e7e15b4238e7881ef263d7c8f44
+)
+
+2025-06-08 13:24:30 - --- New request to login.php ---
+2025-06-08 13:24:30 - Session ID: 9f5551roj1smj4h2t6gkg53g7t
+2025-06-08 13:24:30 - Session data before processing: Array
+(
+    [csrf_token] => ab6b8f3fb29505fde80ddab08fa09835ad325e7e15b4238e7881ef263d7c8f44
+)
+
+2025-06-08 13:24:30 - POST request received: Array
+(
+    [csrf_token] => ab6b8f3fb29505fde80ddab08fa09835ad325e7e15b4238e7881ef263d7c8f44
+    [username] => bibeks337@gmail.com
+>>>>>>> bb31561702464354ab0f25413f7d8175a10d2889
     [password] => password123
     [login] => 1
 )
 
+<<<<<<< HEAD
 2025-06-08 13:19:02 - Username: kitchen1@crustpizza.com.au
 2025-06-08 13:19:03 - Login successful for user ID: 3
 2025-06-08 13:19:03 - Session data set: Array
@@ -1060,3 +1082,18 @@
 
 2025-06-08 15:01:07 - Redirecting for role: counter
 2025-06-08 15:01:07 - Redirecting to: staff/counter/dashboard.php
+=======
+2025-06-08 13:24:30 - Username: bibeks337@gmail.com
+2025-06-08 13:24:30 - Login successful for user ID: 6
+2025-06-08 13:24:30 - Session data set: Array
+(
+    [csrf_token] => ab6b8f3fb29505fde80ddab08fa09835ad325e7e15b4238e7881ef263d7c8f44
+    [user_id] => 6
+    [username] => bibek
+    [full_name] => Bibek Tamang
+    [role] => customer
+)
+
+2025-06-08 13:24:30 - Redirecting for role: customer
+2025-06-08 13:24:30 - Redirecting to: index.php
+>>>>>>> bb31561702464354ab0f25413f7d8175a10d2889

@@ -12,14 +12,12 @@ require_once 'header.php';
 $search = isset($_GET['search']) ? sanitizeInput($_GET['search']) : '';
 $category = isset($_GET['category']) ? (int)$_GET['category'] : '';
 
-// Get pizzas based on search/filter
-if (!empty($search)) {
-    $pizzas = $pizza->searchPizzas($search);
-} elseif (!empty($category)) {
-    $pizzas = $pizza->getPizzasByCategory($category);
-} else {
-    $pizzas = $pizza->getAllPizzas();
-}
+// Get pizzas based on search/filter using the consistent getAllPizzas method
+$page = 1;
+$limit = 50; // Show more pizzas per page for menu
+
+$result = $pizza->getAllPizzas($page, $limit, $search, $category);
+$pizzas = $result['pizzas'];
 
 // Get categories for filter
 $categories_query = "SELECT * FROM categories WHERE is_active = 1 ORDER BY name";
@@ -58,12 +56,39 @@ $categories = $categories_stmt->fetchAll(PDO::FETCH_ASSOC);
         <!-- Flash Messages -->
         <?php displayFlashMessages(); ?>
 
+        <!-- Results Info -->
+        <?php if (!empty($search) || !empty($category)): ?>
+            <div class="results-info" style="margin-bottom: 20px; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                <?php
+                $resultCount = count($pizzas);
+                if (!empty($search) && !empty($category)) {
+                    echo "Found {$resultCount} pizza(s) matching '{$search}' in selected category";
+                } elseif (!empty($search)) {
+                    echo "Found {$resultCount} pizza(s) matching '{$search}'";
+                } elseif (!empty($category)) {
+                    $categoryName = '';
+                    foreach ($categories as $cat) {
+                        if ($cat['category_id'] == $category) {
+                            $categoryName = $cat['name'];
+                            break;
+                        }
+                    }
+                    echo "Showing {$resultCount} pizza(s) in category: {$categoryName}";
+                }
+                ?>
+            </div>
+        <?php endif; ?>
+
         <!-- Pizza Grid -->
         <?php if (empty($pizzas)): ?>
             <div class="text-center" style="padding: 40px;">
                 <h3>No pizzas found</h3>
-                <p>Try adjusting your search or filter criteria.</p>
-                <a href="menu.php" class="btn btn-primary">View All Pizzas</a>
+                <?php if (!empty($search) || !empty($category)): ?>
+                    <p>Try adjusting your search or filter criteria.</p>
+                    <a href="menu.php" class="btn btn-primary">View All Pizzas</a>
+                <?php else: ?>
+                    <p>No pizzas are currently available.</p>
+                <?php endif; ?>
             </div>
         <?php else: ?>
             <div class="pizza-grid">
@@ -79,14 +104,38 @@ $categories = $categories_stmt->fetchAll(PDO::FETCH_ASSOC);
                     $price_small = isset($pizza_item['base_price_small']) ? (float)$pizza_item['base_price_small'] : 15.90;
                     $price_medium = isset($pizza_item['base_price_medium']) ? (float)$pizza_item['base_price_medium'] : 21.90;
                     $price_large = isset($pizza_item['base_price_large']) ? (float)$pizza_item['base_price_large'] : 27.90;
+
+                    // Additional info for display
+                    $category_name = isset($pizza_item['category_name']) ? htmlspecialchars($pizza_item['category_name']) : '';
+                    $ingredient_list = isset($pizza_item['ingredient_list']) ? htmlspecialchars($pizza_item['ingredient_list']) : '';
+                    $is_featured = isset($pizza_item['is_featured']) && $pizza_item['is_featured'] == 1;
+                    $is_vegan = isset($pizza_item['is_vegan']) && $pizza_item['is_vegan'] == 1;
                     ?>
                     <div class="pizza-card" data-price-small="<?php echo $price_small; ?>" data-price-medium="<?php echo $price_medium; ?>" data-price-large="<?php echo $price_large; ?>">
+                        <?php if ($is_featured): ?>
+                            <div class="featured-badge">Featured</div>
+                        <?php endif; ?>
+
                         <div class="pizza-image">
-                            <img src="<?php echo $image_url; ?>" alt="<?php echo $name; ?>">
+                            <img src="<?php echo $image_url; ?>" alt="<?php echo $name; ?>" loading="lazy">
+                            <?php if ($is_vegan): ?>
+                                <div class="vegan-badge">🌱 Vegan</div>
+                            <?php endif; ?>
                         </div>
+
                         <div class="pizza-info">
-                            <h3><?php echo $name; ?></h3>
-                            <p><?php echo $description; ?></p>
+                            <div class="pizza-header">
+                                <h3><?php echo $name; ?></h3>
+                                <?php if (!empty($category_name)): ?>
+                                    <span class="category-tag"><?php echo $category_name; ?></span>
+                                <?php endif; ?>
+                            </div>
+
+                            <p class="pizza-description"><?php echo $description; ?></p>
+
+                            <?php if (!empty($ingredient_list)): ?>
+                                <p class="ingredients"><strong>Ingredients:</strong> <?php echo $ingredient_list; ?></p>
+                            <?php endif; ?>
 
                             <div class="pizza-options" style="margin-bottom: 15px;">
                                 <label for="size-<?php echo $pizza_id; ?>">Size:</label>
@@ -127,6 +176,29 @@ $categories = $categories_stmt->fetchAll(PDO::FETCH_ASSOC);
         // Update cart count on page load
         updateCartCount();
 
+        // Update price when size changes
+        document.querySelectorAll('.size-selector').forEach(selector => {
+            selector.addEventListener('change', function() {
+                const pizzaCard = this.closest('.pizza-card');
+                const size = this.value;
+                const priceElement = pizzaCard.querySelector('.current-price');
+
+                let price;
+                switch (size) {
+                    case 'small':
+                        price = parseFloat(pizzaCard.dataset.priceSmall);
+                        break;
+                    case 'large':
+                        price = parseFloat(pizzaCard.dataset.priceLarge);
+                        break;
+                    default:
+                        price = parseFloat(pizzaCard.dataset.priceMedium);
+                }
+
+                priceElement.textContent = formatCurrency(price);
+            });
+        });
+
         // Add loading animation to Add to Cart buttons
         document.querySelectorAll('.btn-primary').forEach(button => {
             button.addEventListener('click', function() {
@@ -143,6 +215,10 @@ $categories = $categories_stmt->fetchAll(PDO::FETCH_ASSOC);
             });
         });
     });
+
+    function formatCurrency(amount) {
+        return '$' + parseFloat(amount).toFixed(2);
+    }
 
     function addToCartFromMenu(pizzaId) {
         // Check if user is logged in first
@@ -253,7 +329,10 @@ $categories = $categories_stmt->fetchAll(PDO::FETCH_ASSOC);
     function updateCartCount() {
         const cart = JSON.parse(localStorage.getItem('crustPizzaCart')) || [];
         const cartCount = cart.reduce((total, item) => total + (item.quantity || 1), 0);
-        document.getElementById('cartCount').textContent = cartCount;
+        const cartCountElement = document.getElementById('cartCount');
+        if (cartCountElement) {
+            cartCountElement.textContent = cartCount;
+        }
     }
 
     function toggleDropdown() {
@@ -273,19 +352,31 @@ $categories = $categories_stmt->fetchAll(PDO::FETCH_ASSOC);
         const dropdownMenu = document.getElementById('dropdownMenu');
         const navMenu = document.getElementById('navMenu');
         const navToggle = document.querySelector('.nav-toggle');
-        if (!dropdown.contains(event.target) && !navToggle.contains(event.target)) {
+
+        if (dropdown && dropdownMenu && !dropdown.contains(event.target)) {
             dropdownMenu.classList.remove('show');
-            navMenu.classList.remove('active');
             document.querySelector('.dropdown-toggle').setAttribute('aria-expanded', 'false');
+        }
+
+        if (navMenu && navToggle && !navToggle.contains(event.target)) {
+            navMenu.classList.remove('active');
         }
     });
 
     // Close dropdown and nav menu on Escape key
     document.addEventListener('keydown', function(event) {
         if (event.key === 'Escape') {
-            document.getElementById('dropdownMenu').classList.remove('show');
-            document.getElementById('navMenu').classList.remove('active');
-            document.querySelector('.dropdown-toggle').setAttribute('aria-expanded', 'false');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            const navMenu = document.getElementById('navMenu');
+
+            if (dropdownMenu) {
+                dropdownMenu.classList.remove('show');
+                document.querySelector('.dropdown-toggle').setAttribute('aria-expanded', 'false');
+            }
+
+            if (navMenu) {
+                navMenu.classList.remove('active');
+            }
         }
     });
 
@@ -306,6 +397,153 @@ $categories = $categories_stmt->fetchAll(PDO::FETCH_ASSOC);
 </script>
 
 <style>
+    /* Pizza grid and card styles */
+    .pizza-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 30px;
+        margin-top: 30px;
+    }
+
+    .pizza-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        position: relative;
+    }
+
+    .pizza-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .featured-badge {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        background: linear-gradient(45deg, #ff6b35, #ff8c42);
+        color: white;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        z-index: 2;
+    }
+
+    .pizza-image {
+        position: relative;
+        height: 250px;
+        overflow: hidden;
+    }
+
+    .pizza-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .pizza-card:hover .pizza-image img {
+        transform: scale(1.05);
+    }
+
+    .vegan-badge {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        background: rgba(76, 175, 80, 0.9);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: bold;
+    }
+
+    .pizza-info {
+        padding: 25px;
+    }
+
+    .pizza-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 10px;
+    }
+
+    .pizza-header h3 {
+        margin: 0;
+        color: #333;
+        font-size: 1.4rem;
+        font-weight: bold;
+    }
+
+    .category-tag {
+        background: #f8f9fa;
+        color: #6c757d;
+        padding: 4px 8px;
+        border-radius: 10px;
+        font-size: 0.8rem;
+        white-space: nowrap;
+    }
+
+    .pizza-description {
+        color: #666;
+        margin-bottom: 15px;
+        line-height: 1.5;
+    }
+
+    .ingredients {
+        font-size: 0.9rem;
+        color: #777;
+        margin-bottom: 15px;
+        line-height: 1.5;
+    }
+
+    .pizza-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .pizza-actions .btn {
+        flex: 1;
+        text-align: center;
+        padding: 12px;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+        background: linear-gradient(45deg, #ff6b35, #ff8c42);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(45deg, #e55a2b, #e57a32);
+        transform: translateY(-2px);
+    }
+
+    .btn-outline {
+        background: transparent;
+        color: #ff6b35;
+        border: 2px solid #ff6b35;
+    }
+
+    .btn-outline:hover {
+        background: #ff6b35;
+        color: white;
+    }
+
+    .results-info {
+        font-style: italic;
+        color: #666;
+    }
+
     /* Notification styles */
     .cart-notification {
         position: fixed;
@@ -364,6 +602,24 @@ $categories = $categories_stmt->fetchAll(PDO::FETCH_ASSOC);
         to {
             transform: translateX(100%);
             opacity: 0;
+        }
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+        .pizza-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .filter-form {
+            flex-direction: column;
+            align-items: stretch !important;
+        }
+
+        .search-box input,
+        .category-filter select {
+            width: 100% !important;
         }
     }
 </style>
