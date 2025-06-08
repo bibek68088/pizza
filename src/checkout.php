@@ -1,94 +1,161 @@
 <?php
 
+/**
+ * Checkout Page
+ * Process orders and handle payments
+ * Crust Pizza Online Ordering System
+ */
+
 require_once 'config/database.php';
 require_once 'classes/Order.php';
 require_once 'classes/User.php';
+require_once 'classes/Cart.php';
 require_once 'includes/functions.php';
 
 startSession();
 
 // Redirect if not logged in
 if (!isLoggedIn()) {
-    setFlashMessage('Please log in to place an order', 'warning');
-    redirect('login.php?redirect=checkout.php');
+    header('Location: login.php?redirect=checkout.php');
+    exit();
 }
 
 $database = new Database();
 $db = $database->getConnection();
 $order = new Order($db);
 $user = new User($db);
+$cart = new Cart($db);
 
-// Get user details
-$user->getUserById($_SESSION['user_id']);
+// Get user details with proper error handling
+$user_id = $_SESSION['user_id'];
+$user_details = $user->getUserById($user_id);
 
-$error = '';
-$success = '';
+// Get user's cart items
+$cart_items = $cart->getUserCart($user_id);
+$cart_total = $cart->getCartTotal($user_id);
 
-// Handle order submission
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['place_order'])) {
-    $order_type = sanitizeInput($_POST['order_type']);
-    $payment_method = sanitizeInput($_POST['payment_method']);
-    $delivery_address = sanitizeInput($_POST['delivery_address']);
-    $delivery_instructions = sanitizeInput($_POST['delivery_instructions']);
-    $customer_name = sanitizeInput($_POST['customer_name']);
-    $customer_phone = sanitizeInput($_POST['customer_phone']);
-    $customer_email = sanitizeInput($_POST['customer_email']);
+// If cart is empty, redirect to cart page
+if (empty($cart_items)) {
+    setFlashMessage('Your cart is empty. Please add items before checkout.', 'warning');
+    header('Location: cart.php');
+    exit();
+}
 
-    // Get cart from session/localStorage (simulated)
-    $cart_items = json_decode($_POST['cart_data'], true);
+// If user details not found, set defaults
+if (!$user_details || !is_array($user_details)) {
+    $user_details = [
+        'first_name' => '',
+        'last_name' => '',
+        'email' => $_SESSION['email'] ?? '',
+        'phone' => '',
+        'address' => '',
+        'suburb' => '',
+        'state' => '',
+        'postcode' => ''
+    ];
+}
 
-    if (empty($cart_items)) {
-        $error = 'Your cart is empty';
-    } else {
-        // Calculate totals
-        $subtotal = 0;
-        foreach ($cart_items as $item) {
-            $subtotal += $item['price'] * $item['quantity'];
+// Process order submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    try {
+        // Get form data
+        $order_type = sanitizeInput($_POST['order_type']);
+        $payment_method = sanitizeInput($_POST['payment_method']);
+        $customer_name = sanitizeInput($_POST['customer_name']);
+        $customer_phone = sanitizeInput($_POST['customer_phone']);
+        $customer_email = sanitizeInput($_POST['customer_email']);
+
+        // Address fields (only for delivery)
+        $delivery_address = '';
+        if ($order_type === 'delivery') {
+            $street = sanitizeInput($_POST['street']);
+            $suburb = sanitizeInput($_POST['suburb']);
+            $postcode = sanitizeInput($_POST['postcode']);
+            $state = sanitizeInput($_POST['state']);
+            $delivery_address = "$street, $suburb, $state $postcode";
         }
 
+        $special_instructions = sanitizeInput($_POST['special_instructions'] ?? '');
+
+        // Calculate totals
+        $subtotal = floatval($cart_total['subtotal']);
         $tax = $subtotal * 0.1;
-        $delivery_fee = ($order_type === 'delivery') ? ($subtotal > 30 ? 0 : 5.99) : 0;
+        $delivery_fee = ($order_type === 'delivery' && $subtotal < 30) ? 5.99 : 0;
         $total = $subtotal + $tax + $delivery_fee;
 
         // Create order
-        $order->user_id = $_SESSION['user_id'];
-        $order->store_id = 1;
+        // Set order properties
+        $order->user_id = $user_id;
+        $order->store_id = 1; // Default store ID
         $order->order_type = $order_type;
-        $order->subtotal = $subtotal;
-        $order->tax = $tax;
-        $order->delivery_fee = $delivery_fee;
-        $order->total = $total;
         $order->payment_method = $payment_method;
         $order->customer_name = $customer_name;
         $order->customer_phone = $customer_phone;
         $order->customer_email = $customer_email;
         $order->delivery_address = $delivery_address;
-        $order->delivery_instructions = $delivery_instructions;
+        $order->special_requests = $special_instructions;
+        $order->subtotal = $subtotal;
+        $order->tax = $tax;
+        $order->delivery_fee = $delivery_fee;
+        $order->discount_amount = 0; // No discount by default
+        $order->total = $total;
+        $order->priority = 'normal'; // Default priority
+        $order->estimated_prep_time = 30; // Default 30 minutes
 
+        // Create the order
         if ($order->create()) {
-            // Add order items
-            foreach ($cart_items as $item) {
-                $item_data = [
-                    'order_id' => $order->order_id,
-                    'item_type' => $item['type'] ?? 'pizza',
-                    'pizza_id' => (strpos($item['id'], 'pizza_') === 0) ? explode('_', $item['id'])[1] : null,
-                    'menu_item_id' => (strpos($item['id'], 'menu_') === 0) ? explode('_', $item['id'])[1] : null,
-                    'size' => $item['size'] ?? null,
-                    'quantity' => $item['quantity'],
-                    'unit_price' => $item['price'],
-                    'total_price' => $item['price'] * $item['quantity'],
-                    'special_instructions' => $item['specialInstructions'] ?? ''
-                ];
+            $order_id = $order->order_id;
 
-                $order->addOrderItem($item_data);
+            if ($order_id) {
+                // Process cart items
+                foreach ($cart_items as $item) {
+                    $pizza_id = null;
+                    $menu_item_id = null;
+
+                    // Extract IDs from database format
+                    if (!empty($item['pizza_id'])) {
+                        $pizza_id = $item['pizza_id'];
+                    } elseif (!empty($item['menu_item_id'])) {
+                        $menu_item_id = $item['menu_item_id'];
+                    }
+
+                    $item_data = [
+                        'order_id' => $order_id,
+                        'item_type' => $item['item_type'] ?? 'pizza',
+                        'pizza_id' => $pizza_id,
+                        'menu_item_id' => $menu_item_id,
+                        'size' => $item['size'] ?? null,
+                        'quantity' => $item['quantity'],
+                        'unit_price' => $item['unit_price'],
+                        'total_price' => $item['total_price'],
+                        'special_instructions' => $item['special_instructions'] ?? ''
+                    ];
+
+                    $order->addOrderItem($item_data);
+                }
+
+                // Clear user's cart after successful order
+                $cart->clearUserCart($user_id);
+
+                // Set success message and redirect
+                setFlashMessage('Order placed successfully! Order ID: #' . $order_id, 'success');
+                header('Location: order-confirmation.php?order_id=' . $order_id);
+                exit();
+            } else {
+                throw new Exception('Failed to create order');
             }
-
-            setFlashMessage('Order placed successfully! Order ID: ' . $order->order_id, 'success');
-            redirect('track-order.php?order_id=' . $order->order_id);
         } else {
-            $error = 'Error placing order. Please try again.';
+            throw new Exception('Failed to create order');
         }
+    } catch (Exception $e) {
+        setFlashMessage('Error processing order: ' . $e->getMessage(), 'error');
     }
+}
+
+// Helper function to safely get user data
+function getUserData($user_details, $key, $default = '')
+{
+    return isset($user_details[$key]) ? htmlspecialchars($user_details[$key]) : $default;
 }
 ?>
 
@@ -101,288 +168,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['place_order'])) {
     <title>Checkout - Crust Pizza</title>
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .checkout-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem 20px;
-        }
-
-        .checkout-grid {
-            display: grid;
-            grid-template-columns: 1fr 400px;
-            gap: 3rem;
-            margin-top: 2rem;
-        }
-
-        .checkout-section {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            margin-bottom: 2rem;
-        }
-
-        .section-header {
-            background: linear-gradient(135deg, #ff6b35, #f7931e);
-            color: white;
-            padding: 1.5rem 2rem;
-            font-size: 1.2rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .section-content {
-            padding: 2rem;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: #333;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 1rem;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            background: #f8f9fa;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: #ff6b35;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
-        }
-
-        .option-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-
-        .option-card {
-            border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 1.5rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: #f8f9fa;
-            text-align: center;
-            position: relative;
-        }
-
-        .option-card:hover {
-            border-color: #ff6b35;
-            background: white;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.15);
-        }
-
-        .option-card.selected {
-            border-color: #ff6b35;
-            background: linear-gradient(135deg, #fff5f2, #ffffff);
-            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.2);
-        }
-
-        .option-card input[type="radio"] {
-            position: absolute;
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .option-icon {
-            font-size: 2.5rem;
-            color: #ff6b35;
-            margin-bottom: 1rem;
-        }
-
-        .option-title {
-            font-weight: 600;
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
-            color: #333;
-        }
-
-        .option-description {
-            color: #666;
-            font-size: 0.9rem;
-        }
-
-        .payment-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-
-        .order-summary {
-            position: sticky;
-            top: 100px;
-        }
-
-        .summary-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .summary-item:last-child {
-            border-bottom: none;
-        }
-
-        .item-details {
-            flex: 1;
-        }
-
-        .item-name {
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 0.25rem;
-        }
-
-        .item-meta {
-            font-size: 0.9rem;
-            color: #666;
-        }
-
-        .item-price {
-            font-weight: 600;
-            color: #ff6b35;
-            font-size: 1.1rem;
-        }
-
-        .summary-totals {
-            background: #f8f9fa;
-            padding: 1.5rem;
-            border-radius: 10px;
-            margin-top: 1rem;
-        }
-
-        .total-line {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.75rem;
-            font-size: 1rem;
-        }
-
-        .total-line.final {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #ff6b35;
-            border-top: 2px solid #ff6b35;
-            padding-top: 0.75rem;
-            margin-top: 0.75rem;
-        }
-
-        .place-order-btn {
-            width: 100%;
-            background: linear-gradient(135deg, #ff6b35, #f7931e);
-            color: white;
-            border: none;
-            padding: 1.25rem 2rem;
-            border-radius: 12px;
-            font-size: 1.2rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-top: 1.5rem;
-        }
-
-        .place-order-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.4);
-        }
-
-        .place-order-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .delivery-note {
-            background: #e8f5e8;
-            border: 1px solid #4caf50;
-            border-radius: 8px;
-            padding: 1rem;
-            margin: 1rem 0;
-            color: #2e7d32;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .alert {
-            padding: 1rem 1.5rem;
-            border-radius: 10px;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .alert-error {
-            background: #ffebee;
-            border: 1px solid #f44336;
-            color: #c62828;
-        }
-
-        .alert-success {
-            background: #e8f5e8;
-            border: 1px solid #4caf50;
-            color: #2e7d32;
-        }
-
-        @media (max-width: 768px) {
-            .checkout-grid {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-
-            .order-summary {
-                position: static;
-                order: -1;
-            }
-
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-
-            .option-grid,
-            .payment-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .checkout-container {
-                padding: 1rem;
-            }
-        }
-    </style>
+    <script>
+        // Set login status for cart.js
+        const isLoggedIn = <?php echo isLoggedIn() ? 'true' : 'false'; ?>;
+    </script>
 </head>
 
-<body>
+<body class="<?php echo isLoggedIn() ? 'logged-in' : ''; ?>">
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
@@ -399,7 +191,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['place_order'])) {
                 <a href="build-pizza.php" class="nav-link">Build Your Pizza</a>
                 <a href="track-order.php" class="nav-link">Track Order</a>
                 <div class="dropdown">
-                    <button class="dropdown-toggle" onclick="toggleDropdown()" aria-label="User Menu" aria-expanded="false" title="User Menu">
+                    <button class="dropdown-toggle" onclick="toggleDropdown()" aria-label="User Menu" aria-expanded="false">
                         <span class="user-icon"><i class="fas fa-user"></i></span>
                         <span class="dropdown-arrow"></span>
                     </button>
@@ -410,176 +202,218 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['place_order'])) {
                 </div>
                 <a href="cart.php" class="nav-link cart-link">
                     <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-count" id="cartCount">0</span>
+                    <span class="cart-count" id="cartCount"><?php echo $cart_total['total_items'] ?? 0; ?></span>
                 </a>
             </div>
         </div>
     </nav>
 
-    <main style="margin-top: 80px;">
-        <div class="checkout-container">
-            <div class="page-header" style="text-align: center; margin-bottom: 2rem;">
-                <h1 style="font-size: 2.5rem; color: #333; margin-bottom: 0.5rem;">
-                    <i class="fas fa-credit-card" style="color: #ff6b35;"></i> Secure Checkout
-                </h1>
-                <p style="color: #666; font-size: 1.1rem;">Complete your order in just a few steps</p>
+    <main style="margin-top: 80px; padding: 40px 20px;">
+        <div class="container">
+            <div class="page-header">
+                <h1><i class="fas fa-credit-card"></i> Checkout</h1>
+                <p>Complete your order</p>
             </div>
 
-            <?php if ($error): ?>
-                <div class="alert alert-error">
-                    <i class="fas fa-exclamation-circle"></i>
-                    <?php echo $error; ?>
-                </div>
-            <?php endif; ?>
+            <?php displayFlashMessages(); ?>
 
-            <form method="POST" id="checkoutForm">
-                <div class="checkout-grid">
-                    <!-- Left Column - Order Details -->
-                    <div class="checkout-details">
-                        <!-- Customer Information -->
-                        <div class="checkout-section">
-                            <div class="section-header">
-                                <i class="fas fa-user"></i>
-                                Customer Information
-                            </div>
-                            <div class="section-content">
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label for="customer_name">Full Name *</label>
-                                        <input type="text" id="customer_name" name="customer_name" class="form-control"
-                                            value="<?php echo htmlspecialchars($user->full_name); ?>" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="customer_phone">Phone Number *</label>
-                                        <input type="tel" id="customer_phone" name="customer_phone" class="form-control"
-                                            value="<?php echo htmlspecialchars($user->phone); ?>" required>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="customer_email">Email Address *</label>
-                                    <input type="email" id="customer_email" name="customer_email" class="form-control"
-                                        value="<?php echo htmlspecialchars($user->email); ?>" required>
-                                </div>
+            <form id="checkoutForm" method="POST" style="display: grid; grid-template-columns: 1fr 400px; gap: 2rem; margin-top: 2rem;">
+                <!-- Order Details -->
+                <div class="checkout-details">
+                    <!-- Order Type -->
+                    <div class="card" style="margin-bottom: 2rem;">
+                        <div class="card-header">
+                            <h3><i class="fas fa-truck"></i> Order Type</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="order-type-options" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                <label class="option-card" style="padding: 1.5rem; border: 2px solid #ddd; border-radius: 12px; cursor: pointer; text-align: center; transition: all 0.3s ease;">
+                                    <input type="radio" name="order_type" value="delivery" checked style="margin-bottom: 1rem;">
+                                    <i class="fas fa-truck" style="font-size: 2rem; color: #ff6b35; margin-bottom: 0.5rem; display: block;"></i>
+                                    <strong>Delivery</strong>
+                                    <p style="margin: 0.5rem 0 0 0; color: #666; font-size: 0.9rem;">Delivered to your door</p>
+                                </label>
+                                <label class="option-card" style="padding: 1.5rem; border: 2px solid #ddd; border-radius: 12px; cursor: pointer; text-align: center; transition: all 0.3s ease;">
+                                    <input type="radio" name="order_type" value="pickup" style="margin-bottom: 1rem;">
+                                    <i class="fas fa-store" style="font-size: 2rem; color: #ff6b35; margin-bottom: 0.5rem; display: block;"></i>
+                                    <strong>Pickup</strong>
+                                    <p style="margin: 0.5rem 0 0 0; color: #666; font-size: 0.9rem;">Collect from store</p>
+                                </label>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Order Type -->
-                        <div class="checkout-section">
-                            <div class="section-header">
-                                <i class="fas fa-shipping-fast"></i>
-                                Order Type
-                            </div>
-                            <div class="section-content">
-                                <div class="option-grid">
-                                    <label class="option-card" for="delivery">
-                                        <input type="radio" name="order_type" value="delivery" id="delivery" checked>
-                                        <div class="option-icon">
-                                            <i class="fas fa-truck"></i>
-                                        </div>
-                                        <div class="option-title">Delivery</div>
-                                        <div class="option-description">Delivered to your door</div>
-                                    </label>
-                                    <label class="option-card" for="pickup">
-                                        <input type="radio" name="order_type" value="pickup" id="pickup">
-                                        <div class="option-icon">
-                                            <i class="fas fa-store"></i>
-                                        </div>
-                                        <div class="option-title">Pickup</div>
-                                        <div class="option-description">Collect from store</div>
-                                    </label>
+                    <!-- Customer Details -->
+                    <div class="card" style="margin-bottom: 2rem;">
+                        <div class="card-header">
+                            <h3><i class="fas fa-user"></i> Customer Details</h3>
+                        </div>
+                        <div class="card-body">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                                <div>
+                                    <label for="customer_name">Full Name *</label>
+                                    <input type="text" id="customer_name" name="customer_name" class="form-control"
+                                        value="<?php echo getUserData($user_details, 'first_name') . ' ' . getUserData($user_details, 'last_name'); ?>" required>
                                 </div>
+                                <div>
+                                    <label for="customer_phone">Phone Number *</label>
+                                    <input type="tel" id="customer_phone" name="customer_phone" class="form-control"
+                                        value="<?php echo getUserData($user_details, 'phone'); ?>" required>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="customer_email">Email Address *</label>
+                                <input type="email" id="customer_email" name="customer_email" class="form-control"
+                                    value="<?php echo getUserData($user_details, 'email'); ?>" required>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Delivery Address -->
-                        <div class="checkout-section" id="deliverySection">
-                            <div class="section-header">
-                                <i class="fas fa-map-marker-alt"></i>
-                                Delivery Address
-                            </div>
-                            <div class="section-content">
-                                <div class="form-group">
-                                    <label for="delivery_address">Address *</label>
-                                    <textarea id="delivery_address" name="delivery_address" class="form-control" rows="3"
-                                        placeholder="Enter your delivery address"><?php echo htmlspecialchars($user->address); ?></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label for="delivery_instructions">Delivery Instructions</label>
-                                    <textarea id="delivery_instructions" name="delivery_instructions" class="form-control" rows="2"
-                                        placeholder="e.g., Leave at front door, Ring doorbell"></textarea>
-                                </div>
-                                <div class="delivery-note">
-                                    <i class="fas fa-info-circle"></i>
-                                    Free delivery on orders over $30. Delivery fee: $5.99
-                                </div>
-                            </div>
+                    <!-- Delivery Address -->
+                    <div class="card delivery-section" style="margin-bottom: 2rem;">
+                        <div class="card-header">
+                            <h3><i class="fas fa-map-marker-alt"></i> Delivery Address</h3>
                         </div>
-
-                        <!-- Payment Method -->
-                        <div class="checkout-section">
-                            <div class="section-header">
-                                <i class="fas fa-credit-card"></i>
-                                Payment Method
+                        <div class="card-body">
+                            <div style="margin-bottom: 1rem;">
+                                <label for="street">Street Address *</label>
+                                <input type="text" id="street" name="street" class="form-control"
+                                    value="<?php echo getUserData($user_details, 'address'); ?>"
+                                    placeholder="123 Main Street" required>
                             </div>
-                            <div class="section-content">
-                                <div class="payment-grid">
-                                    <label class="option-card" for="cash">
-                                        <input type="radio" name="payment_method" value="cash" id="cash" checked>
-                                        <div class="option-icon">
-                                            <i class="fas fa-money-bill-wave"></i>
-                                        </div>
-                                        <div class="option-title">Cash on Delivery</div>
-                                        <div class="option-description">Pay when you receive</div>
-                                    </label>
-                                    <label class="option-card" for="card">
-                                        <input type="radio" name="payment_method" value="card" id="card">
-                                        <div class="option-icon">
-                                            <i class="fas fa-credit-card"></i>
-                                        </div>
-                                        <div class="option-title">Credit Card</div>
-                                        <div class="option-description">Pay on delivery</div>
-                                    </label>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 100px; gap: 1rem;">
+                                <div>
+                                    <label for="suburb">Suburb *</label>
+                                    <input type="text" id="suburb" name="suburb" class="form-control"
+                                        value="<?php echo getUserData($user_details, 'suburb'); ?>"
+                                        placeholder="Annandale" required>
+                                </div>
+                                <div>
+                                    <label for="state">State *</label>
+                                    <select id="state" name="state" class="form-control" required>
+                                        <option value="">Select State</option>
+                                        <option value="NSW" <?php echo (getUserData($user_details, 'state') === 'NSW') ? 'selected' : ''; ?>>NSW</option>
+                                        <option value="VIC" <?php echo (getUserData($user_details, 'state') === 'VIC') ? 'selected' : ''; ?>>VIC</option>
+                                        <option value="QLD" <?php echo (getUserData($user_details, 'state') === 'QLD') ? 'selected' : ''; ?>>QLD</option>
+                                        <option value="WA" <?php echo (getUserData($user_details, 'state') === 'WA') ? 'selected' : ''; ?>>WA</option>
+                                        <option value="SA" <?php echo (getUserData($user_details, 'state') === 'SA') ? 'selected' : ''; ?>>SA</option>
+                                        <option value="TAS" <?php echo (getUserData($user_details, 'state') === 'TAS') ? 'selected' : ''; ?>>TAS</option>
+                                        <option value="ACT" <?php echo (getUserData($user_details, 'state') === 'ACT') ? 'selected' : ''; ?>>ACT</option>
+                                        <option value="NT" <?php echo (getUserData($user_details, 'state') === 'NT') ? 'selected' : ''; ?>>NT</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="postcode">Postcode *</label>
+                                    <input type="text" id="postcode" name="postcode" class="form-control"
+                                        value="<?php echo getUserData($user_details, 'postcode'); ?>"
+                                        placeholder="2038" pattern="[0-9]{4}" required>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Right Column - Order Summary -->
-                    <div class="order-summary">
-                        <div class="checkout-section">
-                            <div class="section-header">
-                                <i class="fas fa-receipt"></i>
-                                Order Summary
+                    <!-- Payment Method -->
+                    <div class="card" style="margin-bottom: 2rem;">
+                        <div class="card-header">
+                            <h3><i class="fas fa-credit-card"></i> Payment Method</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="payment-options" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                <label class="option-card" style="padding: 1.5rem; border: 2px solid #ddd; border-radius: 12px; cursor: pointer; text-align: center; transition: all 0.3s ease;">
+                                    <input type="radio" name="payment_method" value="cash_on_delivery" checked style="margin-bottom: 1rem;">
+                                    <i class="fas fa-money-bill-wave" style="font-size: 2rem; color: #28a745; margin-bottom: 0.5rem; display: block;"></i>
+                                    <strong>Cash on Delivery</strong>
+                                    <p style="margin: 0.5rem 0 0 0; color: #666; font-size: 0.9rem;">Pay when you receive</p>
+                                </label>
+                                <label class="option-card" style="padding: 1.5rem; border: 2px solid #ddd; border-radius: 12px; cursor: pointer; text-align: center; transition: all 0.3s ease;">
+                                    <input type="radio" name="payment_method" value="card_on_delivery" style="margin-bottom: 1rem;">
+                                    <i class="fas fa-credit-card" style="font-size: 2rem; color: #007bff; margin-bottom: 0.5rem; display: block;"></i>
+                                    <strong>Card on Delivery</strong>
+                                    <p style="margin: 0.5rem 0 0 0; color: #666; font-size: 0.9rem;">Pay by card on delivery</p>
+                                </label>
                             </div>
-                            <div class="section-content">
-                                <div id="orderItems">
-                                    <!-- Order items will be populated here -->
-                                </div>
+                        </div>
+                    </div>
 
-                                <div class="summary-totals">
-                                    <div class="total-line">
-                                        <span>Subtotal:</span>
-                                        <span id="subtotal">$0.00</span>
-                                    </div>
-                                    <div class="total-line">
-                                        <span>GST (10%):</span>
-                                        <span id="tax">$0.00</span>
-                                    </div>
-                                    <div class="total-line">
-                                        <span>Delivery Fee:</span>
-                                        <span id="deliveryFee">$5.99</span>
-                                    </div>
-                                    <div class="total-line final">
-                                        <span>Total:</span>
-                                        <span id="total">$0.00</span>
-                                    </div>
-                                </div>
+                    <!-- Special Instructions -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-comment"></i> Special Instructions</h3>
+                        </div>
+                        <div class="card-body">
+                            <textarea name="special_instructions" placeholder="Any special requests for your order..."
+                                style="width: 100%; padding: 1rem; border: 2px solid #ddd; border-radius: 8px; resize: vertical;" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
 
-                                <input type="hidden" name="cart_data" id="cartData">
-                                <button type="submit" name="place_order" class="place-order-btn" id="placeOrderBtn">
-                                    <i class="fas fa-lock"></i> Place Secure Order
-                                </button>
+                <!-- Order Summary -->
+                <div class="order-summary">
+                    <div class="card" style="position: sticky; top: 2rem;">
+                        <div class="card-header">
+                            <h3><i class="fas fa-receipt"></i> Order Summary</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="orderItems" style="margin-bottom: 1.5rem;">
+                                <!-- Order items from database -->
+                                <?php foreach ($cart_items as $item): ?>
+                                    <div class="order-item" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid #eee;">
+                                        <div style="flex: 1;">
+                                            <div style="font-weight: 600;"><?php echo htmlspecialchars($item['item_name']); ?></div>
+                                            <?php if (!empty($item['size'])): ?>
+                                                <div style="font-size: 0.9rem; color: #666;">Size: <?php echo ucfirst(htmlspecialchars($item['size'])); ?></div>
+                                            <?php endif; ?>
+                                            <?php if (!empty($item['custom_ingredients'])): ?>
+                                                <div style="font-size: 0.8rem; color: #666;">Ingredients: <?php echo htmlspecialchars($item['custom_ingredients']); ?></div>
+                                            <?php endif; ?>
+                                            <div style="font-size: 0.9rem; color: #666;">Qty: <?php echo $item['quantity']; ?></div>
+                                        </div>
+                                        <div style="font-weight: 600; color: #ff6b35;">
+                                            <?php echo formatCurrency($item['total_price']); ?>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
                             </div>
+
+                            <hr>
+
+                            <div class="summary-details">
+                                <div class="summary-line">
+                                    <span>Subtotal:</span>
+                                    <span id="summarySubtotal"><?php echo formatCurrency($cart_total['subtotal'] ?? 0); ?></span>
+                                </div>
+                                <div class="summary-line">
+                                    <span>GST (10%):</span>
+                                    <span id="summaryTax"><?php echo formatCurrency(($cart_total['subtotal'] ?? 0) * 0.1); ?></span>
+                                </div>
+                                <div class="summary-line delivery-fee-line">
+                                    <span>Delivery Fee:</span>
+                                    <span id="summaryDeliveryFee"><?php echo formatCurrency(($cart_total['subtotal'] ?? 0) < 30 ? 5.99 : 0); ?></span>
+                                </div>
+                                <div class="delivery-note">
+                                    <small><i class="fas fa-info-circle"></i> Free delivery on orders over $30</small>
+                                </div>
+                                <hr>
+                                <div class="summary-line total-line">
+                                    <span><strong>Total:</strong></span>
+                                    <span id="summaryTotal"><strong><?php
+                                                                    $subtotal = $cart_total['subtotal'] ?? 0;
+                                                                    $tax = $subtotal * 0.1;
+                                                                    $delivery = $subtotal < 30 ? 5.99 : 0;
+                                                                    echo formatCurrency($subtotal + $tax + $delivery);
+                                                                    ?></strong></span>
+                                </div>
+                            </div>
+
+                            <!-- Hidden inputs for form submission -->
+                            <input type="hidden" name="subtotal" id="hiddenSubtotal" value="<?php echo $cart_total['subtotal'] ?? 0; ?>">
+                            <input type="hidden" name="tax" id="hiddenTax" value="<?php echo ($cart_total['subtotal'] ?? 0) * 0.1; ?>">
+                            <input type="hidden" name="delivery_fee" id="hiddenDeliveryFee" value="<?php echo ($cart_total['subtotal'] ?? 0) < 30 ? 5.99 : 0; ?>">
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem; font-size: 1.1rem; font-weight: 600;">
+                                <i class="fas fa-check"></i> Place Order
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -587,165 +421,117 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['place_order'])) {
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>Crust Pizza</h3>
-                    <p>Gourmet pizza delivered fresh since 2001</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Quick Links</h4>
-                    <ul>
-                        <li><a href="menu.php">Menu</a></li>
-                        <li><a href="build-pizza.php">Build Your Pizza</a></li>
-                        <li><a href="track-order.php">Track Order</a></li>
-                        <li><a href="contact.php">Contact Us</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Contact Info</h4>
-                    <p><i class="fas fa-phone"></i> 1300 CRUST (1300 278 787)</p>
-                    <p><i class="fas fa-envelope"></i> info@crustpizza.com.au</p>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 Crust Pizza. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-
     <script src="assets/js/main.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            loadOrderSummary();
-            setupOrderTypeToggle();
-            setupPaymentOptions();
-            updateCartCount();
+            setupFormHandlers();
         });
 
-        function loadOrderSummary() {
-            const cart = JSON.parse(localStorage.getItem('crustPizzaCart')) || [];
-            const orderItemsDiv = document.getElementById('orderItems');
-
-            if (cart.length === 0) {
-                window.location.href = 'cart.php';
-                return;
-            }
-
-            let itemsHTML = '';
-            let subtotal = 0;
-
-            cart.forEach(item => {
-                const itemTotal = item.price * item.quantity;
-                subtotal += itemTotal;
-
-                itemsHTML += `
-                    <div class="summary-item">
-                        <div class="item-details">
-                            <div class="item-name">${item.name}</div>
-                            <div class="item-meta">
-                                ${item.size ? `Size: ${item.size.charAt(0).toUpperCase() + item.size.slice(1)}` : ''}
-                                ${item.customIngredients ? `<br>Ingredients: ${item.customIngredients.join(', ')}` : ''}
-                                ${item.specialInstructions ? `<br>Instructions: ${item.specialInstructions}` : ''}
-                                <br>Qty: ${item.quantity}
-                            </div>
-                        </div>
-                        <div class="item-price">${formatCurrency(itemTotal)}</div>
-                    </div>
-                `;
+        function setupFormHandlers() {
+            // Order type change handler
+            document.querySelectorAll('input[name="order_type"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    updateOrderTotals();
+                    toggleDeliverySection();
+                    updateOptionCardStyles();
+                });
             });
 
-            orderItemsDiv.innerHTML = itemsHTML;
+            // Payment method change handler
+            document.querySelectorAll('input[name="payment_method"]').forEach(radio => {
+                radio.addEventListener('change', updateOptionCardStyles);
+            });
 
-            // Update totals
-            updateTotals(subtotal);
+            // Initial setup
+            toggleDeliverySection();
+            updateOptionCardStyles();
 
-            // Store cart data in hidden field
-            document.getElementById('cartData').value = JSON.stringify(cart);
+            // Form submission
+            document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+                // Show loading state
+                const submitBtn = this.querySelector('button[type="submit"]');
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                submitBtn.disabled = true;
+            });
         }
 
-        function updateTotals(subtotal) {
-            const tax = subtotal * 0.1;
+        function updateOrderTotals() {
             const orderType = document.querySelector('input[name="order_type"]:checked').value;
-            const deliveryFee = orderType === 'delivery' ? (subtotal > 30 ? 0 : 5.99) : 0;
+            const subtotal = <?php echo $cart_total['subtotal'] ?? 0; ?>;
+            const tax = subtotal * 0.1;
+            const deliveryFee = (orderType === 'delivery' && subtotal < 30) ? 5.99 : 0;
             const total = subtotal + tax + deliveryFee;
 
-            document.getElementById('subtotal').textContent = formatCurrency(subtotal);
-            document.getElementById('tax').textContent = formatCurrency(tax);
-            document.getElementById('deliveryFee').textContent = formatCurrency(deliveryFee);
-            document.getElementById('total').textContent = formatCurrency(total);
-        }
+            document.getElementById('summaryDeliveryFee').textContent = formatCurrency(deliveryFee);
+            document.getElementById('summaryTotal').textContent = formatCurrency(total);
+            document.getElementById('hiddenDeliveryFee').value = deliveryFee.toFixed(2);
 
-        function setupOrderTypeToggle() {
-            const orderTypeInputs = document.querySelectorAll('input[name="order_type"]');
-            const deliverySection = document.getElementById('deliverySection');
-
-            orderTypeInputs.forEach(input => {
-                input.addEventListener('change', function() {
-                    // Update option card selection
-                    document.querySelectorAll('.option-card').forEach(card => {
-                        card.classList.remove('selected');
-                    });
-                    this.closest('.option-card').classList.add('selected');
-
-                    // Show/hide delivery section
-                    if (this.value === 'delivery') {
-                        deliverySection.style.display = 'block';
-                        document.getElementById('delivery_address').required = true;
-                    } else {
-                        deliverySection.style.display = 'none';
-                        document.getElementById('delivery_address').required = false;
-                    }
-
-                    // Update totals
-                    const cart = JSON.parse(localStorage.getItem('crustPizzaCart')) || [];
-                    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-                    updateTotals(subtotal);
-                });
-            });
-
-            // Set initial state
-            document.querySelector('input[name="order_type"]:checked').closest('.option-card').classList.add('selected');
-        }
-
-        function setupPaymentOptions() {
-            const paymentInputs = document.querySelectorAll('input[name="payment_method"]');
-            paymentInputs.forEach(input => {
-                input.addEventListener('change', function() {
-                    // Update option card selection
-                    document.querySelectorAll('input[name="payment_method"]').forEach(radio => {
-                        radio.closest('.option-card').classList.remove('selected');
-                    });
-                    this.closest('.option-card').classList.add('selected');
-                });
-            });
-
-            // Set initial state
-            document.querySelector('input[name="payment_method"]:checked').closest('.option-card').classList.add('selected');
-        }
-
-        function updateCartCount() {
-            const cart = JSON.parse(localStorage.getItem('crustPizzaCart')) || [];
-            const cartCount = cart.reduce((total, item) => total + (item.quantity || 1), 0);
-            document.getElementById('cartCount').textContent = cartCount;
-        }
-
-        // Form submission
-        document.getElementById('checkoutForm').addEventListener('submit', function(e) {
-            const cart = JSON.parse(localStorage.getItem('crustPizzaCart')) || [];
-            if (cart.length === 0) {
-                e.preventDefault();
-                alert('Your cart is empty');
-                return;
+            // Show/hide delivery fee line
+            const deliveryFeeLine = document.querySelector('.delivery-fee-line');
+            const deliveryNote = document.querySelector('.delivery-note');
+            if (orderType === 'pickup') {
+                deliveryFeeLine.style.display = 'none';
+                deliveryNote.style.display = 'none';
+            } else {
+                deliveryFeeLine.style.display = 'flex';
+                deliveryNote.style.display = 'block';
             }
+        }
 
-            // Show loading state
-            const submitBtn = document.getElementById('placeOrderBtn');
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing Order...';
-        });
+        function toggleDeliverySection() {
+            const orderType = document.querySelector('input[name="order_type"]:checked').value;
+            const deliverySection = document.querySelector('.delivery-section');
+            const deliveryInputs = deliverySection.querySelectorAll('input, select');
+
+            if (orderType === 'delivery') {
+                deliverySection.style.display = 'block';
+                deliveryInputs.forEach(input => input.required = true);
+            } else {
+                deliverySection.style.display = 'none';
+                deliveryInputs.forEach(input => input.required = false);
+            }
+        }
+
+        function updateOptionCardStyles() {
+            // Update order type cards
+            document.querySelectorAll('input[name="order_type"]').forEach(radio => {
+                const card = radio.closest('.option-card');
+                if (radio.checked) {
+                    card.style.borderColor = '#ff6b35';
+                    card.style.backgroundColor = '#fff5f2';
+                    card.style.transform = 'translateY(-2px)';
+                    card.style.boxShadow = '0 8px 25px rgba(255, 107, 53, 0.2)';
+                } else {
+                    card.style.borderColor = '#ddd';
+                    card.style.backgroundColor = 'white';
+                    card.style.transform = 'translateY(0)';
+                    card.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+                }
+            });
+
+            // Update payment method cards
+            document.querySelectorAll('input[name="payment_method"]').forEach(radio => {
+                const card = radio.closest('.option-card');
+                if (radio.checked) {
+                    card.style.borderColor = '#ff6b35';
+                    card.style.backgroundColor = '#fff5f2';
+                    card.style.transform = 'translateY(-2px)';
+                    card.style.boxShadow = '0 8px 25px rgba(255, 107, 53, 0.2)';
+                } else {
+                    card.style.borderColor = '#ddd';
+                    card.style.backgroundColor = 'white';
+                    card.style.transform = 'translateY(0)';
+                    card.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+                }
+            });
+        }
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-AU', {
+                style: 'currency',
+                currency: 'AUD'
+            }).format(amount);
+        }
 
         function toggleDropdown() {
             const dropdownMenu = document.getElementById('dropdownMenu');
@@ -780,6 +566,73 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['place_order'])) {
             }
         });
     </script>
+
+    <style>
+        .summary-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            padding: 0.25rem 0;
+        }
+
+        .total-line {
+            font-size: 1.2rem;
+            padding: 0.5rem 0;
+            border-top: 2px solid #ff6b35;
+            margin-top: 0.5rem;
+        }
+
+        .total-line span {
+            color: #ff6b35;
+        }
+
+        .delivery-note {
+            margin: 0.5rem 0;
+            padding: 0.5rem;
+            background: #e8f5e8;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .delivery-note small {
+            color: #28a745;
+            font-weight: 500;
+        }
+
+        .option-card {
+            transition: all 0.3s ease;
+        }
+
+        .option-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        @media (max-width: 768px) {
+            form {
+                grid-template-columns: 1fr !important;
+                gap: 1.5rem !important;
+            }
+
+            .order-summary {
+                order: -1;
+            }
+
+            .order-type-options,
+            .payment-options {
+                grid-template-columns: 1fr !important;
+            }
+
+            .card {
+                margin-bottom: 1.5rem !important;
+            }
+        }
+    </style>
 </body>
 
 </html>

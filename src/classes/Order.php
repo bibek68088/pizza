@@ -1,7 +1,8 @@
 <?php
-require_once 'config/database.php';
+require_once BASE_PATH . 'config/database.php';
 
-class Order {
+class Order
+{
     private $conn;
     private $table_name = "orders";
 
@@ -33,18 +34,18 @@ class Order {
     public $rating;
     public $review;
 
-    public function __construct($db = null) {
+    public function __construct($db = null)
+    {
         $this->conn = $db ?: Database::getInstance()->getConnection();
     }
 
     // Create new order
-    public function create() {
+    public function create()
+    {
         try {
             $this->conn->beginTransaction();
-            
-            // Generate unique order number
-            $this->order_number = generateOrderNumber();
-            
+            $this->order_number = $this->generateOrderNumber();
+
             $query = "INSERT INTO " . $this->table_name . " 
                       SET order_number=:order_number, user_id=:user_id, store_id=:store_id, 
                           order_type=:order_type, priority=:priority, subtotal=:subtotal, 
@@ -59,15 +60,15 @@ class Order {
             // Sanitize inputs
             $this->customer_name = htmlspecialchars(strip_tags($this->customer_name));
             $this->customer_phone = htmlspecialchars(strip_tags($this->customer_phone));
-            $this->customer_email = htmlspecialchars(strip_tags($this->customer_email));
-            $this->delivery_address = htmlspecialchars(strip_tags($this->delivery_address));
-            $this->delivery_instructions = htmlspecialchars(strip_tags($this->delivery_instructions));
-            $this->special_requests = htmlspecialchars(strip_tags($this->special_requests));
+            $this->customer_email = htmlspecialchars(strip_tags($this->customer_email ?? ''));
+            $this->delivery_address = htmlspecialchars(strip_tags($this->delivery_address ?? ''));
+            $this->delivery_instructions = htmlspecialchars(strip_tags($this->delivery_instructions ?? ''));
+            $this->special_requests = htmlspecialchars(strip_tags($this->special_requests ?? ''));
 
             // Bind parameters
             $stmt->bindParam(":order_number", $this->order_number);
-            $stmt->bindParam(":user_id", $this->user_id);
-            $stmt->bindParam(":store_id", $this->store_id);
+            $stmt->bindParam(":user_id", $this->user_id, PDO::PARAM_INT);
+            $stmt->bindParam(":store_id", $this->store_id, PDO::PARAM_INT);
             $stmt->bindParam(":order_type", $this->order_type);
             $stmt->bindParam(":priority", $this->priority);
             $stmt->bindParam(":subtotal", $this->subtotal);
@@ -81,23 +82,22 @@ class Order {
             $stmt->bindParam(":customer_email", $this->customer_email);
             $stmt->bindParam(":delivery_address", $this->delivery_address);
             $stmt->bindParam(":delivery_instructions", $this->delivery_instructions);
-            $stmt->bindParam(":estimated_prep_time", $this->estimated_prep_time);
+            $stmt->bindParam(":estimated_prep_time", $this->estimated_prep_time, PDO::PARAM_INT);
             $stmt->bindParam(":special_requests", $this->special_requests);
 
             if ($stmt->execute()) {
                 $this->order_id = $this->conn->lastInsertId();
-                
+
                 // Add initial status to history
                 $this->addStatusHistory('pending', null, 'Order created');
-                
+
                 $this->conn->commit();
                 logActivity('order_created', "Order {$this->order_number} created", $this->user_id);
                 return true;
             }
-            
+
             $this->conn->rollback();
             return false;
-            
         } catch (Exception $e) {
             $this->conn->rollback();
             error_log("Order creation failed: " . $e->getMessage());
@@ -105,25 +105,35 @@ class Order {
         }
     }
 
+    // Generate unique order number (placeholder implementation)
+    private function generateOrderNumber()
+    {
+        // This should be implemented based on your requirements
+        // Example: Combine timestamp and random string
+        return 'ORD' . date('YmdHis') . substr(uniqid(), -4);
+    }
+
     // Get order by ID
-    public function getOrderById($order_id) {
+    public function getOrderById($order_id)
+    {
         $query = "SELECT o.*, s.name as store_name, s.address as store_address, s.phone as store_phone,
-                         st.full_name as assigned_staff_name
+                         u.full_name as assigned_staff_name
                   FROM " . $this->table_name . " o
                   LEFT JOIN stores s ON o.store_id = s.store_id
-                  LEFT JOIN staff st ON o.assigned_staff_id = st.staff_id
+                  LEFT JOIN users u ON o.assigned_staff_id = u.user_id
                   WHERE o.order_id = :order_id
                   LIMIT 1";
 
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(":order_id", $order_id);
+        $stmt->bindParam(":order_id", $order_id, PDO::PARAM_INT);
         $stmt->execute();
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     // Get order by order number
-    public function getOrderByNumber($order_number) {
+    public function getOrderByNumber($order_number)
+    {
         $query = "SELECT o.*, s.name as store_name, s.address as store_address, s.phone as store_phone
                   FROM " . $this->table_name . " o
                   LEFT JOIN stores s ON o.store_id = s.store_id
@@ -138,7 +148,8 @@ class Order {
     }
 
     // Get orders by user ID
-    public function getOrdersByUserId($user_id, $limit = 20) {
+    public function getOrdersByUserId($user_id, $limit = 20)
+    {
         $query = "SELECT o.*, s.name as store_name
                   FROM " . $this->table_name . " o
                   LEFT JOIN stores s ON o.store_id = s.store_id
@@ -147,7 +158,7 @@ class Order {
                   LIMIT :limit";
 
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(":user_id", $user_id);
+        $stmt->bindParam(":user_id", $user_id, PDO::PARAM_INT);
         $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
         $stmt->execute();
 
@@ -155,21 +166,22 @@ class Order {
     }
 
     // Get orders by status with filtering
-    public function getOrdersByStatus($status, $store_id = null, $limit = 50) {
+    public function getOrdersByStatus($status, $store_id = null, $limit = 50)
+    {
         $whereConditions = ['o.status = :status'];
         $params = [':status' => $status];
-        
-        if ($store_id) {
+
+        if ($store_id !== null) {
             $whereConditions[] = 'o.store_id = :store_id';
             $params[':store_id'] = $store_id;
         }
-        
+
         $whereClause = 'WHERE ' . implode(' AND ', $whereConditions);
-        
-        $query = "SELECT o.*, s.name as store_name, st.full_name as assigned_staff_name
+
+        $query = "SELECT o.*, s.name as store_name, u.full_name as assigned_staff_name
                   FROM " . $this->table_name . " o
                   LEFT JOIN stores s ON o.store_id = s.store_id
-                  LEFT JOIN staff st ON o.assigned_staff_id = st.staff_id
+                  LEFT JOIN users u ON o.assigned_staff_id = u.user_id
                   $whereClause
                   ORDER BY o.priority DESC, o.created_at ASC
                   LIMIT :limit";
@@ -185,102 +197,81 @@ class Order {
     }
 
     // Get all orders with advanced filtering
-    public function getAllOrders($page = 1, $limit = 20, $filters = []) {
-        $offset = ($page - 1) * $limit;
-        
-        $whereConditions = [];
-        $params = [];
-        
-        // Apply filters
-        if (!empty($filters['status'])) {
-            $whereConditions[] = "o.status = :status";
-            $params[':status'] = $filters['status'];
-        }
-        
-        if (!empty($filters['order_type'])) {
-            $whereConditions[] = "o.order_type = :order_type";
-            $params[':order_type'] = $filters['order_type'];
-        }
-        
-        if (!empty($filters['store_id'])) {
-            $whereConditions[] = "o.store_id = :store_id";
-            $params[':store_id'] = $filters['store_id'];
-        }
-        
-        if (!empty($filters['date_from'])) {
-            $whereConditions[] = "DATE(o.created_at) >= :date_from";
-            $params[':date_from'] = $filters['date_from'];
-        }
-        
-        if (!empty($filters['date_to'])) {
-            $whereConditions[] = "DATE(o.created_at) <= :date_to";
-            $params[':date_to'] = $filters['date_to'];
-        }
-        
-        if (!empty($filters['search'])) {
-            $whereConditions[] = "(o.order_number LIKE :search OR o.customer_name LIKE :search OR o.customer_phone LIKE :search)";
-            $params[':search'] = "%{$filters['search']}%";
-        }
-        
-        $whereClause = !empty($whereConditions) ? 'WHERE ' . implode(' AND ', $whereConditions) : '';
-        
-        // Get total count
-        $countQuery = "SELECT COUNT(*) as total FROM " . $this->table_name . " o " . $whereClause;
-        $countStmt = $this->conn->prepare($countQuery);
-        $countStmt->execute($params);
-        $totalOrders = $countStmt->fetch()['total'];
-        
-        // Get orders
-        $query = "SELECT o.*, s.name as store_name, st.full_name as assigned_staff_name
+    public function getAllOrders($page = 1, $perPage = 20)
+    {
+        $offset = ($page - 1) * $perPage;
+
+        $query = "SELECT o.*, u.full_name as customer_name
                   FROM " . $this->table_name . " o
-                  LEFT JOIN stores s ON o.store_id = s.store_id
-                  LEFT JOIN staff st ON o.assigned_staff_id = st.staff_id
-                  $whereClause
+                  LEFT JOIN users u ON o.user_id = u.user_id
                   ORDER BY o.created_at DESC
                   LIMIT :limit OFFSET :offset";
 
         $stmt = $this->conn->prepare($query);
-        foreach ($params as $key => $value) {
-            $stmt->bindValue($key, $value);
-        }
-        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
         $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
         $stmt->execute();
 
+        $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Get total count
+        $countQuery = "SELECT COUNT(*) as total FROM " . $this->table_name;
+        $countStmt = $this->conn->prepare($countQuery);
+        $countStmt->execute();
+        $total = $countStmt->fetch(PDO::FETCH_ASSOC)['total'];
+
         return [
-            'orders' => $stmt->fetchAll(PDO::FETCH_ASSOC),
-            'total' => $totalOrders,
-            'pages' => ceil($totalOrders / $limit),
+            'orders' => $orders,
+            'total' => $total,
+            'pages' => ceil($total / $perPage),
             'current_page' => $page
         ];
     }
 
     // Update order status
-    public function updateStatus($order_id, $new_status, $staff_id = null, $notes = '') {
+    public function updateStatus($order_id, $new_status, $staff_id = null, $notes = '')
+    {
         try {
             $this->conn->beginTransaction();
+
+            // Validate status against allowed ENUM values
+            $validStatuses = [
+                'pending',
+                'confirmed',
+                'preparing',
+                'prepared',
+                'out_for_delivery',
+                'ready_for_pickup',
+                'delivered',
+                'delivery_failure',
+                'received_by_customer',
+                'cancelled'
+            ];
+            if (!in_array($new_status, $validStatuses)) {
+                throw new Exception("Invalid status: $new_status");
+            }
 
             // Update order status
             $query = "UPDATE " . $this->table_name . " 
                       SET status = :status, updated_at = NOW()";
-            
+
             // Update assigned staff if provided
             if ($staff_id) {
                 $query .= ", assigned_staff_id = :staff_id";
             }
-            
-            // Update delivery time for completed deliveries
-            if ($new_status === 'delivered') {
+
+            // Update delivery time for delivered or received_by_customer statuses
+            if (in_array($new_status, ['delivered', 'received_by_customer'])) {
                 $query .= ", actual_delivery_time = NOW()";
             }
-            
+
             $query .= " WHERE order_id = :order_id";
 
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(":status", $new_status);
-            $stmt->bindParam(":order_id", $order_id);
+            $stmt->bindParam(":order_id", $order_id, PDO::PARAM_INT);
             if ($staff_id) {
-                $stmt->bindParam(":staff_id", $staff_id);
+                $stmt->bindParam(":staff_id", $staff_id, PDO::PARAM_INT);
             }
             $stmt->execute();
 
@@ -290,7 +281,6 @@ class Order {
             $this->conn->commit();
             logActivity('order_status_updated', "Order status updated to $new_status", null, $staff_id);
             return true;
-
         } catch (Exception $e) {
             $this->conn->rollback();
             error_log("Order status update failed: " . $e->getMessage());
@@ -299,56 +289,110 @@ class Order {
     }
 
     // Add status history entry
-    private function addStatusHistory($status, $staff_id, $notes, $order_id = null) {
+    private function addStatusHistory($status, $staff_id, $notes, $order_id = null)
+    {
         $order_id = $order_id ?: $this->order_id;
-        
+
         $query = "INSERT INTO order_status_history 
                   SET order_id = :order_id, status = :status, 
                       changed_by = :changed_by, notes = :notes";
 
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(":order_id", $order_id);
+        $stmt->bindParam(":order_id", $order_id, PDO::PARAM_INT);
         $stmt->bindParam(":status", $status);
-        $stmt->bindParam(":changed_by", $staff_id);
+        $stmt->bindParam(":changed_by", $staff_id, PDO::PARAM_INT);
         $stmt->bindParam(":notes", $notes);
         $stmt->execute();
     }
 
     // Get order status history
-    public function getOrderStatusHistory($order_id) {
-        $query = "SELECT osh.*, s.full_name as staff_name
+    public function getOrderStatusHistory($order_id)
+    {
+        $query = "SELECT osh.*, u.full_name as staff_name
                   FROM order_status_history osh
-                  LEFT JOIN staff s ON osh.changed_by = s.staff_id
+                  LEFT JOIN users u ON osh.changed_by = u.user_id
                   WHERE osh.order_id = :order_id
                   ORDER BY osh.created_at ASC";
 
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(":order_id", $order_id);
+        $stmt->bindParam(":order_id", $order_id, PDO::PARAM_INT);
         $stmt->execute();
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     // Get order items
-    public function getOrderItems($order_id) {
-        $query = "SELECT oi.*, 
-                         p.name as pizza_name, p.description as pizza_description,
-                         mi.name as menu_item_name, mi.description as menu_item_description
+    public function getOrderItems($order_id)
+    {
+        $query = "SELECT oi.*, p.name as pizza_name, p.base_price_small, p.base_price_medium, p.base_price_large, 
+                         mi.name as menu_item_name, mi.price as menu_item_price
                   FROM order_items oi
                   LEFT JOIN pizzas p ON oi.pizza_id = p.pizza_id
                   LEFT JOIN menu_items mi ON oi.menu_item_id = mi.menu_item_id
-                  WHERE oi.order_id = :order_id
-                  ORDER BY oi.order_item_id";
+                  WHERE oi.order_id = :order_id";
 
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(":order_id", $order_id);
+        $stmt->bindValue(':order_id', $order_id, PDO::PARAM_INT);
         $stmt->execute();
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function update($order_id, $data)
+    {
+        try {
+            $query = "UPDATE " . $this->table_name . " 
+                      SET status=:status, delivery_address=:delivery_address, 
+                          special_requests=:special_requests, updated_at=NOW() 
+                      WHERE order_id=:order_id";
+            $stmt = $this->conn->prepare($query);
+
+            $status = htmlspecialchars(strip_tags($data['status']));
+            $delivery_address = htmlspecialchars(strip_tags($data['delivery_address']));
+            $special_requests = htmlspecialchars(strip_tags($data['special_requests']));
+
+            $stmt->bindParam(':status', $status);
+            $stmt->bindParam(':delivery_address', $delivery_address);
+            $stmt->bindParam(':special_requests', $special_requests);
+            $stmt->bindParam(':order_id', $order_id, PDO::PARAM_INT);
+
+            return $stmt->execute();
+        } catch (\Exception $e) {
+            error_log("Order update failed: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function delete($order_id)
+    {
+        try {
+            $this->conn->beginTransaction();
+
+            // Delete order items
+            $this->conn->prepare("DELETE FROM order_items WHERE order_id = :order_id")
+                ->execute(['order_id' => $order_id]);
+
+            // Delete order
+            $query = "DELETE FROM " . $this->table_name . " WHERE order_id = :order_id";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindValue(':order_id', $order_id, PDO::PARAM_INT);
+
+            if ($stmt->execute()) {
+                $this->conn->commit();
+                return true;
+            }
+            $this->conn->rollback();
+            return false;
+        } catch (\Exception $e) {
+            $this->conn->rollback();
+            error_log("Order deletion failed: " . $e->getMessage());
+            return false;
+        }
+    }
+
     // Add item to order
-    public function addOrderItem($item_data) {
+    public function addOrderItem($item_data)
+    {
         $query = "INSERT INTO order_items 
                   SET order_id=:order_id, item_type=:item_type, pizza_id=:pizza_id,
                       menu_item_id=:menu_item_id, size=:size, quantity=:quantity,
@@ -357,32 +401,33 @@ class Order {
 
         $stmt = $this->conn->prepare($query);
 
-        $stmt->bindParam(":order_id", $item_data['order_id']);
+        $stmt->bindParam(":order_id", $item_data['order_id'], PDO::PARAM_INT);
         $stmt->bindParam(":item_type", $item_data['item_type']);
-        $stmt->bindParam(":pizza_id", $item_data['pizza_id']);
-        $stmt->bindParam(":menu_item_id", $item_data['menu_item_id']);
+        $stmt->bindParam(":pizza_id", $item_data['pizza_id'], PDO::PARAM_INT);
+        $stmt->bindParam(":menu_item_id", $item_data['menu_item_id'], PDO::PARAM_INT);
         $stmt->bindParam(":size", $item_data['size']);
-        $stmt->bindParam(":quantity", $item_data['quantity']);
+        $stmt->bindParam(":quantity", $item_data['quantity'], PDO::PARAM_INT);
         $stmt->bindParam(":unit_price", $item_data['unit_price']);
         $stmt->bindParam(":total_price", $item_data['total_price']);
         $stmt->bindParam(":special_instructions", $item_data['special_instructions']);
 
         if ($stmt->execute()) {
             $order_item_id = $this->conn->lastInsertId();
-            
+
             // Add custom ingredients if any
             if (!empty($item_data['custom_ingredients'])) {
                 $this->addOrderItemIngredients($order_item_id, $item_data['custom_ingredients']);
             }
-            
+
             return $order_item_id;
         }
-        
+
         return false;
     }
 
     // Add custom ingredients to order item
-    private function addOrderItemIngredients($order_item_id, $ingredients) {
+    private function addOrderItemIngredients($order_item_id, $ingredients)
+    {
         $query = "INSERT INTO order_item_ingredients 
                   SET order_item_id=:order_item_id, ingredient_id=:ingredient_id, 
                       quantity=:quantity, price=:price";
@@ -390,8 +435,8 @@ class Order {
         $stmt = $this->conn->prepare($query);
 
         foreach ($ingredients as $ingredient) {
-            $stmt->bindParam(":order_item_id", $order_item_id);
-            $stmt->bindParam(":ingredient_id", $ingredient['ingredient_id']);
+            $stmt->bindParam(":order_item_id", $order_item_id, PDO::PARAM_INT);
+            $stmt->bindParam(":ingredient_id", $ingredient['ingredient_id'], PDO::PARAM_INT);
             $stmt->bindParam(":quantity", $ingredient['quantity']);
             $stmt->bindParam(":price", $ingredient['price']);
             $stmt->execute();
@@ -399,17 +444,18 @@ class Order {
     }
 
     // Get order statistics
-    public function getOrderStats($store_id = null, $days = 30) {
+    public function getOrderStats($store_id = null, $days = 30)
+    {
         $whereConditions = ["o.created_at >= DATE_SUB(NOW(), INTERVAL :days DAY)"];
         $params = [':days' => $days];
-        
-        if ($store_id) {
+
+        if ($store_id !== null) {
             $whereConditions[] = "o.store_id = :store_id";
             $params[':store_id'] = $store_id;
         }
-        
+
         $whereClause = 'WHERE ' . implode(' AND ', $whereConditions);
-        
+
         $query = "SELECT 
                     COUNT(*) as total_orders,
                     COUNT(CASE WHEN o.status != 'cancelled' THEN 1 END) as completed_orders,
@@ -424,23 +470,27 @@ class Order {
                   FROM " . $this->table_name . " o " . $whereClause;
 
         $stmt = $this->conn->prepare($query);
-        $stmt->execute($params);
+        foreach ($params as $key => $value) {
+            $stmt->bindValue($key, $value, PDO::PARAM_INT);
+        }
+        $stmt->execute();
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     // Get recent orders
-    public function getRecentOrders($limit = 10, $store_id = null) {
+    public function getRecentOrders($limit = 10, $store_id = null)
+    {
         $whereConditions = [];
         $params = [];
-        
-        if ($store_id) {
+
+        if ($store_id !== null) {
             $whereConditions[] = "o.store_id = :store_id";
             $params[':store_id'] = $store_id;
         }
-        
+
         $whereClause = !empty($whereConditions) ? 'WHERE ' . implode(' AND ', $whereConditions) : '';
-        
+
         $query = "SELECT o.*, s.name as store_name
                   FROM " . $this->table_name . " o
                   LEFT JOIN stores s ON o.store_id = s.store_id
@@ -450,7 +500,7 @@ class Order {
 
         $stmt = $this->conn->prepare($query);
         foreach ($params as $key => $value) {
-            $stmt->bindValue($key, $value);
+            $stmt->bindValue($key, $value, PDO::PARAM_INT);
         }
         $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
         $stmt->execute();
@@ -459,31 +509,33 @@ class Order {
     }
 
     // Update order priority
-    public function updatePriority($order_id, $priority) {
+    public function updatePriority($order_id, $priority)
+    {
         $query = "UPDATE " . $this->table_name . " 
                   SET priority = :priority, updated_at = NOW() 
                   WHERE order_id = :order_id";
 
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":priority", $priority);
-        $stmt->bindParam(":order_id", $order_id);
+        $stmt->bindParam(":order_id", $order_id, PDO::PARAM_INT);
 
         if ($stmt->execute()) {
-            logActivity('order_priority_updated', "Order priority updated to $priority", null, getCurrentStaffId());
+            logActivity('order_priority_updated', "Order priority updated to $priority", null, $this->getCurrentStaffId());
             return true;
         }
         return false;
     }
 
     // Assign staff to order
-    public function assignStaff($order_id, $staff_id) {
+    public function assignStaff($order_id, $staff_id)
+    {
         $query = "UPDATE " . $this->table_name . " 
                   SET assigned_staff_id = :staff_id, updated_at = NOW() 
                   WHERE order_id = :order_id";
 
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(":staff_id", $staff_id);
-        $stmt->bindParam(":order_id", $order_id);
+        $stmt->bindParam(":staff_id", $staff_id, PDO::PARAM_INT);
+        $stmt->bindParam(":order_id", $order_id, PDO::PARAM_INT);
 
         if ($stmt->execute()) {
             logActivity('order_staff_assigned', "Staff assigned to order", null, $staff_id);
@@ -493,15 +545,16 @@ class Order {
     }
 
     // Add order review and rating
-    public function addReview($order_id, $rating, $review) {
+    public function addReview($order_id, $rating, $review)
+    {
         $query = "UPDATE " . $this->table_name . " 
                   SET rating = :rating, review = :review, updated_at = NOW() 
                   WHERE order_id = :order_id";
 
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(":rating", $rating);
+        $stmt->bindParam(":rating", $rating, PDO::PARAM_INT);
         $stmt->bindParam(":review", htmlspecialchars(strip_tags($review)));
-        $stmt->bindParam(":order_id", $order_id);
+        $stmt->bindParam(":order_id", $order_id, PDO::PARAM_INT);
 
         if ($stmt->execute()) {
             logActivity('order_reviewed', "Order reviewed with rating $rating");
@@ -511,17 +564,18 @@ class Order {
     }
 
     // Get daily sales report
-    public function getDailySalesReport($date, $store_id = null) {
+    public function getDailySalesReport($date, $store_id = null)
+    {
         $whereConditions = ["DATE(o.created_at) = :date", "o.status != 'cancelled'"];
         $params = [':date' => $date];
-        
-        if ($store_id) {
+
+        if ($store_id !== null) {
             $whereConditions[] = "o.store_id = :store_id";
             $params[':store_id'] = $store_id;
         }
-        
+
         $whereClause = 'WHERE ' . implode(' AND ', $whereConditions);
-        
+
         $query = "SELECT 
                     COUNT(*) as total_orders,
                     SUM(o.total) as total_revenue,
@@ -532,41 +586,49 @@ class Order {
                   FROM " . $this->table_name . " o " . $whereClause;
 
         $stmt = $this->conn->prepare($query);
-        $stmt->execute($params);
+        foreach ($params as $key => $value) {
+            $stmt->bindValue($key, $value);
+        }
+        $stmt->execute();
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     // Cancel order
-    public function cancelOrder($order_id, $reason = '', $staff_id = null) {
+    public function cancelOrder($order_id, $reason = '', $staff_id = null)
+    {
         try {
             $this->conn->beginTransaction();
-            
+
             // Update order status
             $query = "UPDATE " . $this->table_name . " 
                       SET status = 'cancelled', updated_at = NOW() 
                       WHERE order_id = :order_id AND status IN ('pending', 'confirmed')";
 
             $stmt = $this->conn->prepare($query);
-            $stmt->bindParam(":order_id", $order_id);
-            
+            $stmt->bindParam(":order_id", $order_id, PDO::PARAM_INT);
+
             if ($stmt->execute() && $stmt->rowCount() > 0) {
                 // Add to status history
                 $this->addStatusHistory('cancelled', $staff_id, $reason, $order_id);
-                
+
                 $this->conn->commit();
                 logActivity('order_cancelled', "Order cancelled: $reason", null, $staff_id);
                 return true;
             }
-            
+
             $this->conn->rollback();
             return false;
-            
         } catch (Exception $e) {
             $this->conn->rollback();
             error_log("Order cancellation failed: " . $e->getMessage());
             return false;
         }
     }
+
+    // Placeholder for getCurrentStaffId (assumed to be defined elsewhere)
+    private function getCurrentStaffId()
+    {
+        return isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+    }
 }
-?>
