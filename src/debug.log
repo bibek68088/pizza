@@ -720,3 +720,38 @@
 
 2025-06-08 11:57:51 - Redirecting for role: customer
 2025-06-08 11:57:51 - Redirecting to: index.php
+2025-06-08 12:09:18 - --- New request to login.php ---
+2025-06-08 12:09:18 - Session ID: 9f5551roj1smj4h2t6gkg53g7t
+2025-06-08 12:09:18 - Session data before processing: Array
+(
+    [csrf_token] => 9c9e68711d2b3936c86a802c2c74ba95265d35f0377829ca38638122e7809b9c
+)
+
+2025-06-08 12:10:54 - --- New request to login.php ---
+2025-06-08 12:10:54 - Session ID: 9f5551roj1smj4h2t6gkg53g7t
+2025-06-08 12:10:54 - Session data before processing: Array
+(
+    [csrf_token] => 9c9e68711d2b3936c86a802c2c74ba95265d35f0377829ca38638122e7809b9c
+)
+
+2025-06-08 12:10:54 - POST request received: Array
+(
+    [csrf_token] => 9c9e68711d2b3936c86a802c2c74ba95265d35f0377829ca38638122e7809b9c
+    [username] => admin@crustpizza.com.au
+    [password] => admin123
+    [login] => 1
+)
+
+2025-06-08 12:10:54 - Username: admin@crustpizza.com.au
+2025-06-08 12:10:54 - Login successful for user ID: 2
+2025-06-08 12:10:54 - Session data set: Array
+(
+    [csrf_token] => 9c9e68711d2b3936c86a802c2c74ba95265d35f0377829ca38638122e7809b9c
+    [user_id] => 2
+    [username] => admin
+    [full_name] => System Administrator
+    [role] => admin
+)
+
+2025-06-08 12:10:54 - Redirecting for role: admin
+2025-06-08 12:10:54 - Redirecting to: admin/dashboard.php
