@@ -416,13 +416,13 @@ function getOrderItemCustomIngredients($db, $order_item_id) {
 <body>
     <nav class="navbar">
         <div class="nav-container">
-           <div class="nav-brand">
-                <i class="fas fa-pizza-slice"></i>
-                <p><a href="../../index.php" style="text-decoration: none; color: inherit;">Crust Pizza</a></p>
-            </div>
-            <button class="nav-toggle" aria-label="Toggle Navigation">
-                <i class="fas fa-bars"></i>
-            </button>
+            <div class="nav-brand">
+                    <i class="fas fa-pizza-slice"></i>
+                    <p><a href="../../index.php" style="text-decoration: none; color: inherit;">Crust Pizza</a></p>
+                </div>
+                <button class="nav-toggle" aria-label="Toggle Navigation">
+                    <i class="fas fa-bars"></i>
+                </button>
             <div class="nav-menu" id="navMenu">
                 <a href="dashboard.php" class="nav-link active">Kitchen Dashboard</a>
                 <a href="../../logout.php" class="nav-link">Logout</a>

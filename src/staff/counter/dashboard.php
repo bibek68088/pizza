@@ -595,23 +595,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-brand">
-                <i class="fas fa-pizza-slice"></i>
-                <p><a href="../index.php">Crust Pizza</a></p>
-            </div>
-            <button class="nav-toggle" aria-label="Toggle Navigation">
-                <i class="fas fa-bars"></i>
-            </button>
-            <div class="nav-menu" id="navMenu">
-                <a href="dashboard.php" class="nav-link active">Counter Dashboard</a>
-                <div class="dropdown">
-                    <button class="dropdown-toggle" onclick="toggleDropdown()" aria-expanded="false">
-                        <span class="user-icon"><i class="fas fa-user"></i></span>
-                        <span class="dropdown-arrow"></span>
-                    </button>
-                    <div class="dropdown-menu" id="dropdownMenu">
-                        <a href="../logout.php" class="dropdown-item">Logout</a>
-                    </div>
+                    <i class="fas fa-pizza-slice"></i>
+                    <p><a href="../../index.php" style="text-decoration: none; color: inherit;">Crust Pizza</a></p>
                 </div>
+                <button class="nav-toggle" aria-label="Toggle Navigation">
+                    <i class="fas fa-bars"></i>
+                </button>
+            <div class="nav-menu" id="navMenu">
+                <a href="dashboard.php" class="nav-link active">Kitchen Dashboard</a>
+                <a href="../../logout.php" class="nav-link">Logout</a>
             </div>
         </div>
     </nav>
