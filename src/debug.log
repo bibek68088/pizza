@@ -1172,3 +1172,143 @@
 
 2025-06-08 15:41:21 - Redirecting for role: customer
 2025-06-08 15:41:21 - Redirecting to: index.php
+2026-03-10 03:23:06 - --- New request to login.php ---
+2026-03-10 03:23:06 - Session ID: ri4fb02tjpjg8dhkucllkc9ehl
+2026-03-10 03:23:06 - Session data before processing: Array
+(
+    [csrf_token] => d2ef0b5a8f6b0afb49dbc33b31f24291f7505294b9576b965efd7b79980a2eb9
+)
+
+2026-03-10 03:23:21 - --- New request to login.php ---
+2026-03-10 03:23:21 - Session ID: ri4fb02tjpjg8dhkucllkc9ehl
+2026-03-10 03:23:21 - Session data before processing: Array
+(
+    [csrf_token] => d2ef0b5a8f6b0afb49dbc33b31f24291f7505294b9576b965efd7b79980a2eb9
+)
+
+2026-03-10 03:23:22 - POST request received: Array
+(
+    [csrf_token] => d2ef0b5a8f6b0afb49dbc33b31f24291f7505294b9576b965efd7b79980a2eb9
+    [username] => admin@crustpizza.com.au
+    [password] => admin123
+    [login] => 1
+)
+
+2026-03-10 03:23:22 - Username: admin@crustpizza.com.au
+2026-03-10 03:23:22 - Login failed: Invalid credentials
+2026-03-10 03:23:29 - --- New request to login.php ---
+2026-03-10 03:23:29 - Session ID: ri4fb02tjpjg8dhkucllkc9ehl
+2026-03-10 03:23:29 - Session data before processing: Array
+(
+    [csrf_token] => d2ef0b5a8f6b0afb49dbc33b31f24291f7505294b9576b965efd7b79980a2eb9
+)
+
+2026-03-10 03:23:29 - POST request received: Array
+(
+    [csrf_token] => d2ef0b5a8f6b0afb49dbc33b31f24291f7505294b9576b965efd7b79980a2eb9
+    [username] => admin@crustpizza.com.au
+    [password] => admin
+    [login] => 1
+)
+
+2026-03-10 03:23:29 - Username: admin@crustpizza.com.au
+2026-03-10 03:23:29 - Login failed: Invalid credentials
+2026-03-10 03:24:12 - --- New request to login.php ---
+2026-03-10 03:24:12 - Session ID: ri4fb02tjpjg8dhkucllkc9ehl
+2026-03-10 03:24:12 - Session data before processing: Array
+(
+    [csrf_token] => d2ef0b5a8f6b0afb49dbc33b31f24291f7505294b9576b965efd7b79980a2eb9
+)
+
+2026-03-10 03:24:21 - --- New request to login.php ---
+2026-03-10 03:24:21 - Session ID: ri4fb02tjpjg8dhkucllkc9ehl
+2026-03-10 03:24:21 - Session data before processing: Array
+(
+    [csrf_token] => d2ef0b5a8f6b0afb49dbc33b31f24291f7505294b9576b965efd7b79980a2eb9
+)
+
+2026-03-10 03:24:21 - POST request received: Array
+(
+    [csrf_token] => d2ef0b5a8f6b0afb49dbc33b31f24291f7505294b9576b965efd7b79980a2eb9
+    [username] => admin@crustpizza.com.au
+    [password] => Admin123
+    [login] => 1
+)
+
+2026-03-10 03:24:21 - Username: admin@crustpizza.com.au
+2026-03-10 03:24:21 - Login failed: Invalid credentials
+2026-03-10 03:25:13 - --- New request to login.php ---
+2026-03-10 03:25:13 - Session ID: ri4fb02tjpjg8dhkucllkc9ehl
+2026-03-10 03:25:13 - Session data before processing: Array
+(
+    [csrf_token] => d2ef0b5a8f6b0afb49dbc33b31f24291f7505294b9576b965efd7b79980a2eb9
+)
+
+2026-03-10 03:25:13 - POST request received: Array
+(
+    [csrf_token] => d2ef0b5a8f6b0afb49dbc33b31f24291f7505294b9576b965efd7b79980a2eb9
+    [username] => admin
+    [password] => admin123
+    [login] => 1
+)
+
+2026-03-10 03:25:13 - Username: admin
+2026-03-10 03:25:13 - Login failed: Invalid credentials
+2026-03-10 03:25:19 - --- New request to login.php ---
+2026-03-10 03:25:19 - Session ID: ri4fb02tjpjg8dhkucllkc9ehl
+2026-03-10 03:25:19 - Session data before processing: Array
+(
+    [csrf_token] => d2ef0b5a8f6b0afb49dbc33b31f24291f7505294b9576b965efd7b79980a2eb9
+)
+
+2026-03-10 03:25:19 - POST request received: Array
+(
+    [csrf_token] => d2ef0b5a8f6b0afb49dbc33b31f24291f7505294b9576b965efd7b79980a2eb9
+    [username] => admin@crustpizza.com.au
+    [password] => admin123
+    [login] => 1
+)
+
+2026-03-10 03:25:19 - Username: admin@crustpizza.com.au
+2026-03-10 03:25:19 - Login failed: Invalid credentials
+2026-03-10 03:25:44 - --- New request to login.php ---
+2026-03-10 03:25:44 - Session ID: ri4fb02tjpjg8dhkucllkc9ehl
+2026-03-10 03:25:44 - Session data before processing: Array
+(
+    [csrf_token] => d2ef0b5a8f6b0afb49dbc33b31f24291f7505294b9576b965efd7b79980a2eb9
+)
+
+2026-03-10 03:26:38 - --- New request to login.php ---
+2026-03-10 03:26:38 - Session ID: ri4fb02tjpjg8dhkucllkc9ehl
+2026-03-10 03:26:38 - Session data before processing: Array
+(
+    [csrf_token] => d2ef0b5a8f6b0afb49dbc33b31f24291f7505294b9576b965efd7b79980a2eb9
+)
+
+2026-03-10 03:26:38 - POST request received: Array
+(
+    [csrf_token] => d2ef0b5a8f6b0afb49dbc33b31f24291f7505294b9576b965efd7b79980a2eb9
+    [username] => admin
+    [password] => admin123
+    [login] => 1
+)
+
+2026-03-10 03:26:38 - Username: admin
+2026-03-10 03:26:38 - Login failed: Invalid credentials
+2026-03-10 03:26:49 - --- New request to login.php ---
+2026-03-10 03:26:49 - Session ID: ri4fb02tjpjg8dhkucllkc9ehl
+2026-03-10 03:26:49 - Session data before processing: Array
+(
+    [csrf_token] => d2ef0b5a8f6b0afb49dbc33b31f24291f7505294b9576b965efd7b79980a2eb9
+)
+
+2026-03-10 03:26:49 - POST request received: Array
+(
+    [csrf_token] => d2ef0b5a8f6b0afb49dbc33b31f24291f7505294b9576b965efd7b79980a2eb9
+    [username] => admin
+    [password] => admin123
+    [login] => 1
+)
+
+2026-03-10 03:26:49 - Username: admin
+2026-03-10 03:26:49 - Login failed: Invalid credentials
